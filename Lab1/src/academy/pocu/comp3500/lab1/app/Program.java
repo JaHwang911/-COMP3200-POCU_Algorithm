@@ -1,8 +1,10 @@
 package academy.pocu.comp3500.lab1.app;
 
-public class Program {
+import academy.pocu.comp3500.lab1.Lab1;
 
+public class Program {
     public static void main(String[] args) {
-        // Write your code here
+        assert(false);
+        System.out.println(Lab1.add(1, 2));
     }
 }
