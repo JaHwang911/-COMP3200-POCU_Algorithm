@@ -58,13 +58,44 @@ public final class PocuBasketballAssociation {
 
         sortByPointsPerGameRecursive(players, 0, players.length - 1);
 
-        int index = searchTargetPointsPerGame(players, 0, players.length - 1, targetPoints);
-        
+        int index = 0;
+        int diffTargetValue = Math.abs(players[index].getPointsPerGame() - targetPoints);
+
+        for (int i = index + 1; i < players.length; ++i) {
+            int tempDiff = Math.abs(players[i].getPointsPerGame() - targetPoints);
+
+            if (diffTargetValue >= tempDiff) {
+                index = i;
+                diffTargetValue = tempDiff;
+            } else {
+                break;
+            }
+        }
+
         return players[index];
     }
 
     public static Player findPlayerShootingPercentage(final Player[] players, int targetShootingPercentage) {
-        return null;
+        assert(players.length > 0);
+        assert(targetShootingPercentage > 0);
+
+        sortByShootingPercentageRecursive(players, 0, players.length - 1);
+
+        int index = 0;
+        int diffTargetValue = Math.abs(players[index].getShootingPercentage() - targetShootingPercentage);
+
+        for (int i = index + 1; i < players.length; ++i) {
+            int tempDiff = Math.abs(players[i].getShootingPercentage() - targetShootingPercentage);
+
+            if (diffTargetValue >= tempDiff) {
+                index = i;
+                diffTargetValue = tempDiff;
+            } else {
+                break;
+            }
+        }
+
+        return players[index];
     }
 
     public static long find3ManDreamTeam(final Player[] players, final Player[] outPlayers, final Player[] scratch) {
@@ -84,26 +115,7 @@ public final class PocuBasketballAssociation {
             return;
         }
 
-        int pivotPos = partition(gameStats, left, right);
-
-        sortByPlayersNameRecursive(gameStats, left, pivotPos - 1);
-        sortByPlayersNameRecursive(gameStats, pivotPos + 1, right);
-    }
-
-    private static void sortByPointsPerGameRecursive(final Player[] players, int left, int right) {
-        if (left >= right) {
-            return;
-        }
-
-        int pivotPos = partition(players, left, right);
-
-        sortByPointsPerGameRecursive(players, left, pivotPos - 1);
-        sortByPointsPerGameRecursive(players, pivotPos + 1, right);
-    }
-
-    private static int partition(final GameStat[] gameStats, int left, int right) {
         String pivot = gameStats[right].getPlayerName();
-
         int i = left;
 
         for (int j = i; j < right; ++j) {
@@ -115,10 +127,17 @@ public final class PocuBasketballAssociation {
 
         swapGameStats(gameStats, i, right);
 
-        return i;
+        int pivotPos = i;
+
+        sortByPlayersNameRecursive(gameStats, left, pivotPos - 1);
+        sortByPlayersNameRecursive(gameStats, pivotPos + 1, right);
     }
 
-    private static int partition(final Player[] players, int left, int right) {
+    private static void sortByPointsPerGameRecursive(final Player[] players, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+
         int pivotValue = players[right].getPointsPerGame();
         int i = left;
 
@@ -132,7 +151,34 @@ public final class PocuBasketballAssociation {
 
         swapPlayers(players, i, right);
 
-        return i;
+        int pivotPos = i;
+
+        sortByPointsPerGameRecursive(players, left, pivotPos - 1);
+        sortByPointsPerGameRecursive(players, pivotPos + 1, right);
+    }
+
+    private static void sortByShootingPercentageRecursive(final Player[] players, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+
+        int pivotValue = players[right].getShootingPercentage();
+        int i = left;
+
+        for (int j = i; j < right; ++j) {
+            if (players[j].getShootingPercentage() < pivotValue) {
+                swapPlayers(players, i, j);
+
+                ++i;
+            }
+        }
+
+        swapPlayers(players, i, right);
+
+        int pivotPos = i;
+
+        sortByShootingPercentageRecursive(players, left, pivotPos - 1);
+        sortByShootingPercentageRecursive(players, pivotPos + 1, right);
     }
 
     private static void swapGameStats(final GameStat[] gameStats, int i, int j) {
@@ -145,21 +191,5 @@ public final class PocuBasketballAssociation {
         Player tmp = players[i];
         players[i] = players[j];
         players[j] = tmp;
-    }
-
-    private static int searchTargetPointsPerGame(Player[] players, int low, int high, int targetPoints) {
-        if (low >= high) {
-            return low;
-        }
-
-        int mid = (low + high) / 2;
-
-        if (players[mid].getPointsPerGame() == targetPoints) {
-            return mid;
-        } else if (players[mid].getPointsPerGame() < targetPoints) {
-            return searchTargetPointsPerGame(players, mid + 1, high, targetPoints);
-        } else {
-            return searchTargetPointsPerGame(players, low, mid - 1, targetPoints);
-        }
     }
 }
