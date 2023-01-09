@@ -65,8 +65,6 @@ public final class PocuBasketballAssociation {
             if (diffTargetValue >= tempDiff) {
                 index = i;
                 diffTargetValue = tempDiff;
-            } else {
-                break;
             }
         }
 
@@ -86,8 +84,6 @@ public final class PocuBasketballAssociation {
             if (diffTargetValue >= tempDiff) {
                 index = i;
                 diffTargetValue = tempDiff;
-            } else {
-                break;
             }
         }
 
@@ -95,10 +91,6 @@ public final class PocuBasketballAssociation {
     }
 
     public static long find3ManDreamTeam(final Player[] players, final Player[] outPlayers, final Player[] scratch) {
-        assert(players.length > 0);
-
-        sortBySumOfPassAndAssistRecursive(players, 0, players.length);
-
         return -1;
     }
 
@@ -138,21 +130,18 @@ public final class PocuBasketballAssociation {
         sortByPlayersNameRecursive(gameStats, pivotPos + 1, right);
     }
 
-    private static void sortBySumOfPassAndAssistRecursive(Player[] players, int left, int right) {
+    public static void sortByAssistRecursive(Player[] players, int left, int right) {
         if (left >= right) {
             return;
         }
 
-        int pivotValue = players[right].getPassesPerGame() + players[right].getAssistsPerGame();
         int i = left;
 
         for (int j = i; j < right; ++j) {
-            int value = players[j].getPassesPerGame() + players[j].getAssistsPerGame();
-
-            if (value >= pivotValue) {
-                Player tmp = players[i];
-                players[i] = players[j];
-                players[j] = tmp;
+            if (players[j].getAssistsPerGame() < players[right].getAssistsPerGame()) {
+                Player tmp = players[j];
+                players[j] = players[i];
+                players[i] = tmp;
 
                 ++i;
             }
@@ -164,7 +153,7 @@ public final class PocuBasketballAssociation {
 
         int pivotPos = i;
 
-        sortBySumOfPassAndAssistRecursive(players, left, pivotPos - 1);
-        sortBySumOfPassAndAssistRecursive(players, pivotPos + 1, right);
+        sortByAssistRecursive(players, left, pivotPos - 1);
+        sortByAssistRecursive(players, pivotPos + 1, right);
     }
 }

@@ -7,107 +7,71 @@ import academy.pocu.comp3500.assignment1.pba.Player;
 public class Program {
 
     public static void main(String[] args) {
-        TestProcessGameStats();
-        TestFindPlayerPointsPerGame();
-        TestFindPlayerShootingPercentage();
+//        TestProcessGameStats();
+//        TestFindPlayerPointsPerGame();
+//        TestFindPlayerShootingPercentage();
+//        TestFind3ManDreamTeam();
+
+        temp();
     }
 
-    private static void TestProcessGameStats() {
-        GameStat[] gameStats = new GameStat[] {
-                new GameStat("Player 1", 1, 13, 5, 6, 10, 1),
-                new GameStat("Player 2", 2, 5, 2, 5, 0, 10),
-                new GameStat("Player 1", 3, 12, 6, 9, 8, 5),
-                new GameStat("Player 3", 1, 31, 15, 40, 5, 3),
-                new GameStat("Player 2", 1, 3, 1, 3, 12, 2),
-                new GameStat("Player 1", 2, 11, 6, 11, 9, 3),
-                new GameStat("Player 2", 3, 9, 3, 3, 1, 11),
-                new GameStat("Player 3", 4, 32, 15, 51, 4, 2),
-                new GameStat("Player 4", 3, 44, 24, 50, 1, 1),
-                new GameStat("Player 1", 4, 11, 5, 14, 8, 3),
-                new GameStat("Player 2", 4, 5, 1, 3, 1, 9),
-        };
-
+    private static void temp() {
         Player[] players = new Player[] {
-                new Player(),
-                new Player(),
-                new Player(),
-                new Player()
+                new Player("Player 2", 5, 12, 14, 50),
+                new Player("Player 6", 15, 2, 5, 40),
+                new Player("Player 5", 11, 1, 11, 54),
+                new Player("Player 4", 10, 3, 51, 88),
+                new Player("Player 7", 16, 8, 5, 77),
+                new Player("Player 1", 1, 15, 2, 22),
+                new Player("Player 3", 7, 5, 8, 66)
         };
 
-        PocuBasketballAssociation.processGameStats(gameStats, players);
+        PocuBasketballAssociation.sortByAssistRecursive(players, 0, players.length - 1);
 
-        for (int i = 0;  i < players.length; ++i) {
-            String pName = players[i].getName();
+        Player[] players2 = new Player[] {
+                new Player("Player 2", 5, 5, 17, 50),
+                new Player("Player 6", 15, 4, 10, 40),
+                new Player("Player 5", 11, 3, 25, 54),
+                new Player("Player 4", 10, 9, 1, 88),
+                new Player("Player 7", 16, 7, 5, 77),
+                new Player("Player 1", 1, 2, 8, 22),
+                new Player("Player 9", 42, 15, 4, 56),
+                new Player("Player 8", 33, 11, 3, 72),
+        };
 
-            switch (pName) {
-                case "Player 1":
-                    assert(players[i].getPointsPerGame() == 11);
-                    assert(players[i].getAssistsPerGame() == 8);
-                    assert(players[i].getPassesPerGame() == 3);
-                    assert(players[i].getShootingPercentage() == 55);
-                    break;
-                case "Player 2":
-                    assert(players[i].getPointsPerGame() == 5);
-                    assert(players[i].getAssistsPerGame() == 3);
-                    assert(players[i].getPassesPerGame() == 8);
-                    assert(players[i].getShootingPercentage() == 50);
-                    break;
-                case "Player 3":
-                    assert(players[i].getPointsPerGame() == 31);
-                    assert(players[i].getAssistsPerGame() == 4);
-                    assert(players[i].getPassesPerGame() == 2);
-                    assert(players[i].getShootingPercentage() == 32);
-                    break;
-                case "Player 4":
-                    assert(players[i].getPointsPerGame() == 44);
-                    assert(players[i].getAssistsPerGame() == 1);
-                    assert(players[i].getPassesPerGame() == 1);
-                    assert(players[i].getShootingPercentage() == 48);
-                    break;
-                default:
-                    assert(false);
-                    break;
-            }
-        }
+        PocuBasketballAssociation.sortByAssistRecursive(players2, 0, players2.length - 1);
+
+        Player[] players3 = new Player[] {
+                new Player("Player 1", 2, 5, 10, 78),
+                new Player("Player 2", 10, 4, 5, 66),
+                new Player("Player 3", 3, 3, 2, 22),
+                new Player("Player 4", 1, 9, 8, 12),
+                new Player("Player 5", 11, 1, 12, 26),
+                new Player("Player 6", 7, 2, 10, 15),
+                new Player("Player 7", 8, 15, 3, 11),
+                new Player("Player 8", 5, 7, 13, 5),
+                new Player("Player 9", 8, 2, 7, 67),
+                new Player("Player 10", 1, 11, 1, 29),
+                new Player("Player 11", 2, 6, 9, 88)
+        };
+
+        PocuBasketballAssociation.sortByAssistRecursive(players3, 0, players3.length - 1);
     }
 
-    private static void TestFindPlayerPointsPerGame() {
+    private static void TestFind3ManDreamTeam() {
         Player[] players = new Player[] {
-                new Player("Player 2", 5, 2, 11, 31),
-                new Player("Player 5", 11, 12, 6, 77),
-                new Player("Player 3", 7, 4, 7, 44),
-                new Player("Player 1", 1, 5, 1, 60),
-                new Player("Player 4", 10, 10, 15, 25),
-                new Player("Player 7", 16, 8, 2, 70),
-                new Player("Player 6", 15, 0, 12, 61),
+                new Player("Player 2", 5, 12, 14, 50),
+                new Player("Player 6", 15, 2, 5, 40),
+                new Player("Player 5", 11, 1, 11, 54),
+                new Player("Player 4", 10, 3, 51, 88),
+                new Player("Player 7", 16, 8, 5, 77),
+                new Player("Player 1", 1, 15, 2, 22),
+                new Player("Player 3", 7, 5, 8, 66)
         };
 
-        Player player = PocuBasketballAssociation.findPlayerPointsPerGame(players, 12); // player: Player 5
-        assert(player.getName().equals("Player 5"));
+        Player[] outPlayers = new Player[3];
+        Player[] scratch = new Player[3];
 
-        player = PocuBasketballAssociation.findPlayerPointsPerGame(players, 5); // player: Player 2
-        assert(player.getName().equals("Player 2"));
-        player = PocuBasketballAssociation.findPlayerPointsPerGame(players, 13); // player: Player 6
-        assert(player.getName().equals("Player 6"));
-    }
-
-    private static void TestFindPlayerShootingPercentage() {
-        Player[] players = new Player[] {
-                new Player("Player 4", 10, 10, 15, 25),
-                new Player("Player 2", 5, 2, 11, 31),
-                new Player("Player 3", 7, 4, 7, 44),
-                new Player("Player 1", 1, 5, 1, 60),
-                new Player("Player 6", 15, 0, 12, 61),
-                new Player("Player 7", 16, 8, 2, 70),
-                new Player("Player 5", 11, 12, 6, 77)
-        };
-
-        Player player = PocuBasketballAssociation.findPlayerShootingPercentage(players, 28); // player: Player 2
-        assert(player.getName().equals("Player 2"));
-
-        player = PocuBasketballAssociation.findPlayerShootingPercentage(players, 58); // player: Player 1
-        assert(player.getName().equals("Player 1"));
-        player = PocuBasketballAssociation.findPlayerShootingPercentage(players, 72); // player: Player 7
-        assert(player.getName().equals("Player 7"));
+        long maxTeamwork = PocuBasketballAssociation.find3ManDreamTeam(players, outPlayers, scratch); // maxTeamwork: 219, outPlayers: [ Player 4, Player 2, Player 3 ]
     }
 }
