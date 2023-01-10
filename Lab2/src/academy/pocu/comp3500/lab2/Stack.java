@@ -11,28 +11,24 @@ public final class Stack {
     }
 
     public void push(final int data) {
-        this.root = LinkedList.append(this.root, data);
+        this.root = LinkedList.prepend(this.root, data);
         ++this.size;
     }
 
     public int peek() {
         assert (this.root != null);
-
-        Node topNode = LinkedList.getOrNull(this.root, this.size - 1);
-        assert (topNode != null);
-
-        return topNode.getData();
+        return this.root.getData();
     }
 
     public int pop() {
         assert (this.root != null);
 
-        Node lastNode = LinkedList.getOrNull(this.root, this.size - 1);
-        this.root = LinkedList.removeAt(this.root, this.size - 1);
+        Node popNode = this.root;
+        this.root = this.root.getNextOrNull();
 
         --this.size;
 
-        return lastNode.getData();
+        return popNode.getData();
     }
 
     public int getSize() {
