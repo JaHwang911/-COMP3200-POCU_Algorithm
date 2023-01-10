@@ -36,7 +36,11 @@ public final class LinkedList {
 
     public static Node insertAt(final Node rootOrNull, final int index, final int data) {
         if (rootOrNull == null) {
-            return new Node(data);
+            if (index == 0) {
+                return new Node(data);
+            }
+
+            return null;
         } else if (index < 0) {
             return rootOrNull;
         } else if (index == 0) {
@@ -125,19 +129,15 @@ public final class LinkedList {
     }
 
     public static Node reverse(final Node rootOrNull) {
-        if (rootOrNull == null) {
-            return null;
-        }
-
-        Node reverseNode = null;
+        Node reverseList = null;
         Node current = rootOrNull;
 
         while (current != null) {
-            reverseNode = prepend(reverseNode, current.getData());
+            reverseList = prepend(reverseList, current.getData());
             current = current.getNextOrNull();
         }
 
-        return reverseNode;
+        return reverseList;
     }
 
     public static Node interleaveOrNull(final Node root0OrNull, final Node root1OrNull) {
@@ -152,8 +152,6 @@ public final class LinkedList {
             current0 = current0.getNextOrNull();
             current1 = current1.getNextOrNull();
         }
-
-        assert (current0 == null || current1 == null);
 
         while (current0 != null) {
             interleaveList = append(interleaveList, current0.getData());

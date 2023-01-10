@@ -9,7 +9,11 @@ public class Program {
 
     public static void main(String[] args) {
         officialTest();
-	    myTest();
+        myTest();
+        reverseTest();
+        interleaveTest();
+
+        System.out.println("No prob lab 2");
     }
 
     private static void officialTest() {
@@ -259,107 +263,184 @@ public class Program {
     }
 
     private static void myTest() {
+        Node root = LinkedList.append(null, 12);
+
+        root = LinkedList.prepend(root, 11);
+        root = LinkedList.prepend(root, 10);
+
+        root = LinkedList.insertAt(root, 10, 20);
+        root = LinkedList.insertAt(root, 0, 8);
+        root = LinkedList.insertAt(root, 1, 9);
+        root = LinkedList.insertAt(root, 4, 13);
+        // 8 -> 9 -> 10 -> 11 -> 13 -> 12
+
+        Node node = LinkedList.getOrNull(root, 0);
+        assert(node.getData() == 8);
+        node = LinkedList.getOrNull(root, 1);
+        assert(node.getData() == 9);
+        node = LinkedList.getOrNull(root, 2);
+        assert(node.getData() == 10);
+        node = LinkedList.getOrNull(root, 3);
+        assert(node.getData() == 11);
+        node = LinkedList.getOrNull(root, 4);
+        assert(node.getData() == 13);
+        node = LinkedList.getOrNull(root, 5);
+        assert(node.getData() == 12);
+        node = LinkedList.getOrNull(root, 6);
+        assert(node == null);
+
+        root = LinkedList.reverse(root);
+        assert(root.getData() == 12);
+
+        node = root.getNextOrNull();
+        assert(node.getData() == 13);
+
+        node = node.getNextOrNull();
+        assert(node.getData() == 11);
+
+        node = node.getNextOrNull();
+        assert(node.getData() == 10);
+
+        node = node.getNextOrNull();
+        assert(node.getData() == 9);
+
+        node = node.getNextOrNull();
+        assert(node.getData() == 8);
+
+        node = node.getNextOrNull();
+        assert(node == null);
+
+        root = LinkedList.reverse(root);
+
+        root = LinkedList.removeAt(root, 0);
+        // 9 -> 10 -> 11 -> 13 -> 12
+        root = LinkedList.removeAt(root, 1);
+        // 9 -> 11 -> 13 -> 12
+        root = LinkedList.removeAt(root, 2);
+        // 9 -> 11  -> 12
+        root = LinkedList.removeAt(root, 2);
+        // 9 -> 11
+        root = LinkedList.removeAt(root, 2);
+        // 9 -> 11
+    }
+
+    private static void reverseTest() {
+            {
+                Node root = LinkedList.append(null, 10);
+
+                root = LinkedList.append(root, 11);
+                root = LinkedList.append(root, 12);
+                root = LinkedList.append(root, 13);
+                root = LinkedList.append(root, 14);
+                root = LinkedList.append(root, 15);
+
+                Node reverse = LinkedList.reverse(root);
+            }
+
+            {
+                Node oneNode = new Node(10);
+
+                Node reverse = LinkedList.reverse(oneNode);
+                assert (reverse.getData() == 10);
+                assert (reverse.getNextOrNull() == null);
+            }
+
+            {
+                Node root = new Node(10);
+                root = LinkedList.append(root, 11);
+
+                Node reverse = LinkedList.reverse(root);
+
+                assert (reverse.getData() == 11);
+                Node next = reverse.getNextOrNull();
+                assert (next.getData() == 10);
+                next = next.getNextOrNull();
+                assert (next == null);
+
+                root = LinkedList.reverse(reverse);
+
+                assert (root.getData() == 10);
+                next = root.getNextOrNull();
+                assert (next.getData() == 11);
+                next = next.getNextOrNull();
+                assert (next == null);
+            }
+    }
+
+    private static void interleaveTest() {
         {
-            Node root = LinkedList.append(null, 12);
+            Node root1 = LinkedList.append(null, 10);
+            root1 = LinkedList.append(root1, 12);
+            root1 = LinkedList.append(root1, 14);
 
-            root = LinkedList.prepend(root, 11);
-            root = LinkedList.prepend(root, 10);
+            Node root2 = LinkedList.append(null, 11);
+            root2 = LinkedList.append(root2, 13);
+            root2 = LinkedList.append(root2, 15);
 
-            root = LinkedList.insertAt(root, 10, 20);
-            root = LinkedList.insertAt(root, 0, 8);
-            root = LinkedList.insertAt(root, 1, 9);
-            root = LinkedList.insertAt(root, 4, 13);
-            // 8 -> 9 -> 10 -> 11 -> 13 -> 12
+            Node interleave = LinkedList.interleaveOrNull(root1, root2);
 
-            Node node = LinkedList.getOrNull(root, 0);
-            assert(node.getData() == 8);
-            node = LinkedList.getOrNull(root, 1);
-            assert(node.getData() == 9);
-            node = LinkedList.getOrNull(root, 2);
-            assert(node.getData() == 10);
-            node = LinkedList.getOrNull(root, 3);
-            assert(node.getData() == 11);
-            node = LinkedList.getOrNull(root, 4);
-            assert(node.getData() == 13);
-            node = LinkedList.getOrNull(root, 5);
-            assert(node.getData() == 12);
-            node = LinkedList.getOrNull(root, 6);
-            assert(node == null);
-
-            root = LinkedList.reverse(root);
-            assert(root.getData() == 12);
-
-            node = root.getNextOrNull();
-            assert(node.getData() == 13);
-
-            node = node.getNextOrNull();
-            assert(node.getData() == 11);
-
-            node = node.getNextOrNull();
-            assert(node.getData() == 10);
-
-            node = node.getNextOrNull();
-            assert(node.getData() == 9);
-
-            node = node.getNextOrNull();
-            assert(node.getData() == 8);
-
-            node = node.getNextOrNull();
-            assert(node == null);
-
-            root = LinkedList.reverse(root);
-
-            root = LinkedList.removeAt(root, 0);
-            // 9 -> 10 -> 11 -> 13 -> 12
-            root = LinkedList.removeAt(root, 1);
-            // 9 -> 11 -> 13 -> 12
-            root = LinkedList.removeAt(root, 2);
-            // 9 -> 11  -> 12
-            root = LinkedList.removeAt(root, 2);
-            // 9 -> 11
-            root = LinkedList.removeAt(root, 2);
-            // 9 -> 11
-        }
-
-        {
-            Node root = LinkedList.append(null, 10);
-
-            root = LinkedList.append(root, 11);
-            root = LinkedList.append(root, 12);
-            root = LinkedList.append(root, 13);
-            root = LinkedList.append(root, 14);
-            root = LinkedList.append(root, 15);
-
-            Node reverse = LinkedList.reverse(root);
-        }
-
-        {
-            Node oneNode = new Node(10);
-
-            Node reverse = LinkedList.reverse(oneNode);
-            assert (reverse.getData() == 10);
-            assert (reverse.getNextOrNull() == null);
-        }
-
-        {
-            Node root = new Node(10);
-            root = LinkedList.append(root, 11);
-
-            Node reverse = LinkedList.reverse(root);
-
-            assert (reverse.getData() == 11);
-            Node next = reverse.getNextOrNull();
-            assert (next.getData() == 10);
-            next = next.getNextOrNull();
-            assert (next == null);
-
-            root = LinkedList.reverse(reverse);
-
-            assert (root.getData() == 10);
-            next = root.getNextOrNull();
+            assert (interleave.getData() == 10);
+            Node next = interleave.getNextOrNull();
             assert (next.getData() == 11);
             next = next.getNextOrNull();
-            assert (next == null);
+            assert (next.getData() == 12);
+            next = next.getNextOrNull();
+            assert (next.getData() == 13);
+            next = next.getNextOrNull();
+            assert (next.getData() == 14);
+            next = next.getNextOrNull();
+            assert (next.getData() == 15);
+        }
+
+        {
+            Node root1 = LinkedList.append(null, 10);
+            root1 = LinkedList.append(root1, 12);
+            root1 = LinkedList.append(root1, 14);
+
+            Node root2 = LinkedList.append(null, 11);
+
+            Node interleave = LinkedList.interleaveOrNull(root1, root2);
+
+            assert (interleave.getData() == 10);
+            Node next = interleave.getNextOrNull();
+            assert (next.getData() == 11);
+            next = next.getNextOrNull();
+            assert (next.getData() == 12);
+            next = next.getNextOrNull();
+            assert (next.getData() == 14);
+        }
+
+        {
+            Node root1 = LinkedList.append(null, 10);
+            root1 = LinkedList.append(root1, 12);
+            root1 = LinkedList.append(root1, 14);
+
+            Node interleave = LinkedList.interleaveOrNull(root1, null);
+
+            assert (interleave.getData() == 10);
+            Node next = interleave.getNextOrNull();
+            assert (next.getData() == 12);
+            next = next.getNextOrNull();
+            assert (next.getData() == 14);
+        }
+
+        {
+            Node root2 = LinkedList.append(null, 11);
+            root2 = LinkedList.append(root2, 13);
+            root2 = LinkedList.append(root2, 15);
+
+            Node interleave = LinkedList.interleaveOrNull(null, root2);
+
+            assert (interleave.getData() == 11);
+            Node next = interleave.getNextOrNull();
+            assert (next.getData() == 13);
+            next = next.getNextOrNull();
+            assert (next.getData() == 15);
+        }
+
+        {
+            Node interleave = LinkedList.interleaveOrNull(null, null);
+            assert (interleave == null);
         }
     }
 }
