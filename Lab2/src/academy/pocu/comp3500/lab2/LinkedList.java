@@ -34,13 +34,13 @@ public final class LinkedList {
 
     public static Node insertAt(final Node rootOrNull, final int index, final int data) {
         if (rootOrNull == null) {
-            return new Node(data);
+            return null;
+        } else if (index < 0) {
+            return rootOrNull;
         } else if (index == 0) {
             Node newNode = new Node(data);
             newNode.setNext(rootOrNull);
             return newNode;
-        } else if (index < 0) {
-            return rootOrNull;
         }
 
         Node current = rootOrNull;
