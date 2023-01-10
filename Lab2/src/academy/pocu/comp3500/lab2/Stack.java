@@ -16,16 +16,16 @@ public final class Stack {
     }
 
     public int peek() {
-        assert(this.root != null);
+        assert (this.root != null);
 
         Node topNode = LinkedList.getOrNull(this.root, this.size - 1);
-        assert(topNode != null);
+        assert (topNode != null);
 
         return topNode.getData();
     }
 
     public int pop() {
-        assert(this.root != null);
+        assert (this.root != null);
 
         Node lastNode = LinkedList.getOrNull(this.root, this.size - 1);
         this.root = LinkedList.removeAt(this.root, this.size - 1);

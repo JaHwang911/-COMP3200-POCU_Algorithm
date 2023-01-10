@@ -16,12 +16,12 @@ public final class Queue {
     }
 
     public int peek() {
-        assert(this.root != null);
+        assert (this.root != null);
         return this.root.getData();
     }
 
     public int dequeue() {
-        assert(this.root != null);
+        assert (this.root != null);
 
         int result = this.root.getData();
         this.root = this.root.getNextOrNull();
