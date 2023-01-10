@@ -36,11 +36,7 @@ public final class LinkedList {
 
     public static Node insertAt(final Node rootOrNull, final int index, final int data) {
         if (rootOrNull == null) {
-            if (index == 0) {
-                return new Node(data);
-            }
-
-            return null;
+            return new Node(data);
         } else if (index < 0) {
             return rootOrNull;
         } else if (index == 0) {
@@ -111,6 +107,10 @@ public final class LinkedList {
     }
 
     public static Node getOrNull(final Node rootOrNull, final int index) {
+        if (index < 0) {
+            return null;
+        }
+
         Node current = rootOrNull;
 
         for (int i = 0; i < index; ++i) {
@@ -129,36 +129,25 @@ public final class LinkedList {
             return null;
         }
 
-        Node lastNode = rootOrNull;
-
-        while (lastNode.getNextOrNull() != null) {
-            lastNode = lastNode.getNextOrNull();
-        }
-
-        Node reverseListRoot = null;
+        Node reverseNode = null;
         Node current = rootOrNull;
 
-        while (current != lastNode) {
-            reverseListRoot = prepend(reverseListRoot, current.getData());
+        while (current != null) {
+            reverseNode = prepend(reverseNode, current.getData());
             current = current.getNextOrNull();
         }
 
-        assert (lastNode.getNextOrNull() == null);
-        lastNode.setNext(reverseListRoot);
-
-        return lastNode;
+        return reverseNode;
     }
 
     public static Node interleaveOrNull(final Node root0OrNull, final Node root1OrNull) {
         Node current0 = root0OrNull;
         Node current1 = root1OrNull;
-        Node newNode = null;
+        Node interleaveList = null;
 
-        final int MIN_LENGTH = Math.min(getListLength(root0OrNull), getListLength(root1OrNull));
-
-        for (int i = 0; i < MIN_LENGTH; ++i) {
-            newNode = append(newNode, current0.getData());
-            newNode = append(newNode, current1.getData());
+        while (current0 != null && current1 != null) {
+            interleaveList = append(interleaveList, current0.getData());
+            interleaveList = append(interleaveList, current1.getData());
 
             current0 = current0.getNextOrNull();
             current1 = current1.getNextOrNull();
@@ -167,28 +156,15 @@ public final class LinkedList {
         assert (current0 == null || current1 == null);
 
         while (current0 != null) {
-            newNode = append(newNode, current0.getData());
+            interleaveList = append(interleaveList, current0.getData());
             current0 = current0.getNextOrNull();
         }
 
         while (current1 != null) {
-            newNode = append(newNode, current1.getData());
+            interleaveList = append(interleaveList, current1.getData());
             current1 = current1.getNextOrNull();
         }
 
-        return newNode;
-    }
-
-    private static int getListLength(final Node rootOrNull) {
-        int i = 0;
-
-        Node current = rootOrNull;
-
-        while (current != null) {
-            current = current.getNextOrNull();
-            ++i;
-        }
-
-        return i;
+        return interleaveList;
     }
 }
