@@ -3,7 +3,8 @@ package academy.pocu.comp3500.lab2;
 import academy.pocu.comp3500.lab2.datastructure.Node;
 
 public final class Queue {
-    private Node root;
+    private Node front;
+    private Node back;
     private int size;
 
     public Queue() {
@@ -11,20 +12,30 @@ public final class Queue {
     }
 
     public void enqueue(final int data) {
-        this.root = LinkedList.append(this.root, data);
+        if (this.size == 0) {
+            this.front = LinkedList.prepend(this.front, data);
+            this.back = this.front;
+        }
+
+        this.back.setNext(new Node(data));
+        this.back = this.back.getNextOrNull();
+
         ++this.size;
     }
 
     public int peek() {
-        assert (this.root != null);
-        return this.root.getData();
+        assert (this.front != null);
+        assert (this.back != null);
+
+        return this.front.getData();
     }
 
     public int dequeue() {
-        assert (this.root != null);
+        assert (this.front != null);
+        assert (this.back != null);
 
-        int result = this.root.getData();
-        this.root = this.root.getNextOrNull();
+        int result = this.front.getData();
+        this.front = this.front.getNextOrNull();
 
         --this.size;
 
