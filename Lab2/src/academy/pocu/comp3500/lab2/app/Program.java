@@ -412,6 +412,24 @@ public class Program {
 
         {
             Node root1 = LinkedList.append(null, 10);
+
+            Node root2 = LinkedList.append(null, 11);
+            root2 = LinkedList.append(root2, 13);
+            root2 = LinkedList.append(root2, 15);
+
+            Node interleave = LinkedList.interleaveOrNull(root1, root2);
+
+            assert (interleave.getData() == 10);
+            Node next = interleave.getNextOrNull();
+            assert (next.getData() == 11);
+            next = next.getNextOrNull();
+            assert (next.getData() == 13);
+            next = next.getNextOrNull();
+            assert (next.getData() == 15);
+        }
+
+        {
+            Node root1 = LinkedList.append(null, 10);
             root1 = LinkedList.append(root1, 12);
             root1 = LinkedList.append(root1, 14);
 

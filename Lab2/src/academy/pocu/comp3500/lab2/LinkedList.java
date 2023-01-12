@@ -134,8 +134,8 @@ public final class LinkedList {
 
         while (current != null) {
             Node next = current.getNextOrNull();
-
             current.setNext(prev);
+
             prev = current;
             current = next;
         }
@@ -144,28 +144,44 @@ public final class LinkedList {
     }
 
     public static Node interleaveOrNull(final Node root0OrNull, final Node root1OrNull) {
-        Node current0 = root0OrNull;
-        Node current1 = root1OrNull;
-        Node interleaveList = null;
-
-        while (current0 != null && current1 != null) {
-            interleaveList = append(interleaveList, current0.getData());
-            interleaveList = append(interleaveList, current1.getData());
-
-            current0 = current0.getNextOrNull();
-            current1 = current1.getNextOrNull();
+        if (root0OrNull == null) {
+            return root1OrNull;
+        } else if (root1OrNull == null) {
+            return root0OrNull;
         }
 
-        while (current0 != null) {
-            interleaveList = append(interleaveList, current0.getData());
-            current0 = current0.getNextOrNull();
+        Node mainRoot = root0OrNull;
+        Node next0 = root0OrNull.getNextOrNull();
+        Node next1 = root1OrNull;
+
+        while (next0 != null && next1 != null) {
+            mainRoot.setNext(next1);
+            next1 = next1.getNextOrNull();
+
+            mainRoot = mainRoot.getNextOrNull();
+
+            mainRoot.setNext(next0);
+            next0 = next0.getNextOrNull();
+
+            mainRoot = mainRoot.getNextOrNull();
         }
 
-        while (current1 != null) {
-            interleaveList = append(interleaveList, current1.getData());
-            current1 = current1.getNextOrNull();
+        if (next0 == null && next1 != null) {
+            mainRoot.setNext(next1);
         }
 
-        return interleaveList;
+        return root0OrNull;
+    }
+
+    private static int getNodeLength(final Node root) {
+        int result = 0;
+        Node current = root;
+
+        while (current != null) {
+            current = current.getNextOrNull();
+            ++result;
+        }
+
+        return result;
     }
 }
