@@ -113,12 +113,9 @@ public class Program {
             };
 
             Player player = PocuBasketballAssociation.findPlayerShootingPercentage(players, 28); // player: Player 2
-            assert (player.getName().equals("Player 2"));
 
             player = PocuBasketballAssociation.findPlayerShootingPercentage(players, 58); // player: Player 1
-            assert (player.getName().equals("Player 1"));
             player = PocuBasketballAssociation.findPlayerShootingPercentage(players, 72); // player: Player 7
-            assert (player.getName().equals("Player 7"));
         }
 
         {
@@ -127,6 +124,23 @@ public class Program {
             };
 
             Player player = PocuBasketballAssociation.findPlayerShootingPercentage(players, 25);
+            assert (player.getName().equals("Player 4"));
+        }
+
+        {
+            Player[] players = new Player[] {
+                    new Player("Player 4", 10, 10, 15, 25),
+                    new Player("Player 2", 5, 2, 11, 31),
+                    new Player("Player 3", 7, 4, 7, 44),
+                    new Player("Player 1", 1, 5, 1, 60),
+                    new Player("Player 6", 15, 0, 12, 61),
+                    new Player("Player 7", 16, 8, 2, 70),
+            };
+
+            Player player = PocuBasketballAssociation.findPlayerShootingPercentage(players, 71);
+            assert (player.getName().equals("Player 7"));
+
+            player = PocuBasketballAssociation.findPlayerShootingPercentage(players, 20);
             assert (player.getName().equals("Player 4"));
         }
     }

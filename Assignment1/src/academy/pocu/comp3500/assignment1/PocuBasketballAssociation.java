@@ -160,12 +160,12 @@ public final class PocuBasketballAssociation {
 
         if (currValue == targetValue) {
             return mid;
-        } else if (prevValue < targetValue && targetValue < currValue) {
+        } else if (prevValue <= targetValue && targetValue < currValue) {
             int prevDiff = targetValue - prevValue;
             int currDiff = currValue - targetValue;
 
             return (prevDiff < currDiff ? mid - 1 : mid);
-        } else if (currValue < targetValue && targetValue < nextValue) {
+        } else if (currValue < targetValue && targetValue <= nextValue) {
             int currDiff = targetValue - currValue;
             int nextDiff = nextValue - currValue;
 
@@ -204,12 +204,12 @@ public final class PocuBasketballAssociation {
 
         if (currValue == targetValue) {
             return mid;
-        } else if (prevValue < targetValue && targetValue < currValue) {
+        } else if (prevValue <= targetValue && targetValue < currValue) {
             int prevDiff = targetValue - prevValue;
             int currDiff = currValue - targetValue;
 
             return (prevDiff < currDiff ? mid - 1 : mid);
-        } else if (currValue < targetValue && targetValue < nextValue) {
+        } else if (currValue < targetValue && targetValue <= nextValue) {
             int currDiff = targetValue - currValue;
             int nextDiff = nextValue - currValue;
 
