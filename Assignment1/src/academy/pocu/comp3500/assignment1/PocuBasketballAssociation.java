@@ -137,89 +137,93 @@ public final class PocuBasketballAssociation {
 
     private static int indexOfTargetPointRecursive(Player[] players, int start, int end, int targetValue) {
         if (start >= end) {
-            return start;
+            if (players.length == 1) {
+                return start;
+            }
+
+            int index = start;
+
+            if (index - 1 < 0) {
+                int currDiff = Math.abs(targetValue - players[index].getPointsPerGame());
+                int nextDiff = Math.abs(targetValue - players[index + 1].getPointsPerGame());
+
+                index = currDiff < nextDiff ? index : index + 1;
+            } else if (index + 1 >= players.length) {
+                int prevDiff = Math.abs(targetValue - players[index - 1].getPointsPerGame());
+                int currDiff = Math.abs(targetValue - players[index].getPointsPerGame());
+
+                index = prevDiff < currDiff ? index - 1 : index;
+            } else {
+                int prevDiff = Math.abs(targetValue - players[index - 1].getPointsPerGame());
+                int currDiff = Math.abs(targetValue - players[index].getPointsPerGame());
+                int nextDiff = Math.abs(targetValue - players[index + 1].getPointsPerGame());
+
+                if (prevDiff < currDiff) {
+                    index = index - 1;
+                } else if (nextDiff <= currDiff) {
+                    index = index + 1;
+                }
+            }
+
+            return index;
         }
 
         int mid = (start + end) / 2;
 
-        if (mid - 1 < 0) {
-            int currDiff = Math.abs(players[mid].getPointsPerGame() - targetValue);
-            int nextDiff = Math.abs(players[mid + 1].getPointsPerGame() - targetValue);
-
-            return (currDiff < nextDiff ? mid : mid + 1);
-        } else if (mid + 1 >= players.length) {
-            int prevDiff = Math.abs(players[mid - 1].getPointsPerGame() - targetValue);
-            int currDiff = Math.abs(players[mid].getPointsPerGame() - targetValue);
-
-            return (prevDiff < currDiff ? mid - 1 : mid);
-        }
-
-        int prevValue = players[mid - 1].getPointsPerGame();
-        int currValue = players[mid].getPointsPerGame();
-        int nextValue = players[mid + 1].getPointsPerGame();
-
-        if (currValue == targetValue) {
+        if (players[mid].getPointsPerGame() == targetValue) {
             return mid;
-        } else if (prevValue <= targetValue && targetValue < currValue) {
-            int prevDiff = targetValue - prevValue;
-            int currDiff = currValue - targetValue;
-
-            return (prevDiff < currDiff ? mid - 1 : mid);
-        } else if (currValue < targetValue && targetValue <= nextValue) {
-            int currDiff = targetValue - currValue;
-            int nextDiff = nextValue - currValue;
-
-            return (currDiff < nextDiff ? mid : mid + 1);
         }
 
-        if (players[mid].getPointsPerGame() < targetValue) {
-            return indexOfTargetPointRecursive(players, mid + 1, end, targetValue);
-        } else {
+        if (players[mid].getPointsPerGame() > targetValue) {
             return indexOfTargetPointRecursive(players, start, mid - 1, targetValue);
+        } else {
+            return indexOfTargetPointRecursive(players, mid + 1, end, targetValue);
         }
     }
 
     private static int indexOfTargetShootingRecursive(Player[] players, int start, int end, int targetValue) {
         if (start >= end) {
-            return start;
+            if (players.length == 1) {
+                return start;
+            }
+
+            int index = start;
+
+            if (index - 1 < 0) {
+                int currDiff = Math.abs(targetValue - players[index].getShootingPercentage());
+                int nextDiff = Math.abs(targetValue - players[index + 1].getShootingPercentage());
+
+                index = currDiff < nextDiff ? index : index + 1;
+            } else if (index + 1 >= players.length) {
+                int prevDiff = Math.abs(targetValue - players[index - 1].getShootingPercentage());
+                int currDiff = Math.abs(targetValue - players[index].getShootingPercentage());
+
+                index = prevDiff < currDiff ? index - 1 : index;
+            } else {
+                int prevDiff = Math.abs(targetValue - players[index - 1].getShootingPercentage());
+                int currDiff = Math.abs(targetValue - players[index].getShootingPercentage());
+                int nextDiff = Math.abs(targetValue - players[index + 1].getShootingPercentage());
+
+                if (prevDiff < currDiff) {
+                    index = index - 1;
+                } else if (nextDiff <= currDiff) {
+                    index = index + 1;
+                }
+            }
+
+            return index;
         }
 
         int mid = (start + end) / 2;
 
-        if (mid - 1 < 0) {
-            int currDiff = Math.abs(players[mid].getShootingPercentage() - targetValue);
-            int nextDiff = Math.abs(players[mid + 1].getShootingPercentage() - targetValue);
-
-            return (currDiff < nextDiff ? mid : mid + 1);
-        } else if (mid + 1 >= players.length) {
-            int prevDiff = Math.abs(players[mid - 1].getShootingPercentage() - targetValue);
-            int currDiff = Math.abs(players[mid].getShootingPercentage() - targetValue);
-
-            return (prevDiff < currDiff ? mid - 1 : mid);
-        }
-
-        int prevValue = players[mid - 1].getShootingPercentage();
-        int currValue = players[mid].getShootingPercentage();
-        int nextValue = players[mid + 1].getShootingPercentage();
-
-        if (currValue == targetValue) {
+        if (players[mid].getShootingPercentage() == targetValue) {
             return mid;
-        } else if (prevValue <= targetValue && targetValue < currValue) {
-            int prevDiff = targetValue - prevValue;
-            int currDiff = currValue - targetValue;
-
-            return (prevDiff < currDiff ? mid - 1 : mid);
-        } else if (currValue < targetValue && targetValue <= nextValue) {
-            int currDiff = targetValue - currValue;
-            int nextDiff = nextValue - currValue;
-
-            return (currDiff < nextDiff ? mid : mid + 1);
         }
 
-        if (currValue < targetValue) {
-            return indexOfTargetShootingRecursive(players, mid + 1, end, targetValue);
-        } else {
+        if (players[mid].getShootingPercentage() > targetValue) {
             return indexOfTargetShootingRecursive(players, start, mid - 1, targetValue);
+        } else {
+            return indexOfTargetShootingRecursive(players, mid + 1, end, targetValue);
         }
     }
 }

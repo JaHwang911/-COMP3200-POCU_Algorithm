@@ -58,21 +58,6 @@ public class Program {
 
         {
             Player[] players = new Player[] {
-                    new Player("Player 1", 5, 5, 1, 60)
-            };
-
-            Player player = PocuBasketballAssociation.findPlayerPointsPerGame(players, 5);
-            assert (player.getName().equals("Player 1"));
-
-            player = PocuBasketballAssociation.findPlayerPointsPerGame(players, 1);
-            assert (player.getName().equals("Player 1"));
-
-            player = PocuBasketballAssociation.findPlayerPointsPerGame(players, 10);
-            assert (player.getName().equals("Player 1"));
-        }
-
-        {
-            Player[] players = new Player[] {
                     new Player("Player 1", 5, 5, 1, 60),
                     new Player("Player 2", 10, 5, 1, 60)
             };
@@ -97,6 +82,21 @@ public class Program {
 
             player = PocuBasketballAssociation.findPlayerPointsPerGame(players, 15);
             assert (player.getName().equals("Player 2"));
+        }
+
+        {
+            Player[] players = new Player[] {
+                    new Player("Player 1", 5, 5, 1, 60)
+            };
+
+            Player player = PocuBasketballAssociation.findPlayerPointsPerGame(players, 5);
+            assert (player.getName().equals("Player 1"));
+
+            player = PocuBasketballAssociation.findPlayerPointsPerGame(players, 1);
+            assert (player.getName().equals("Player 1"));
+
+            player = PocuBasketballAssociation.findPlayerPointsPerGame(players, 10);
+            assert (player.getName().equals("Player 1"));
         }
     }
 
