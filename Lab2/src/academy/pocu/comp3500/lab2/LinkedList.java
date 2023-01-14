@@ -172,16 +172,4 @@ public final class LinkedList {
 
         return root0OrNull;
     }
-
-    private static int getNodeLength(final Node root) {
-        int result = 0;
-        Node current = root;
-
-        while (current != null) {
-            current = current.getNextOrNull();
-            ++result;
-        }
-
-        return result;
-    }
 }
