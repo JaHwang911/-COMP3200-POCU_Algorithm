@@ -302,6 +302,253 @@ public class Program {
             long maxTeamwork = PocuBasketballAssociation.find3ManDreamTeam(players, outPlayers, scratch);
             assert (maxTeamwork == 30);
         }
+
+        {
+            Player[] players = new Player[] {
+                    new Player("Player 5", 11, 15, 25, 54),
+                    new Player("Player 2", 5, 12, 17, 50),
+                    new Player("Player 6", 15, 9, 10, 40),
+                    new Player("Player 1", 1, 7, 8, 22),
+                    new Player("Player 7", 16, 6, 5, 77),
+                    new Player("Player 9", 42, 4, 4, 56),
+                    new Player("Player 8", 33, 3, 3, 72),
+                    new Player("Player 4", 10, 1, 1, 88),
+            };
+
+            Player[] outPlayers0 = new Player[4];
+            Player[] scratch0 = new Player[4];
+
+            int teamSize = PocuBasketballAssociation.findDreamTeamSize(players, scratch0);
+            System.out.printf("#### Team size: %d #### \n", teamSize);
+
+            long maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, 4, outPlayers0, scratch0);
+            assert (maxTeamwork == 420);
+
+            Player player = getPlayerOrNull(outPlayers0, "Player 5");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers0, "Player 2");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers0, "Player 6");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers0, "Player 1");
+            assert (player != null);
+
+            Player[] outPlayers1 = new Player[5];
+            Player[] scratch1 = new Player[5];
+
+            maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, 5, outPlayers1, scratch1);
+            assert (maxTeamwork == 390);
+
+            player = getPlayerOrNull(outPlayers1, "Player 5");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers1, "Player 2");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers1, "Player 6");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers1, "Player 1");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers1, "Player 7");
+            assert (player != null);
+
+            Player[] outPlayers2 = new Player[6];
+            Player[] scratch2 = new Player[6];
+
+            maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, 6, outPlayers2, scratch2);
+            assert (maxTeamwork == 276);
+
+            player = getPlayerOrNull(outPlayers2, "Player 5");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers2, "Player 2");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers2, "Player 6");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers2, "Player 1");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers2, "Player 7");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers2, "Player 9");
+            assert (player != null);
+
+            Player[] outPlayers3 = new Player[7];
+            Player[] scratch3 = new Player[7];
+
+            maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, 7, outPlayers3, scratch3);
+            assert (maxTeamwork == 216);
+
+            player = getPlayerOrNull(outPlayers3, "Player 5");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers3, "Player 2");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers3, "Player 6");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers3, "Player 1");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers3, "Player 7");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers3, "Player 9");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers3, "Player 8");
+            assert (player != null);
+
+            Player[] outPlayers4 = new Player[8];
+            Player[] scratch4 = new Player[8];
+
+            maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, 8, outPlayers4, scratch4);
+            assert (maxTeamwork == 73);
+
+            player = getPlayerOrNull(outPlayers4, "Player 5");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers4, "Player 2");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers4, "Player 6");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers4, "Player 1");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers4, "Player 7");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers4, "Player 9");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers4, "Player 8");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers4, "Player 4");
+            assert (player != null);
+        }
+
+        {
+            Player[] players = new Player[] {
+                    new Player("Player 5", 11, 2, 25, 54),
+                    new Player("Player 2", 5, 3, 17, 50),
+                    new Player("Player 6", 15, 5, 10, 40),
+                    new Player("Player 1", 1, 7, 8, 22),
+                    new Player("Player 7", 16, 9, 5, 77),
+                    new Player("Player 9", 42, 10, 4, 56),
+                    new Player("Player 8", 33, 13, 3, 72),
+                    new Player("Player 4", 10, 16, 1, 88),
+            };
+
+            Player[] outPlayer = new Player[4];
+            Player[] scratch = new Player[4];
+
+            int teamSize = PocuBasketballAssociation.findDreamTeamSize(players, scratch);
+            System.out.printf("#### Team size: %d #### \n", teamSize);
+
+            long maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, 4, outPlayer, scratch);
+            assert (maxTeamwork == 140);
+
+            Player player = getPlayerOrNull(outPlayer, "Player 1");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer, "Player 7");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer, "Player 9");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer, "Player 8");
+            assert (player != null);
+
+            Player[] outPlayer1 = new Player[5];
+            Player[] scratch1 = new Player[5];
+
+            maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, 5, outPlayer1, scratch1);
+            assert (maxTeamwork == 150);
+
+            player = getPlayerOrNull(outPlayer1, "Player 6");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer1, "Player 1");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer1, "Player 7");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer1, "Player 9");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer1, "Player 8");
+            assert (player != null);
+
+            Player[] outPlayer2 = new Player[6];
+            Player[] scratch2 = new Player[6];
+
+            maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, 6, outPlayer2, scratch2);
+            assert (maxTeamwork == 155);
+
+            player = getPlayerOrNull(outPlayer2, "Player 6");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer2, "Player 1");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer2, "Player 7");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer2, "Player 9");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer2, "Player 8");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer2, "Player 4");
+            assert (player != null);
+
+            Player[] outPlayer3 = new Player[7];
+            Player[] scratch3 = new Player[7];
+
+            maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, 7, outPlayer3, scratch3);
+            assert (maxTeamwork == 144);
+
+            player = getPlayerOrNull(outPlayer3, "Player 5");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer3, "Player 2");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer3, "Player 6");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer3, "Player 1");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer3, "Player 7");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer3, "Player 9");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer3, "Player 8");
+            assert (player != null);
+
+            Player[] outPlayer4 = new Player[8];
+            Player[] scratch4 = new Player[8];
+
+            maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, 8, outPlayer4, scratch4);
+            assert (maxTeamwork == 146);
+
+            player = getPlayerOrNull(outPlayer4, "Player 5");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer4, "Player 2");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer4, "Player 6");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer4, "Player 1");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer4, "Player 7");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer4, "Player 9");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer4, "Player 8");
+            assert (player != null);
+            player = getPlayerOrNull(outPlayer4, "Player 4");
+            assert (player != null);
+        }
     }
 
     private static Player getPlayerOrNull(final Player[] players, final String id) {

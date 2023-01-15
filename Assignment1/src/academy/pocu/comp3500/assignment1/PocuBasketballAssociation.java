@@ -73,11 +73,15 @@ public final class PocuBasketballAssociation {
     }
 
     public static long findDreamTeam(final Player[] players, int k, final Player[] outPlayers, final Player[] scratch) {
+        assert (players.length >= k);
+        assert (outPlayers.length == k);
+        assert (scratch.length == k);
+
         sortByPassesDescendingRecursive(players, 0, players.length - 1);
 
         int maxTeamworkScore = 0;
 
-        for (int i = 0; i < players.length - k + 1; ++i) {
+        for (int i = 0; i < players.length; ++i) {
             int tmpTeamwork = 0;
             int scratchIndex = 0;
 
@@ -107,24 +111,6 @@ public final class PocuBasketballAssociation {
                     outPlayers[j] = scratch[j];
                 }
             }
-        }
-
-        if (outPlayers[0] == null) {
-            assert (maxTeamworkScore == 0);
-            assert (players.length == k);
-
-            int minAssist = players[0].getAssistsPerGame();
-
-            for (int i = 0; i < players.length; ++i) {
-                outPlayers[i] = players[i];
-                maxTeamworkScore += players[i].getPassesPerGame();
-
-                if (minAssist > players[i].getAssistsPerGame()) {
-                    minAssist = players[i].getAssistsPerGame();
-                }
-            }
-
-            maxTeamworkScore *= minAssist;
         }
 
         return maxTeamworkScore;
