@@ -110,6 +110,9 @@ public final class PocuBasketballAssociation {
         }
 
         if (outPlayers[0] == null) {
+            assert (maxTeamworkScore == 0);
+            assert (players.length == k);
+
             int minAssist = players[0].getAssistsPerGame();
 
             for (int i = 0; i < players.length; ++i) {

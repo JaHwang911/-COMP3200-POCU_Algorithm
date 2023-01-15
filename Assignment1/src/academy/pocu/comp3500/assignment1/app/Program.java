@@ -211,7 +211,7 @@ public class Program {
             assert (maxTeamwork == 219);
         }
 
-        { // Killing test
+        { // Killing test f01
             Player[] players = new Player[] {
                     new Player("Player 2", 5, 5, 17, 50),
                     new Player("Player 6", 15, 4, 10, 40),
