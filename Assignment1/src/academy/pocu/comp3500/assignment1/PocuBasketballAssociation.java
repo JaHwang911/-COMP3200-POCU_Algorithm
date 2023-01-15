@@ -113,6 +113,24 @@ public final class PocuBasketballAssociation {
             }
         }
 
+        if (outPlayers[0] == null) {
+            assert (players.length == outPlayers.length);
+            
+            int minAssist = players[0].getAssistsPerGame();
+            int sumPasses = 0;
+
+            for (int i = 0; i < players.length; ++i) {
+                sumPasses += players[i].getPassesPerGame();
+                outPlayers[i] = players[i];
+
+                if (minAssist > players[i].getAssistsPerGame()) {
+                    minAssist = players[i].getAssistsPerGame();
+                }
+            }
+            
+            maxTeamworkScore = sumPasses * minAssist;
+        }
+
         return maxTeamworkScore;
     }
 

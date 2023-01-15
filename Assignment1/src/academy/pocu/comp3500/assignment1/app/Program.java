@@ -76,6 +76,20 @@ public class Program {
             player = getPlayerOrNull(outPlayers, "Player 5");
             assert (player != null);
         }
+
+        {
+            Player[] players = new Player[] {
+                    new Player("Player 2", 5, 12, 14, 50),
+                    new Player("Player 6", 15, 2, 5, 40),
+                    new Player("Player 5", 11, 1, 11, 54),
+            };
+
+            Player[] outPlayers = new Player[3];
+            Player[] scratch = new Player[3];
+
+            long maxTeamwork = PocuBasketballAssociation.find3ManDreamTeam(players, outPlayers, scratch);
+            assert (maxTeamwork == 30);
+        }
     }
 
     private static Player getPlayerOrNull(Player[] players, String name) {
