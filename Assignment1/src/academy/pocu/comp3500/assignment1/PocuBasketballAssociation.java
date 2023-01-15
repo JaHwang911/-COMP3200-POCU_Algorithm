@@ -77,28 +77,11 @@ public final class PocuBasketballAssociation {
 
         int maxTeamworkScore = 0;
 
-        if (players.length == k) {
-            int minAssist = players[0].getAssistsPerGame();
-
-            for (int i = 0; i < players.length; ++i) {
-                outPlayers[i] = players[i];
-                maxTeamworkScore += players[i].getPassesPerGame();
-
-                if (minAssist > players[i].getAssistsPerGame()) {
-                    minAssist = players[i].getAssistsPerGame();
-                }
-            }
-
-            return maxTeamworkScore * minAssist;
-        }
-
         for (int i = 0; i < players.length - k + 1; ++i) {
-            int tmpTeamwork = players[i].getPassesPerGame();
+            int tmpTeamwork = 0;
             int scratchIndex = 0;
 
-            scratch[scratchIndex++] = players[i];
-
-            for (int j = i + 1; j < players.length; ++j) {
+            for (int j = 0; j < players.length; ++j) {
                 if (players[j].getAssistsPerGame() < players[i].getAssistsPerGame()) {
                     continue;
                 }
@@ -124,6 +107,21 @@ public final class PocuBasketballAssociation {
                     outPlayers[j] = scratch[j];
                 }
             }
+        }
+
+        if (outPlayers[0] == null) {
+            int minAssist = players[0].getAssistsPerGame();
+
+            for (int i = 0; i < players.length; ++i) {
+                outPlayers[i] = players[i];
+                maxTeamworkScore += players[i].getPassesPerGame();
+
+                if (minAssist > players[i].getAssistsPerGame()) {
+                    minAssist = players[i].getAssistsPerGame();
+                }
+            }
+
+            maxTeamworkScore *= minAssist;
         }
 
         return maxTeamworkScore;
