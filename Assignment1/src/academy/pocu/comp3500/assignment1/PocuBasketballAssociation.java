@@ -73,12 +73,44 @@ public final class PocuBasketballAssociation {
     }
 
     public static long findDreamTeam(final Player[] players, int k, final Player[] outPlayers, final Player[] scratch) {
-        sortByAssistRecursive(players, 0, players.length - 1);
+        sortByPassesDescendingRecursive(players, 0, players.length - 1);
 
-        int maxTeamworkScore = -1;
+        int maxTeamworkScore = 0;
 
-        for (int i = 0; i < players.length; ++i) {
+        for (int i = 0; i < players.length - k + 1; ++i) {
+            int tmpTeamwork = players[i].getPassesPerGame();
+            int scratchIndex = 0;
 
+            scratch[scratchIndex++] = players[i];
+
+            for (int j = i + 1; j < players.length; ++j) {
+                if (players[j].getAssistsPerGame() < players[i].getAssistsPerGame()) {
+                    continue;
+                }
+
+                scratch[scratchIndex++] = players[j];
+                tmpTeamwork += players[j].getPassesPerGame();
+
+                if (scratchIndex == k) {
+                    break;
+                }
+            }
+
+            if (scratchIndex < k) {
+                continue;
+            }
+
+            tmpTeamwork *= players[i].getAssistsPerGame();
+
+            if (tmpTeamwork > maxTeamworkScore) {
+                maxTeamworkScore = tmpTeamwork;
+
+                for (int j = 0; j < scratch.length; ++j) {
+                    outPlayers[j] = scratch[j];
+                }
+            } else {
+                break;
+            }
         }
 
         return maxTeamworkScore;
@@ -101,20 +133,6 @@ public final class PocuBasketballAssociation {
         }
 
         return index + 1;
-    }
-
-    private static int getTeamworkScore(final Player[] players, int start, final Player[] scratch) {
-        for (int i = 0; i < scratch.length; ++i) {
-            scratch[i] = null;
-        }
-
-        int max = players[start].getPassesPerGame();
-        int min = players[start].getPassesPerGame();
-
-        for (int i = start + 1; i < players.length - 1; ++i) {
-        }
-
-        return 0;
     }
 
     private static void sortByPlayersNameRecursive(final GameStat[] gameStats, int left, int right) {
@@ -143,7 +161,7 @@ public final class PocuBasketballAssociation {
         sortByPlayersNameRecursive(gameStats, i + 1, right);
     }
 
-    public static void sortByAssistRecursive(Player[] players, int left, int right) {
+    public static void sortByPassesDescendingRecursive(Player[] players, int left, int right) {
         if (left >= right) {
             return;
         }
@@ -151,7 +169,7 @@ public final class PocuBasketballAssociation {
         int i = left;
 
         for (int j = i; j < right; ++j) {
-            if (players[j].getAssistsPerGame() < players[right].getAssistsPerGame()) {
+            if (players[j].getPassesPerGame() >= players[right].getPassesPerGame()) {
                 Player tmp = players[j];
                 players[j] = players[i];
                 players[i] = tmp;
@@ -164,8 +182,8 @@ public final class PocuBasketballAssociation {
         players[i] = players[right];
         players[right] = tmp;
 
-        sortByAssistRecursive(players, left, i - 1);
-        sortByAssistRecursive(players, i + 1, right);
+        sortByPassesDescendingRecursive(players, left, i - 1);
+        sortByPassesDescendingRecursive(players, i + 1, right);
     }
 
     private static void sortByAssistDescendingRecursive(Player[] players, int left, int right) {

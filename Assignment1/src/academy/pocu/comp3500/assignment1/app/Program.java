@@ -7,27 +7,87 @@ import academy.pocu.comp3500.assignment1.pba.Player;
 public class Program {
 
     public static void main(String[] args) {
-        testFindDreamTeamSize();
+        testFindDreamTeam();
     }
 
-    private static void testFindDreamTeamSize() {
-        Player[] players = new Player[] {
-                new Player("Player 1", 2, 5, 10, 78),
-                new Player("Player 2", 10, 4, 5, 66),
-                new Player("Player 3", 3, 3, 2, 22),
-                new Player("Player 4", 1, 9, 8, 12),
-                new Player("Player 5", 11, 1, 12, 26),
-                new Player("Player 6", 7, 2, 10, 15),
-                new Player("Player 7", 8, 15, 3, 11),
-                new Player("Player 8", 5, 7, 13, 5),
-                new Player("Player 9", 8, 2, 7, 67),
-                new Player("Player 10", 1, 11, 1, 29),
-                new Player("Player 11", 2, 6, 9, 88)
-        };
+    private static void testFindDreamTeam() {
+        {
+            Player[] players = new Player[] {
+                    new Player("Player 2", 5, 12, 14, 50),
+                    new Player("Player 6", 15, 2, 5, 40),
+                    new Player("Player 5", 11, 1, 11, 54),
+                    new Player("Player 4", 10, 3, 51, 88),
+                    new Player("Player 7", 16, 8, 5, 77),
+                    new Player("Player 1", 1, 15, 2, 22),
+                    new Player("Player 3", 7, 5, 8, 66)
+            };
 
-        Player[] scratch = new Player[players.length];
+            Player[] outPlayers = new Player[3];
+            Player[] scratch = new Player[3];
 
-        int k = PocuBasketballAssociation.findDreamTeamSize(players, scratch);
-        assert (k == 6);
+            long maxTeamwork = PocuBasketballAssociation.find3ManDreamTeam(players, outPlayers, scratch);
+            assert (maxTeamwork == 219);
+        }
+
+        {
+            Player[] players = new Player[] {
+                    new Player("Player 2", 5, 5, 17, 50),
+                    new Player("Player 6", 15, 4, 10, 40),
+                    new Player("Player 5", 11, 3, 25, 54),
+                    new Player("Player 4", 10, 9, 1, 88),
+                    new Player("Player 7", 16, 7, 5, 77),
+                    new Player("Player 1", 1, 2, 8, 22),
+                    new Player("Player 9", 42, 15, 4, 56),
+                    new Player("Player 8", 33, 11, 3, 72),
+            };
+
+            int k = 4;
+            Player[] outPlayers = new Player[4];
+            Player[] scratch = new Player[k];
+
+            long maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, k, outPlayers, scratch);
+            assert (maxTeamwork == 171);
+        }
+
+        {
+            Player[] players = new Player[] {
+                    new Player("Player 2", 5, 2, 14, 50),
+                    new Player("Player 6", 15, 2, 5, 40),
+                    new Player("Player 5", 11, 2, 11, 54),
+                    new Player("Player 4", 10, 2, 51, 88),
+                    new Player("Player 7", 16, 2, 5, 77),
+                    new Player("Player 1", 1, 2, 2, 22),
+                    new Player("Player 3", 7, 2, 8, 66)
+            };
+
+            Player[] outPlayers = new Player[3];
+            Player[] scratch = new Player[3];
+
+            long maxTeamwork = PocuBasketballAssociation.find3ManDreamTeam(players, outPlayers, scratch);
+
+            assert (maxTeamwork == 152);
+
+            Player player = getPlayerOrNull(outPlayers, "Player 4");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers, "Player 2");
+            assert (player != null);
+
+            player = getPlayerOrNull(outPlayers, "Player 5");
+            assert (player != null);
+        }
+    }
+
+    private static Player getPlayerOrNull(Player[] players, String name) {
+        Player result = null;
+
+        for (int i = 0; i < players.length; ++i) {
+            if (players[i].getName().equals(name)) {
+                result = players[i];
+                break;
+            }
+        }
+
+        return result;
     }
 }
