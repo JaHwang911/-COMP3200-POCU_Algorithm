@@ -90,6 +90,23 @@ public class Program {
             long maxTeamwork = PocuBasketballAssociation.find3ManDreamTeam(players, outPlayers, scratch);
             assert (maxTeamwork == 30);
         }
+
+        {
+            Player[] players = new Player[] {
+                    new Player("Player 1", -1, 99999999, 2, -1),
+                    new Player("Player 2", -1, 99999999, 1, -1),
+                    new Player("Player 3", -1, 100, 0, -1),
+                    new Player("Player 4", -1, 2, 102, -1),
+                    new Player("Player 5", -1, 1, 296, -1),
+            };
+
+            Player[] outPlayers = new Player[3];
+            Player[] scratch = new Player[3];
+
+            long maxTeamwork = PocuBasketballAssociation.find3ManDreamTeam(players, outPlayers, scratch);
+            assert maxTeamwork == 400;
+
+        }
     }
 
     private static Player getPlayerOrNull(Player[] players, String name) {

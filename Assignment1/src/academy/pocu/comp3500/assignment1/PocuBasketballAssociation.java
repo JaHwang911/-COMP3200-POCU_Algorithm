@@ -77,6 +77,21 @@ public final class PocuBasketballAssociation {
 
         int maxTeamworkScore = 0;
 
+        if (players.length == k) {
+            int minAssist = players[0].getAssistsPerGame();
+
+            for (int i = 0; i < players.length; ++i) {
+                outPlayers[i] = players[i];
+                maxTeamworkScore += players[i].getPassesPerGame();
+
+                if (minAssist > players[i].getAssistsPerGame()) {
+                    minAssist = players[i].getAssistsPerGame();
+                }
+            }
+
+            return maxTeamworkScore * minAssist;
+        }
+
         for (int i = 0; i < players.length - k + 1; ++i) {
             int tmpTeamwork = players[i].getPassesPerGame();
             int scratchIndex = 0;
@@ -108,27 +123,7 @@ public final class PocuBasketballAssociation {
                 for (int j = 0; j < scratch.length; ++j) {
                     outPlayers[j] = scratch[j];
                 }
-            } else {
-                break;
             }
-        }
-
-        if (outPlayers[0] == null) {
-            assert (players.length == outPlayers.length);
-            
-            int minAssist = players[0].getAssistsPerGame();
-            int sumPasses = 0;
-
-            for (int i = 0; i < players.length; ++i) {
-                sumPasses += players[i].getPassesPerGame();
-                outPlayers[i] = players[i];
-
-                if (minAssist > players[i].getAssistsPerGame()) {
-                    minAssist = players[i].getAssistsPerGame();
-                }
-            }
-            
-            maxTeamworkScore = sumPasses * minAssist;
         }
 
         return maxTeamworkScore;
