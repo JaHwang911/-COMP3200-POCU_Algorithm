@@ -7,8 +7,7 @@ public final class MissionControl {
     }
 
     public static int findMaxAltitudeTime(final int[] altitudes) {
-        int index = findIndexMaxAltitudeTimeRecursive(altitudes, 0, altitudes.length - 1);
-        return altitudes[index];
+        return findIndexMaxAltitudeTimeRecursive(altitudes, 0, altitudes.length - 1);
     }
 
     private static int findIndexMaxAltitudeTimeRecursive(final int[] altitudes, int start, int end) {
@@ -18,7 +17,11 @@ public final class MissionControl {
 
         int mid = (start + end) / 2;
 
-        if (altitudes[start] <= altitudes[mid]) {
+        if (altitudes[mid - 1] < altitudes[mid] && altitudes[mid + 1] < altitudes[mid]) {
+            return mid;
+        }
+
+        if (altitudes[start] < altitudes[mid]) {
             return findIndexMaxAltitudeTimeRecursive(altitudes, mid + 1, end);
         } else {
             return findIndexMaxAltitudeTimeRecursive(altitudes, start, mid - 1);
