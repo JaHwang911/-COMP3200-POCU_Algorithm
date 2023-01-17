@@ -33,25 +33,23 @@ public final class MissionControl {
     }
 
     private static void findTargetAltitudeRecursive(final int[] altitudes, int start, int end, final int targetAltitude, ArrayList<Integer> out) {
-        if (start >= end) {
+        if (end - start <= 1) {
             if (altitudes[start] == targetAltitude) {
                 out.add(start);
-                return;
+            } else if (altitudes[end] == targetAltitude) {
+                out.add(end);
             }
+
+            return;
         }
 
         int mid = (start + end) / 2;
 
-        if (altitudes[mid] == targetAltitude) {
-            out.add(mid);
-            return;
-        }
-
-        if (altitudes[start] < altitudes[mid]) {
+        if (altitudes[start] <= targetAltitude && altitudes[mid] > targetAltitude) {
             findTargetAltitudeRecursive(altitudes, start, mid - 1, targetAltitude, out);
         }
 
-        if (altitudes[mid] > altitudes[end]) {
+        if (altitudes[mid] > targetAltitude && altitudes[end] <= targetAltitude) {
             findTargetAltitudeRecursive(altitudes, mid + 1, end, targetAltitude, out);
         }
     }
