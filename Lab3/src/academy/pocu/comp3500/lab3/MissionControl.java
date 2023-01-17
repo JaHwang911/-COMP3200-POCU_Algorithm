@@ -7,37 +7,42 @@ public final class MissionControl {
     }
 
     public static int findMaxAltitudeTime(final int[] altitudes) {
-        return maxAltitudeTimeRecursive(altitudes, 0, altitudes.length - 1);
+        int index = findIndexMaxAltitudeTimeRecursive(altitudes, 0, altitudes.length - 1);
+        return altitudes[index];
     }
 
-    private static int maxAltitudeTimeRecursive(final int[] altitudes, int start, int end) {
+    private static int findIndexMaxAltitudeTimeRecursive(final int[] altitudes, int start, int end) {
         if (end - start <= 1) {
-            return Math.max(altitudes[start], altitudes[end]);
+            return altitudes[end] > altitudes[start] ? end : start;
         }
 
         int mid = (start + end) / 2;
 
         if (altitudes[start] <= altitudes[mid]) {
-            return maxAltitudeTimeRecursive(altitudes, mid + 1, end);
+            return findIndexMaxAltitudeTimeRecursive(altitudes, mid + 1, end);
         } else {
-            return maxAltitudeTimeRecursive(altitudes, start, mid - 1);
+            return findIndexMaxAltitudeTimeRecursive(altitudes, start, mid - 1);
         }
     }
 
     public static ArrayList<Integer> findAltitudeTimes(final int[] altitudes, final int targetAltitude) {
         ArrayList<Integer> result = new ArrayList<>(32);
+        int index = findIndexMaxAltitudeTimeRecursive(altitudes, 0, altitudes.length - 1);
 
-        findTargetAltitudeRecursive(altitudes, 0, altitudes.length - 1, targetAltitude, result);
+        if (index < altitudes.length - 1) {
+            findTargetAltitudeRecursive(altitudes, 0, index, targetAltitude, result);
+            findTargetAltitudeRecursive(altitudes, index + 1, altitudes.length - 1, targetAltitude, result);
+        } else {
+            findTargetAltitudeRecursive(altitudes, 0, altitudes.length - 1, targetAltitude, result);
+        }
 
         return result;
     }
 
     private static void findTargetAltitudeRecursive(final int[] altitudes, int start, int end, final int targetAltitude, ArrayList<Integer> out) {
-        if (end - start <= 1) {
+        if (start >= end) {
             if (altitudes[start] == targetAltitude) {
                 out.add(start);
-            } else if (altitudes[end] == targetAltitude) {
-                out.add(end);
             }
 
             return;
@@ -45,12 +50,23 @@ public final class MissionControl {
 
         int mid = (start + end) / 2;
 
-        if (altitudes[start] <= targetAltitude && altitudes[mid] > targetAltitude) {
-            findTargetAltitudeRecursive(altitudes, start, mid - 1, targetAltitude, out);
+        if (altitudes[mid] == targetAltitude) {
+            out.add(mid);
+            return;
         }
 
-        if (altitudes[mid] > targetAltitude && altitudes[end] <= targetAltitude) {
-            findTargetAltitudeRecursive(altitudes, mid + 1, end, targetAltitude, out);
+        if (altitudes[start] < altitudes[end]) {
+            if (altitudes[mid] > targetAltitude) {
+                findTargetAltitudeRecursive(altitudes, start, mid - 1, targetAltitude, out);
+            } else {
+                findTargetAltitudeRecursive(altitudes, mid + 1, end, targetAltitude, out);
+            }
+        } else {
+            if (altitudes[mid] > targetAltitude) {
+                findTargetAltitudeRecursive(altitudes, mid + 1, end, targetAltitude, out);
+            } else {
+                findTargetAltitudeRecursive(altitudes, start, mid - 1, targetAltitude, out);
+            }
         }
     }
 }
