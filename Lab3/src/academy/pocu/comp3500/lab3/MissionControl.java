@@ -21,7 +21,7 @@ public final class MissionControl {
             return mid;
         }
 
-        if (altitudes[start] < altitudes[mid]) {
+        if (altitudes[mid - 1] < altitudes[mid]) {
             return findIndexMaxAltitudeTimeRecursive(altitudes, mid + 1, end);
         } else {
             return findIndexMaxAltitudeTimeRecursive(altitudes, start, mid - 1);
