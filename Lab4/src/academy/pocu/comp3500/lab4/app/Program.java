@@ -4,25 +4,17 @@ import academy.pocu.comp3500.lab4.Cracker;
 import academy.pocu.comp3500.lab4.pocuhacker.RainbowTable;
 import academy.pocu.comp3500.lab4.pocuhacker.User;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Program {
 
     public static void main(String[] args) {
-        final String email = "notahacker@not.a.hacker";
-        final String password = "notahackerpassword";
-
-        final String normalUser1 = "john.smith@te.st";
-        final String normalUser2 = "hong.gil.dong@nor.mal";
-
-        User[] userTable = new User[]{
-                new User("001", normalUser1, "2418662205"),
-                new User("004", email, "632000577"),
-                new User("011", normalUser2, "477404077")
-        };
-
-        Cracker cracker = new Cracker(userTable, email, password);
+        testOfficial();
 
         System.out.println("No prob lab 4");
     }
