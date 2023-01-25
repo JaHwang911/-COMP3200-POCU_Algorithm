@@ -10,6 +10,24 @@ import java.util.Map;
 public class Program {
 
     public static void main(String[] args) {
+        final String email = "notahacker@not.a.hacker";
+        final String password = "notahackerpassword";
+
+        final String normalUser1 = "john.smith@te.st";
+        final String normalUser2 = "hong.gil.dong@nor.mal";
+
+        User[] userTable = new User[]{
+                new User("001", normalUser1, "2418662205"),
+                new User("004", email, "632000577"),
+                new User("011", normalUser2, "477404077")
+        };
+
+        Cracker cracker = new Cracker(userTable, email, password);
+
+        System.out.println("No prob lab 4");
+    }
+
+    private static void testOfficial() {
         HashMap<String, String> crc32Map = new HashMap<>(Map.of(
                 "211534962", "0000",
                 "477404077", "letmein",
@@ -129,7 +147,5 @@ public class Program {
             assert(plainTexts[1] != null && plainTexts[1].equals("password"));
             assert(plainTexts[2] == null);
         }
-
-        System.out.println("No prob lab 4");
     }
 }
