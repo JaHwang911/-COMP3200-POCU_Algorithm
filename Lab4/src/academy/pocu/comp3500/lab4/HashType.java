@@ -4,7 +4,7 @@ public enum HashType {
     NONE,
     CRC32,
     MD2,
-    MD5 ,
+    MD5,
     SHA1,
     SHA256
 }
