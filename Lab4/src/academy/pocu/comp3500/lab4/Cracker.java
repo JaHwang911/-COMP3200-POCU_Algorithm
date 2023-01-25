@@ -5,24 +5,31 @@ import academy.pocu.comp3500.lab4.pocuhacker.User;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
+import java.util.zip.CRC32;
 
 public final class Cracker {
     private final User[] userTable;
-    private final HashType hashType;
+    private final String email;
+    private final String password;
+    private HashType hashType;
 
     public Cracker(User[] userTable, String email, String password) {
         this.userTable = userTable;
+        this.email = email;
+        this.password = password;
+    }
 
+    private void setHashType() {
         User myInfoInUserTable = null;
-        String myPasswordMD5Hash = getMD5Hash(password);
 
-        for (User user : userTable) {
-            if (user.getEmail().equals(email)) {
+        for (User user : this.userTable) {
+            if (user.getEmail().equals(this.email)) {
                 myInfoInUserTable = user;
                 break;
             }
@@ -30,34 +37,65 @@ public final class Cracker {
 
         assert (myInfoInUserTable != null);
 
-        if (myInfoInUserTable.getPasswordHash().equals(myPasswordMD5Hash)) {
+        String crc32Hash = getCRC32Hash(this.password);
+
+        if (myInfoInUserTable.getPasswordHash().equals(crc32Hash)) {
+            this.hashType = HashType.CRC32;
+            return;
+        }
+
+        String md2Hash = getMD2Hash(this.password);
+
+        if (myInfoInUserTable.getPasswordHash().equals(md2Hash)) {
+            this.hashType = HashType.MD2;
+            return;
+        }
+
+        String md5Hash = getMD5Hash(this.password);
+
+        if (myInfoInUserTable.getPasswordHash().equals(md5Hash)) {
             this.hashType = HashType.MD5;
             return;
         }
 
-        final int PASSWORD_HASH_LENGTH = myInfoInUserTable.getPasswordHash().length();
+        String sha1Hash = getSHA1Hash(this.password);
 
-        switch (PASSWORD_HASH_LENGTH) {
-            case 9:
-                this.hashType = HashType.CRC32;
-                break;
-            case 24:
-                this.hashType = HashType.MD2;
-                break;
-            case 28:
-                this.hashType = HashType.SHA1;
-                break;
-            case 44:
-                this.hashType = HashType.SHA256;
-                break;
-            default:
-                this.hashType = HashType.NONE;
-                assert (false) : "Can't get hash type";
-                break;
+        if (myInfoInUserTable.getPasswordHash().equals(sha1Hash)) {
+            this.hashType = HashType.SHA1;
+            return;
+        }
+
+        String sha256Hash = getSHA256Hash(this.password);
+
+        if (myInfoInUserTable.getPasswordHash().equals(sha256Hash)) {
+            this.hashType = HashType.SHA256;
+            return;
+        }
+
+        this.hashType = HashType.NONE;
+    }
+
+    private static String getCRC32Hash(String password) {
+        CRC32 crc32 = new CRC32();
+        crc32.update(password.getBytes(StandardCharsets.UTF_8));
+
+        long result = crc32.getValue();
+
+        return Long.toString(result);
+    }
+
+    private static String getMD2Hash(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD2");
+            byte[] messageDigest = md.digest(password.getBytes());
+
+            return Base64.getEncoder().encodeToString(messageDigest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private String getMD5Hash(String password) {
+    private static String getMD5Hash(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(password.getBytes());
@@ -68,11 +106,35 @@ public final class Cracker {
         }
     }
 
-    public String[] run(final RainbowTable[] rainbowTables) {
-        assert (this.hashType != HashType.NONE);
+    private static String getSHA1Hash(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            byte[] messageDigest = md.digest(password.getBytes());
 
+            return Base64.getEncoder().encodeToString(messageDigest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String getSHA256Hash(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] messageDigest = md.digest(password.getBytes());
+
+            return Base64.getEncoder().encodeToString(messageDigest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String[] run(final RainbowTable[] rainbowTables) {
         String[] result = new String[userTable.length];
         RainbowTable rainbowTable;
+
+        if (this.hashType == null) {
+            setHashType();
+        }
 
         switch (this.hashType) {
             case CRC32:
@@ -90,9 +152,11 @@ public final class Cracker {
             case SHA256:
                 rainbowTable = rainbowTables[4];
                 break;
+            case NONE:
+                return result;
             default:
-                assert (false) : "Invalid hash type";
-                return null;
+                assert (false) : "Unknown hash type";
+                return result;
         }
 
         for (int i = 0; i < this.userTable.length; ++i) {

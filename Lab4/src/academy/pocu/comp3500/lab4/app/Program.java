@@ -60,6 +60,22 @@ public class Program {
         final String normalUser1 = "john.smith@te.st";
         final String normalUser2 = "hong.gil.dong@nor.mal";
 
+        // None
+        {
+            User[] userTable = new User[]{
+                    new User("001", normalUser1, "2418665555"),
+                    new User("004", email, "6320005723427"),
+                    new User("011", normalUser2, "47740412616077")
+            };
+
+            Cracker cracker = new Cracker(userTable, email, password);
+            String[] plainTexts = cracker.run(rainbowTables);
+
+            assert (plainTexts[0] == null);
+            assert (plainTexts[1] == null);
+            assert (plainTexts[2] == null);
+        }
+
         // CRC32
         {
             User[] userTable = new User[]{
