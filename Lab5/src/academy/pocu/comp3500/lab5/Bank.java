@@ -2,8 +2,9 @@ package academy.pocu.comp3500.lab5;
 
 import javax.crypto.Cipher;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.MessageDigest;
+import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 
 public class Bank {
@@ -84,6 +85,10 @@ public class Bank {
         int fromIndex = getPubKeyIndex(from);
         int toIndex = getPubKeyIndex(to);
 
+        if (fromIndex == -1 || toIndex == -1) {
+            return true;
+        }
+
         this.amounts[fromIndex] -= amount;
         this.amounts[toIndex] += amount;
 
@@ -94,7 +99,7 @@ public class Bank {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             return md.digest(transaction);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
