@@ -1,56 +1,99 @@
 package academy.pocu.comp3500.lab5;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import javax.crypto.Cipher;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.spec.X509EncodedKeySpec;
 
 public class Bank {
-    private final String[] encodedPubKeys;
+    private final byte[][] publicKeys;
     private final long[] amounts;
 
     public Bank(byte[][] pubKeys, final long[] amounts) {
-        this.encodedPubKeys = new String[pubKeys.length];
+        this.publicKeys = pubKeys;
         this.amounts = amounts;
-
-        for (int i = 0; i < pubKeys.length; ++i) {
-            this.encodedPubKeys[i] = encodeToHexString(pubKeys[i]);
-        }
     }
 
-    public long getBalance(final byte[] pubKey) {
-        String encodedInputPubKey = encodeToHexString(pubKey);
+    private int getPubKeyIndex(final byte[] inputPubKey) {
+        for (int i = 0; i < this.publicKeys.length; ++i) {
+            boolean bIsSame = true;
+            byte[] pubKey = this.publicKeys[i];
+            
+            for (int j = 0; j < pubKey.length; ++j) {
+                if (pubKey[j] != inputPubKey[j]) {
+                    bIsSame = false;
+                    break;
+                }
+            }
 
-        for (int i = 0; i < this.encodedPubKeys.length; ++i) {
-            if (this.encodedPubKeys[i].equals(encodedInputPubKey)) {
-                return this.amounts[i];
+            if (bIsSame) {
+                return i;
             }
         }
 
-        return 0;
+        return -1;
+    }
+
+    public long getBalance(final byte[] pubKey) {
+        int index = getPubKeyIndex(pubKey);
+
+        if (index == -1) {
+            return 0;
+        }
+
+        return this.amounts[index];
     }
 
     public boolean transfer(final byte[] from, byte[] to, final long amount, final byte[] signature) {
-        byte[] transactionHash = getSHA256Hash(encodeToHexString(from) + encodeToHexString(to) + amount);
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(amount);
 
-        return false;
-    }
+        byte[] amountBytes = buffer.array();
+        byte[] transaction = new byte[from.length + to.length + Long.BYTES];
+        int sumLength = 0;
 
-    private byte[] decryptWithPubKey(byte[] transactionHash, String pubKey) {
-        return null;
-    }
+        System.arraycopy(from, 0, transaction, sumLength, from.length);
 
-    private static String encodeToHexString(byte[] bytes) {
-        StringBuilder result = new StringBuilder();
-        for (byte oneByte : bytes) {
-            result.append(String.format("%02x", oneByte));
+        sumLength += from.length;
+        System.arraycopy(to, 0, transaction, sumLength, to.length);
+
+        sumLength += to.length;
+        System.arraycopy(amountBytes, 0, transaction, sumLength, amountBytes.length);
+
+        byte[] transactionHash = getSHA256Hash(transaction);
+        byte[] plaintext;
+
+        try {
+            PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(from));
+
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.DECRYPT_MODE, publicKey);
+
+            plaintext = cipher.doFinal(signature);
+        } catch (Exception e) {
+            return false;
         }
 
-        return result.toString();
+        for (int i = 0; i < plaintext.length; ++i) {
+            if (plaintext[i] != transactionHash[i]) {
+                return false;
+            }
+        }
+
+        int fromIndex = getPubKeyIndex(from);
+        int toIndex = getPubKeyIndex(to);
+
+        this.amounts[fromIndex] -= amount;
+        this.amounts[toIndex] += amount;
+
+        return true;
     }
 
-    private static byte[] getSHA256Hash(String transaction) {
+    private static byte[] getSHA256Hash(byte[] transaction) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            return md.digest(transaction.getBytes());
+            return md.digest(transaction);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
