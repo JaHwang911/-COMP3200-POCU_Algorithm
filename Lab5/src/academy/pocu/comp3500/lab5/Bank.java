@@ -85,8 +85,12 @@ public class Bank {
         int fromIndex = getPubKeyIndex(from);
         int toIndex = getPubKeyIndex(to);
 
-        if (fromIndex == -1 || toIndex == -1) {
+        if (fromIndex == -1 && toIndex == -1) {
             return true;
+        } else if (fromIndex == -1) {
+            this.amounts[toIndex] += amount;
+        } else if (toIndex == -1) {
+            this.amounts[fromIndex] -= amount;
         }
 
         this.amounts[fromIndex] -= amount;
