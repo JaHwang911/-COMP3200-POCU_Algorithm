@@ -47,6 +47,10 @@ public class Bank {
     }
 
     public boolean transfer(final byte[] from, byte[] to, final long amount, final byte[] signature) {
+        if (amount < 0) {
+            return false;
+        }
+
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
         buffer.putLong(amount);
 
@@ -90,10 +94,23 @@ public class Bank {
         } else if (toIndex == -1) {
             this.amounts[fromIndex] -= amount;
             return true;
+        } else if (fromIndex == -1) {
+            return false;
+        }
+
+        if (this.amounts[fromIndex] < amount) {
+            return false;
         }
 
         this.amounts[fromIndex] -= amount;
-        this.amounts[toIndex] += amount;
+
+        boolean bIsOverflow = this.amounts[toIndex] + amount < this.amounts[toIndex];
+
+        if (bIsOverflow) {
+            this.amounts[toIndex] = Long.MAX_VALUE;
+        } else {
+            this.amounts[toIndex] += amount;
+        }
 
         return true;
     }

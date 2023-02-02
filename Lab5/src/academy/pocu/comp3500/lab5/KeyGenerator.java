@@ -5,20 +5,20 @@ import java.util.Random;
 
 public class KeyGenerator {
     public static boolean isPrime(final BigInteger number) {
-        BigInteger BigZero = BigInteger.ZERO;
+        BigInteger bigZero = BigInteger.ZERO;
 
         if (number.compareTo(BigInteger.TWO) < 0) {
             return false;
         } else if (number.compareTo(BigInteger.valueOf(2)) == 0) {
             return true;
-        } else if (number.mod(BigInteger.TWO).equals(BigZero)) {
+        } else if (number.mod(BigInteger.TWO).equals(bigZero)) {
             return false;
         }
 
         BigInteger odd = number.subtract(BigInteger.ONE);
         int s = 0;
 
-        while (odd.mod(BigInteger.TWO).equals(BigZero)) {
+        while (odd.mod(BigInteger.TWO).equals(bigZero)) {
             ++s;
             odd = odd.divide(BigInteger.TWO);
         }
