@@ -10,6 +10,7 @@ public class Program {
 
     public static void main(String[] args) {
         testIsPrime();
+        smallPrimeNumberTest();
         testOfficial();
         testNoExistingWallet();
 
@@ -52,6 +53,11 @@ public class Program {
             if (bPrime != bIsPrimeResult) {
                 System.out.println(String.format("%d is %s\n", i, (bPrime ? "prime number" : "not a prime number")));
             }
+
+            if (bPrime != bIsPrimeResult) {
+                System.out.println(i);
+            }
+
             assert(bPrime == bIsPrimeResult);
         }
     }
