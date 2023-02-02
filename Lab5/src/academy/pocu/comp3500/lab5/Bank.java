@@ -6,20 +6,28 @@ import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Bank {
-    private final byte[][] publicKeys;
-    private final long[] amounts;
+    private final ArrayList<byte[]> publicKeys;
+    private final ArrayList<Long> amounts;
 
     public Bank(byte[][] pubKeys, final long[] amounts) {
-        this.publicKeys = pubKeys;
-        this.amounts = amounts;
+        this.publicKeys = new ArrayList<>(pubKeys.length);
+        this.amounts = new ArrayList<>(amounts.length);
+
+        this.publicKeys.addAll(Arrays.asList(pubKeys));
+
+        for (int i = 0; i < amounts.length; ++i) {
+            this.amounts.add(amounts[i]);
+        }
     }
 
     private int getPubKeyIndex(final byte[] inputPubKey) {
-        for (int i = 0; i < this.publicKeys.length; ++i) {
+        for (int i = 0; i < this.publicKeys.size(); ++i) {
             boolean bIsSame = true;
-            byte[] pubKey = this.publicKeys[i];
+            byte[] pubKey = this.publicKeys.get(i);
             
             for (int j = 0; j < pubKey.length; ++j) {
                 if (pubKey[j] != inputPubKey[j]) {
@@ -43,7 +51,7 @@ public class Bank {
             return 0;
         }
 
-        return this.amounts[index];
+        return this.amounts.get(index);
     }
 
     public boolean transfer(final byte[] from, byte[] to, final long amount, final byte[] signature) {
@@ -90,26 +98,31 @@ public class Bank {
         if (fromIndex == -1 && toIndex == -1) {
             return false;
         } else if (toIndex == -1) {
-            this.amounts[fromIndex] -= amount;
+            Long fromAmount = this.amounts.get(fromIndex);
+
+            if (fromAmount < amount || amount < 0) {
+                return false;
+            }
+
+            this.amounts.set(fromIndex, fromAmount - amount);
+
+            this.publicKeys.add(to);
+            this.amounts.add(amount);
+
             return true;
         } else if (fromIndex == -1) {
             return false;
         }
 
-        if (this.amounts[fromIndex] < amount || amount < 0) {
+        Long fromAmount = this.amounts.get(fromIndex);
+        Long toAmount = this.amounts.get(toIndex);
+
+        if (fromAmount < amount || amount < 0) {
             return false;
         }
 
-        this.amounts[fromIndex] -= amount;
-
-        boolean bIsOverflow = this.amounts[toIndex] + amount < this.amounts[toIndex];
-
-        if (bIsOverflow) {
-            this.amounts[toIndex] = Long.MAX_VALUE;
-            return false;
-        } else {
-            this.amounts[toIndex] += amount;
-        }
+        this.amounts.set(fromIndex, fromAmount - amount);
+        this.amounts.set(toIndex, toAmount + amount);
 
         return true;
     }
