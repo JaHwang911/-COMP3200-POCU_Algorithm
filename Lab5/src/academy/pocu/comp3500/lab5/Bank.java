@@ -91,7 +91,7 @@ public class Bank {
             return false;
         } else if (toIndex == -1) {
             this.amounts[fromIndex] -= amount;
-            return false;
+            return true;
         } else if (fromIndex == -1) {
             return false;
         }
