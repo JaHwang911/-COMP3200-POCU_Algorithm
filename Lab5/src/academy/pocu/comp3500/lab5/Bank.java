@@ -47,10 +47,6 @@ public class Bank {
     }
 
     public boolean transfer(final byte[] from, byte[] to, final long amount, final byte[] signature) {
-        if (amount < 0) {
-            return false;
-        }
-
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
         buffer.putLong(amount);
 
@@ -86,6 +82,8 @@ public class Bank {
             }
         }
 
+        assert (transactionHash.length == plaintext.length);
+
         int fromIndex = getPubKeyIndex(from);
         int toIndex = getPubKeyIndex(to);
 
@@ -93,12 +91,12 @@ public class Bank {
             return false;
         } else if (toIndex == -1) {
             this.amounts[fromIndex] -= amount;
-            return true;
+            return false;
         } else if (fromIndex == -1) {
             return false;
         }
 
-        if (this.amounts[fromIndex] < amount) {
+        if (this.amounts[fromIndex] < amount || amount < 0) {
             return false;
         }
 
@@ -108,6 +106,7 @@ public class Bank {
 
         if (bIsOverflow) {
             this.amounts[toIndex] = Long.MAX_VALUE;
+            return false;
         } else {
             this.amounts[toIndex] += amount;
         }

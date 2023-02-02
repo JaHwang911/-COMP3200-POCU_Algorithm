@@ -9,8 +9,8 @@ import java.nio.charset.StandardCharsets;
 public class Program {
 
     public static void main(String[] args) {
-        testIsPrime();
-        smallPrimeNumberTest();
+//        testIsPrime();
+//        smallPrimeNumberTest();
         testOfficial();
         testNoExistingWallet();
 
