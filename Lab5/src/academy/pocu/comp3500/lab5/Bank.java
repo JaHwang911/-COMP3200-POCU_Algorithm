@@ -56,6 +56,10 @@ public class Bank {
     }
 
     public boolean transfer(final byte[] from, byte[] to, final long amount, final byte[] signature) {
+        if (amount < 1) {
+            return false;
+        }
+
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
         buffer.putLong(amount);
 
@@ -101,7 +105,7 @@ public class Bank {
         } else if (toIndex == -1) {
             Long fromAmount = this.amounts.get(fromIndex);
 
-            if (fromAmount < amount || amount < 0) {
+            if (fromAmount < amount) {
                 return false;
             }
 
@@ -118,7 +122,7 @@ public class Bank {
         Long fromAmount = this.amounts.get(fromIndex);
         Long toAmount = this.amounts.get(toIndex);
 
-        if (fromAmount < amount || amount < 0) {
+        if (fromAmount < amount) {
             return false;
         }
 
