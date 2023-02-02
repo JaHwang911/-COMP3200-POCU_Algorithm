@@ -7,7 +7,6 @@ import java.security.MessageDigest;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Bank {
     private final ArrayList<byte[]> publicKeys;
@@ -17,7 +16,9 @@ public class Bank {
         this.publicKeys = new ArrayList<>(pubKeys.length);
         this.amounts = new ArrayList<>(amounts.length);
 
-        this.publicKeys.addAll(Arrays.asList(pubKeys));
+        for (int i = 0; i < pubKeys.length; ++i) {
+            this.publicKeys.add(pubKeys[i]);
+        }
 
         for (int i = 0; i < amounts.length; ++i) {
             this.amounts.add(amounts[i]);
