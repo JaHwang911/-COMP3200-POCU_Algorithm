@@ -6,19 +6,16 @@ import academy.pocu.comp3500.lab5.KeyGenerator;
 import javax.crypto.Cipher;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 
 public class Program {
 
     public static void main(String[] args) {
-//        testIsPrime();
-//        smallPrimeNumberTest();
+        testIsPrime();
+        smallPrimeNumberTest();
         testOfficial();
         testNoExistingWallet();
         testReceiverTooRich();
