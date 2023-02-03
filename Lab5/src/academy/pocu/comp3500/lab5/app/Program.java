@@ -220,9 +220,29 @@ public class Program {
         final byte[] TEST_3_TEST_1_1000000_SIGNATURE = getSignature(memberPublicKey, senderPublicKey, 1000000, decodeFromHexString(TEST_PRIVATE_KEY_3));
         final byte[] TEST_1_TEST_2_1000000_SIGNATURE = getSignature(senderPublicKey, receiverPublicKey, 1000000, decodeFromHexString(TEST_PRIVATE_KEY_1));
 
-        bank.transfer(senderPublicKey, receiverPublicKey, Long.MAX_VALUE, TEST_1_TEST_2_MAX_SIGNATURE);
-        bank.transfer(memberPublicKey, senderPublicKey, 1000000, TEST_3_TEST_1_1000000_SIGNATURE);
-        bank.transfer(senderPublicKey, receiverPublicKey, 1000000, TEST_1_TEST_2_1000000_SIGNATURE);
+        boolean bTransfer = bank.transfer(senderPublicKey, receiverPublicKey, Long.MAX_VALUE, TEST_1_TEST_2_MAX_SIGNATURE);
+        senderBalance = bank.getBalance(senderPublicKey);
+        receiverBalance = bank.getBalance(receiverPublicKey);
+
+        assert (!bTransfer);
+        assert (senderBalance == senderInitialBalance);
+        assert (receiverBalance == receiverInitialBalance);
+
+        bTransfer = bank.transfer(memberPublicKey, senderPublicKey, 1000000, TEST_3_TEST_1_1000000_SIGNATURE);
+        senderBalance = bank.getBalance(senderPublicKey);
+        memberBalance = bank.getBalance(memberPublicKey);
+
+        assert (!bTransfer);
+        assert (senderBalance == senderInitialBalance);
+        assert (memberBalance == memberPublicKeyInitialBalance);
+
+        bTransfer = bank.transfer(senderPublicKey, receiverPublicKey, 1000000, TEST_1_TEST_2_1000000_SIGNATURE);
+        senderBalance = bank.getBalance(senderPublicKey);
+        receiverBalance = bank.getBalance(receiverPublicKey);
+
+        assert (bTransfer);
+        assert (senderBalance == senderInitialBalance - 1000000);
+        assert (receiverBalance == receiverInitialBalance + 1000000);
     }
 
     private static byte[] getSignature(byte[] from, byte[] to, long amount, byte[] fromPrivate) {
