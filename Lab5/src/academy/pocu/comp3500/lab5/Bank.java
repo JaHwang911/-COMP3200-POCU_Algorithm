@@ -37,7 +37,7 @@ public class Bank {
                 }
             }
 
-            if (bIsSame) {
+            if (bIsSame && !this.amounts.get(i).equals(Long.MAX_VALUE)) {
                 return i;
             }
         }
@@ -127,7 +127,17 @@ public class Bank {
         }
 
         this.amounts.set(fromIndex, fromAmount - amount);
-        this.amounts.set(toIndex, toAmount + amount);
+
+        if (Long.MAX_VALUE - toAmount < amount) {
+            long remain = amount - (Long.MAX_VALUE - toAmount);
+
+            this.amounts.set(toIndex, Long.MAX_VALUE);
+
+            this.publicKeys.add(to);
+            this.amounts.add(remain);
+        } else {
+            this.amounts.set(toIndex, toAmount + amount);
+        }
 
         return true;
     }
