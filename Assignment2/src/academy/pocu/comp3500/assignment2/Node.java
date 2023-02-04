@@ -2,12 +2,12 @@ package academy.pocu.comp3500.assignment2;
 
 import academy.pocu.comp3500.assignment2.datastructure.ArrayList;
 
-public final class Indent {
-    private final String data;
-    private Indent prev;
-    private ArrayList<Indent> next;
+public class Node {
+    private String data;
+    private Node prev;
+    private ArrayList<Node> next;
 
-    public Indent(String data, Indent prev) {
+    public Node(String data, Node prev) {
         this.data = data;
         this.prev = prev;
         this.next = new ArrayList<>(32);
@@ -17,15 +17,11 @@ public final class Indent {
         return this.data;
     }
 
-    public Indent getPrev() {
+    public Node getPrev() {
         return this.prev;
     }
 
-    public ArrayList<Indent> getNext() {
+    public ArrayList<Node> getNext() {
         return this.next;
-    }
-
-    public void discard() {
-
     }
 }
