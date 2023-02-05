@@ -3,12 +3,14 @@ package academy.pocu.comp3500.assignment2;
 import java.io.BufferedWriter;
 
 public final class Logger {
-    private static final Indent ROOT = new Indent("", null);
+    private static final Indent ROOT = new Indent("", 0, null);
     private static int currentIndentLevel = 0;
 
     public static void log(final String text) {
         Indent current = getCurrentLevelIndentRecursive(ROOT, 0);
-        current.getNextIndents().add(new Indent(text, current));
+
+        int logIndex = current.getNextIndents().getSize();
+        current.getNextIndents().add(new Indent(text, logIndex, current));
     }
 
     private static Indent getCurrentLevelIndentRecursive(Indent root, int level) {
@@ -83,8 +85,9 @@ public final class Logger {
 
     public static Indent indent() {
         Indent current = getCurrentLevelIndentRecursive(ROOT, 0);
+        int index = current.getNextIndents().getSize();
 
-        current.getNextIndents().add(new Indent("", current));
+        current.getNextIndents().add(new Indent("", index, current));
 
         ++currentIndentLevel;
 
