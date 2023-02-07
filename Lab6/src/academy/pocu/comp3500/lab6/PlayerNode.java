@@ -4,6 +4,7 @@ import academy.pocu.comp3500.lab6.leagueofpocu.Player;
 
 public class PlayerNode {
     private final Player player;
+    private PlayerNode parent;
     private PlayerNode left;
     private PlayerNode right;
 
@@ -13,6 +14,14 @@ public class PlayerNode {
 
     public Player getPlayer() {
         return this.player;
+    }
+
+    public PlayerNode getParentOrNull() {
+        return this.parent;
+    }
+
+    public void setParent(PlayerNode playerNode) {
+        this.parent = playerNode;
     }
 
     public PlayerNode getLeftOrNull() {

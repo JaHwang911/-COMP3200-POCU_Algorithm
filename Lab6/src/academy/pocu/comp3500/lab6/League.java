@@ -2,31 +2,44 @@ package academy.pocu.comp3500.lab6;
 
 import academy.pocu.comp3500.lab6.leagueofpocu.Player;
 
+import java.util.ArrayList;
+
 public class League {
-    private BinarySearchTree playerTree;
+    private BinarySearchTree playerTreeRoot;
 
     public League() {
-
     }
 
     public League(Player[] players) {
-        this.playerTree = new BinarySearchTree(new PlayerNode(players[0]));
+        this.playerTreeRoot = new BinarySearchTree(new PlayerNode(players[0]));
 
         for (int i = 1; i < players.length; ++i) {
-            this.playerTree.insert(new PlayerNode(players[i]));
+            this.playerTreeRoot.insert(new PlayerNode(players[i]));
         }
     }
 
     public Player findMatchOrNull(final Player player) {
-        return null;
+        if (this.playerTreeRoot == null) {
+            return null;
+        }
+
+        return this.playerTreeRoot.findHigherRatingPlayerOrNull(player);
     }
 
     public Player[] getTop(final int count) {
-        return null;
+        if (this.playerTreeRoot == null) {
+            return null;
+        }
+
+        return this.playerTreeRoot.getTop(count);
     }
 
     public Player[] getBottom(final int count) {
-        return null;
+        if (this.playerTreeRoot == null) {
+            return null;
+        }
+
+        return this.playerTreeRoot.getBottom(count);
     }
 
     public boolean join(final Player player) {

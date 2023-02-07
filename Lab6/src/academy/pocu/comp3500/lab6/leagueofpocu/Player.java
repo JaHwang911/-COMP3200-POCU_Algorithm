@@ -5,6 +5,14 @@ public final class Player {
     private final String name;
     private final int rating;
 
+    private static int count = 0;
+
+    public Player(final int rating) {
+        this.id = ++count;
+        this.name = "player" + count;
+        this.rating = rating;
+    }
+
     public Player(final int id, final String name, final int rating) {
         this.id = id;
         this.name = name;
