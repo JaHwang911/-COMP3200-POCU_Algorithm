@@ -20,27 +20,31 @@ public class PlayerNode {
         return this.parent;
     }
 
-    public void setParent(PlayerNode playerNode) {
-        this.parent = playerNode;
+    public void setParent(final PlayerNode parent) {
+        this.parent = parent;
     }
 
     public PlayerNode getLeftOrNull() {
         return this.left;
     }
 
-    public void setLeft(PlayerNode left) {
-        this.left = left;
+    public void setLeft(final PlayerNode leftOrNull) {
+        this.left = leftOrNull;
     }
 
     public PlayerNode getRightOrNull() {
         return this.right;
     }
 
-    public void setRight(PlayerNode right) {
-        this.right = right;
+    public void setRight(final PlayerNode rightOrNull) {
+        this.right = rightOrNull;
     }
 
     public int getRating() {
         return this.player.getRating();
+    }
+
+    public int getId() {
+        return this.player.getId();
     }
 }

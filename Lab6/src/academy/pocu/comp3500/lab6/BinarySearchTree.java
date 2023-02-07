@@ -11,16 +11,16 @@ public class BinarySearchTree {
         this.root = root;
     }
 
-    public PlayerNode search(Player player) {
+    public PlayerNode search(final Player player) {
         return searchOrNullRecursive(this.root, player);
     }
 
-    private PlayerNode searchOrNullRecursive(PlayerNode root, Player player) {
+    private PlayerNode searchOrNullRecursive(final PlayerNode root, final Player player) {
         if (root == null) {
             return null;
         }
 
-        if (root.getPlayer() == player) {
+        if (root.getPlayer().getId() == player.getId()) {
             return root;
         } else if (root.getPlayer().getRating() >= player.getRating()) {
             return searchOrNullRecursive(root.getLeftOrNull(), player);
@@ -29,34 +29,36 @@ public class BinarySearchTree {
         }
     }
 
-    public void insert(PlayerNode playerNode) {
-        insertRecursive(this.root, playerNode);
+    public void insert(final Player player) {
+        insertRecursive(this.root, player);
     }
 
-    private void insertRecursive(PlayerNode root, PlayerNode playerNode) {
-        if (root.getRating() >= playerNode.getRating()) {
+    private void insertRecursive(final PlayerNode root, final Player player) {
+        if (root.getRating() >= player.getRating()) {
             if (root.getLeftOrNull() == null) {
-                root.setLeft(playerNode);
-                playerNode.setParent(root);
+                PlayerNode node = new PlayerNode(player);
+                root.setLeft(node);
+                node.setParent(root);
 
                 return;
             }
 
-            insertRecursive(root.getLeftOrNull(), playerNode);
+            insertRecursive(root.getLeftOrNull(), player);
         } else {
             if (root.getRightOrNull() == null) {
-                root.setRight(playerNode);
-                playerNode.setParent(root);
+                PlayerNode node = new PlayerNode(player);
+                root.setRight(node);
+                node.setParent(root);
 
                 return;
             }
 
-            insertRecursive(root.getRightOrNull(), playerNode);
+            insertRecursive(root.getRightOrNull(), player);
         }
     }
 
-    public Player findHigherRatingPlayerOrNull(Player start) {
-        PlayerNode target = searchOrNullRecursive(this.root, start);
+    public Player findHigherRatingPlayerOrNull(Player delete) {
+        PlayerNode target = searchOrNullRecursive(this.root, delete);
 
         if (target == null) {
             return null;
@@ -81,7 +83,7 @@ public class BinarySearchTree {
         return out[0].getPlayer();
     }
 
-    private void findHigherRatedPlayerRecursive(PlayerNode root, PlayerNode targetPlayer, int minDiff, PlayerNode[] outPlayer) {
+    private void findHigherRatedPlayerRecursive(final PlayerNode root, final PlayerNode targetPlayer, int minDiff, final PlayerNode[] outPlayer) {
         if (root == null) {
             return;
         }
@@ -161,5 +163,39 @@ public class BinarySearchTree {
         }
 
         getBottomRecursive(root.getRightOrNull(), maxCount, out);
+    }
+
+    public boolean deletePlayer(final Player player) {
+        PlayerNode delete = search(player);
+
+        if (delete == null) {
+            return false;
+        }
+
+        if (delete.getLeftOrNull() == null && delete.getRightOrNull() == null) {
+            PlayerNode parent = delete.getParentOrNull();
+
+            if (parent == null) {
+                assert (this.root.getId() == delete.getId());
+
+                this.root = null;
+                return true;
+            }
+
+            if (parent.getRating() > delete.getRating()) {
+                parent.setLeft(null);
+            } else {
+                parent.setRight(null);
+            }
+            return true;
+        }
+
+
+
+        return true;
+    }
+
+    public void deletePlayerRecursive(final PlayerNode delete, final Player player) {
+
     }
 }

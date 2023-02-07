@@ -14,7 +14,7 @@ public class League {
         this.playerTreeRoot = new BinarySearchTree(new PlayerNode(players[0]));
 
         for (int i = 1; i < players.length; ++i) {
-            this.playerTreeRoot.insert(new PlayerNode(players[i]));
+            this.playerTreeRoot.insert(players[i]);
         }
     }
 
@@ -43,10 +43,15 @@ public class League {
     }
 
     public boolean join(final Player player) {
-        return false;
+        if (this.playerTreeRoot.search(player) != null) {
+            return false;
+        }
+
+        this.playerTreeRoot.insert(player);
+        return true;
     }
 
     public boolean leave(final Player player) {
-        return false;
+        return this.playerTreeRoot.deletePlayer(player);
     }
 }
