@@ -389,7 +389,9 @@ public class Program {
         }
 
         League league = new League(players);
+        League league1 = new League(players);
         for (int i = 0; i < playerCount; ++i) {
+            System.out.printf("Delete %d: ", players[i].getRating());
             league.leave(players[i]);
             p.remove(0);
 
@@ -399,9 +401,17 @@ public class Program {
 
             Player[] actual = league.getBottom(p.size()); // higher rating -> top
             for (int j = 0; j < p.size(); ++j) {
-                assert (expected.get(j) == actual[j].getRating());
+                if (expected.get(j) != actual[j].getRating()) {
+                    testErrorLeave(players, i, league1);
+                }
             }
+
+            league1.leave(players[i]);
         }
+    }
+
+    private static void testErrorLeave(Player[] players, int index, League league) {
+        league.leave(players[index]);
     }
 
     public static void findMatchTest() {

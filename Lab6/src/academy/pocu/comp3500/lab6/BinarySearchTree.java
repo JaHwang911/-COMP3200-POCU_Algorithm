@@ -126,6 +126,8 @@ public class BinarySearchTree {
 
         if (out.size() < maxCount) {
             out.add(root.getPlayer());
+        } else if (out.size() == maxCount) {
+            return;
         }
 
         getTopRecursive(root.getLeftOrNull(), maxCount, out);
@@ -153,6 +155,8 @@ public class BinarySearchTree {
 
         if (out.size() < maxCount) {
             out.add(root.getPlayer());
+        } else if (out.size() == maxCount) {
+            return;
         }
 
         getBottomRecursive(root.getRightOrNull(), maxCount, out);
@@ -210,6 +214,8 @@ public class BinarySearchTree {
 
         if (deleteNode.getParentOrNull() == null) {
             this.root = swapNode;
+
+            swapNode.setParent(null);
             deleteNode.setParent(null);
 
             return true;

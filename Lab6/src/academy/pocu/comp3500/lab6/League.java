@@ -32,7 +32,7 @@ public class League {
 
     public Player[] getTop(final int count) {
         if (this.playerTreeRoot == null) {
-            return null;
+            return new Player[count];
         }
 
         return this.playerTreeRoot.getTop(count);
@@ -40,7 +40,7 @@ public class League {
 
     public Player[] getBottom(final int count) {
         if (this.playerTreeRoot == null) {
-            return null;
+            return new Player[count];
         }
 
         return this.playerTreeRoot.getBottom(count);
@@ -56,7 +56,10 @@ public class League {
     }
 
     public boolean leave(final Player player) {
-        return this.playerTreeRoot.deletePlayer(player);
+        boolean result = this.playerTreeRoot.deletePlayer(player);
+        this.playerTreeRoot.print();
+
+        return result;
     }
 
     public void printAllMember() {
