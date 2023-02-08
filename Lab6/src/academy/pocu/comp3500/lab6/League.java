@@ -27,7 +27,7 @@ public class League {
             return null;
         }
 
-        return this.playerTreeRoot.findHigherRatingPlayerOrNull(player);
+        return this.playerTreeRoot.findMatchOrNull(player);
     }
 
     public Player[] getTop(final int count) {
