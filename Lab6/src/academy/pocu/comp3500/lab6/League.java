@@ -18,6 +18,10 @@ public class League {
         }
     }
 
+    public boolean checkPlayerJoined(Player player) {
+        return (this.playerTreeRoot.search(player) != null);
+    }
+
     public Player findMatchOrNull(final Player player) {
         if (this.playerTreeRoot == null) {
             return null;
@@ -53,5 +57,9 @@ public class League {
 
     public boolean leave(final Player player) {
         return this.playerTreeRoot.deletePlayer(player);
+    }
+
+    public void printAllMember() {
+        this.playerTreeRoot.print();
     }
 }
