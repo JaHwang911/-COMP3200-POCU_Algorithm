@@ -245,6 +245,10 @@ public class BinarySearchTree {
                 parent.setLeft(start.getLeftOrNull());
             }
 
+            if (start.getLeftOrNull() != null) {
+                start.getLeftOrNull().setParent(parent);
+            }
+
             return start;
         }
 
@@ -259,6 +263,10 @@ public class BinarySearchTree {
                 parent.setRight(start.getRightOrNull());
             } else {
                 parent.setLeft(start.getRightOrNull());
+            }
+
+            if (start.getRightOrNull() != null) {
+                start.getRightOrNull().setParent(parent);
             }
 
             return start;

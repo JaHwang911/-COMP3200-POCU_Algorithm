@@ -401,9 +401,7 @@ public class Program {
 
             Player[] actual = league.getBottom(p.size()); // higher rating -> top
             for (int j = 0; j < p.size(); ++j) {
-                if (expected.get(j) != actual[j].getRating()) {
-                    testErrorLeave(players, i, league1);
-                }
+                assert (expected.get(j) == actual[j].getRating());
             }
 
             league1.leave(players[i]);
