@@ -74,7 +74,7 @@ public class Program {
             assert (result == player3);
 
             result = league.findMatchOrNull(player1);
-            assert (result == player5);
+            assert (result == player6);
 
             result = league.findMatchOrNull(player14);
             assert (result == player12);

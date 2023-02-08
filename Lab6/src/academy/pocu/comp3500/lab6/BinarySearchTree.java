@@ -57,69 +57,61 @@ public class BinarySearchTree {
         }
     }
 
-    public Player findHigherRatingPlayerOrNull(Player delete) {
-        PlayerNode target = searchOrNullRecursive(this.root, delete);
+    public Player findHigherRatingPlayerOrNull(Player player) {
+        PlayerNode target = searchOrNullRecursive(this.root, player);
 
         if (target == null) {
             return null;
         }
 
-        PlayerNode[] out1 = new PlayerNode[] { this.root };
-        PlayerNode[] out2 = new PlayerNode[] { this.root };
+        PlayerNode[] out = new PlayerNode[] { this.root };
+        int[] minDiff = new int[] { Integer.MAX_VALUE };
 
         if (target == this.root) {
             if (this.root.getLeftOrNull() == null && this.root.getRightOrNull() == null) {
                 return null;
             } else if (this.root.getLeftOrNull() == null) {
-                out1[0] = this.root.getRightOrNull();
-                findHigherRatedPlayerRecursive(this.root.getRightOrNull(), target, Integer.MAX_VALUE, out1);
+                out[0] = this.root.getRightOrNull();
+                findHigherRatedPlayerRecursive(this.root.getRightOrNull(), target, minDiff, out);
 
-                return out1[0].getPlayer();
+                return out[0].getPlayer();
             } else if (this.root.getRightOrNull() == null) {
-                out1[0] = this.root.getRightOrNull();
-                findHigherRatedPlayerRecursive(this.root.getLeftOrNull(), target, Integer.MAX_VALUE, out1);
+                out[0] = this.root.getRightOrNull();
+                findHigherRatedPlayerRecursive(this.root.getLeftOrNull(), target, minDiff, out);
 
-                return out1[0].getPlayer();
-            }else {
-                out1[0] = this.root.getLeftOrNull();
-                out2[0] = this.root.getRightOrNull();
-
-                findHigherRatedPlayerRecursive(this.root.getLeftOrNull(), target, Integer.MAX_VALUE, out1);
-                findHigherRatedPlayerRecursive(this.root.getRightOrNull(), target, Integer.MAX_VALUE, out2);
-
-                int diff = out1[0].getRating() - out2[0].getRating();
-
-                return diff < 0 ? out1[0].getPlayer() : out2[0].getPlayer();
+                return out[0].getPlayer();
+            } else {
+                findHigherRatedPlayerRecursive(this.root.getLeftOrNull(), target, minDiff, out);
+                findHigherRatedPlayerRecursive(this.root.getRightOrNull(), target, minDiff, out);
             }
-        } else {
-            findHigherRatedPlayerRecursive(this.root, target, Integer.MAX_VALUE, out1);
-
-            return out1[0].getPlayer();
+            
+            return out[0].getPlayer();
         }
+
+        findHigherRatedPlayerRecursive(this.root, target, minDiff, out);
+
+        return out[0].getPlayer();
     }
 
-    private void findHigherRatedPlayerRecursive(final PlayerNode root, final PlayerNode targetPlayer, int minDiff, final PlayerNode[] outPlayer) {
+    private void findHigherRatedPlayerRecursive(final PlayerNode root, final PlayerNode targetPlayer, final int[] minDiff, final PlayerNode[] outPlayer) {
         if (root == null) {
             return;
         }
 
         int diff = root.getRating() - targetPlayer.getRating();
 
-        if (diff != 0 && Math.abs(diff) < Math.abs(minDiff)) {
-            minDiff = diff;
+        if (diff != 0 && Math.abs(diff) < Math.abs(minDiff[0])) {
+            minDiff[0] = diff;
             outPlayer[0] = root;
-        } else if (Math.abs(diff) == Math.abs(minDiff)) {
-            if (diff > minDiff) {
-                minDiff = diff;
+        } else if (Math.abs(diff) == Math.abs(minDiff[0])) {
+            if (diff - minDiff[0] > 0) {
+                minDiff[0] = diff;
                 outPlayer[0] = root;
             }
         }
 
-        if (root.getRating() >= targetPlayer.getRating()) {
-            findHigherRatedPlayerRecursive(root.getLeftOrNull(), targetPlayer, minDiff, outPlayer);
-        } else {
-            findHigherRatedPlayerRecursive(root.getRightOrNull(), targetPlayer, minDiff, outPlayer);
-        }
+        findHigherRatedPlayerRecursive(root.getLeftOrNull(), targetPlayer, minDiff, outPlayer);
+        findHigherRatedPlayerRecursive(root.getRightOrNull(), targetPlayer, minDiff, outPlayer);
     }
 
     public Player[] getTop(final int count) {
