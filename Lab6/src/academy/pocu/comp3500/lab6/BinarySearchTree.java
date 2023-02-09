@@ -6,9 +6,11 @@ import java.util.ArrayList;
 
 public class BinarySearchTree {
     private PlayerNode root;
+    private int count;
 
     public BinarySearchTree(PlayerNode root) {
         this.root = root;
+        this.count = 1;
     }
 
     public PlayerNode search(final Player player) {
@@ -31,6 +33,7 @@ public class BinarySearchTree {
 
     public void insert(final Player player) {
         insertRecursive(this.root, player);
+        ++this.count;
     }
 
     private void insertRecursive(final PlayerNode root, final Player player) {
@@ -105,12 +108,23 @@ public class BinarySearchTree {
     }
 
     public Player[] getTop(final int count) {
-        Player[] result = new Player[count];
-        ArrayList<Player> out = new ArrayList<>(count);
+        Player[] result;
+        ArrayList<Player> out;
+        int topCount;
 
-        getTopRecursive(this.root, count, out);
+        if (count > this.count) {
+            result = new Player[this.count];
+            out = new ArrayList<>(this.count);
+            topCount = this.count;
+        } else {
+            result = new Player[count];
+            out = new ArrayList<>(count);
+            topCount = count;
+        }
 
-        for (int i = 0; i < out.size(); ++i) {
+        getTopRecursive(this.root, topCount, out);
+
+        for (int i = 0; i < topCount; ++i) {
             result[i] = out.get(i);
         }
 
@@ -134,10 +148,21 @@ public class BinarySearchTree {
     }
 
     public Player[] getBottom(final int count) {
-        Player[] result = new Player[count];
-        ArrayList<Player> out = new ArrayList<>(count);
+        Player[] result;
+        ArrayList<Player> out;
+        int bottomCount;
 
-        getBottomRecursive(this.root, count, out);
+        if (count > this.count) {
+            result = new Player[this.count];
+            out = new ArrayList<>(this.count);
+            bottomCount = this.count;
+        } else {
+            result = new Player[count];
+            out = new ArrayList<>(count);
+            bottomCount = count;
+        }
+
+        getBottomRecursive(this.root, bottomCount, out);
 
         for (int i = 0; i < out.size(); ++i) {
             result[i] = out.get(i);
@@ -176,6 +201,7 @@ public class BinarySearchTree {
                 assert (this.root.getId() == deleteNode.getId());
 
                 this.root = null;
+                --this.count;
                 return true;
             }
 
@@ -186,7 +212,7 @@ public class BinarySearchTree {
             }
 
             deleteNode.setParent(null);
-
+            --this.count;
             return true;
         }
 
@@ -218,6 +244,7 @@ public class BinarySearchTree {
             swapNode.setParent(null);
             deleteNode.setParent(null);
 
+            --this.count;
             return true;
         }
 
@@ -231,6 +258,8 @@ public class BinarySearchTree {
 
         swapNode.setParent(parent);
         deleteNode.setParent(null);
+
+        --this.count;
 
         return true;
     }

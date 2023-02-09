@@ -152,6 +152,38 @@ public class Program {
             assert (result[1] == player7);
             assert (result[2] == player10);
             assert (result[3] == player3);
+
+            result = league.getTop(14);
+            assert (result[0] == player11);
+            assert (result[1] == player7);
+            assert (result[2] == player10);
+            assert (result[3] == player3);
+            assert (result[4] == player9);
+            assert (result[5] == player6);
+            assert (result[6] == player1);
+            assert (result[7] == player5);
+            assert (result[8] == player2);
+            assert (result[9] == player4);
+            assert (result[10] == player13);
+            assert (result[11] == player8);
+            assert (result[12] == player12);
+            assert (result[13] == player14);
+
+            result = league.getTop(15);
+            assert (result[0] == player11);
+            assert (result[1] == player7);
+            assert (result[2] == player10);
+            assert (result[3] == player3);
+            assert (result[4] == player9);
+            assert (result[5] == player6);
+            assert (result[6] == player1);
+            assert (result[7] == player5);
+            assert (result[8] == player2);
+            assert (result[9] == player4);
+            assert (result[10] == player13);
+            assert (result[11] == player8);
+            assert (result[12] == player12);
+            assert (result[13] == player14);
         }
 
         {
@@ -406,10 +438,6 @@ public class Program {
 
             league1.leave(players[i]);
         }
-    }
-
-    private static void testErrorLeave(Player[] players, int index, League league) {
-        league.leave(players[index]);
     }
 
     public static void findMatchTest() {
