@@ -44,10 +44,7 @@ public class League {
     }
 
     public boolean leave(final Player player) {
-        boolean result = this.playerTreeRoot.deletePlayer(player);
-        this.playerTreeRoot.print();
-
-        return result;
+        return this.playerTreeRoot.deletePlayer(player);
     }
 
     public boolean checkPlayerJoined(Player player) {

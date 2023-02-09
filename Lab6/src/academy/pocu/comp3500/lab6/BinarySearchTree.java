@@ -232,9 +232,9 @@ public class BinarySearchTree {
         PlayerNode swapNode;
 
         if (deleteNode.getRightOrNull() == null) {
-            swapNode = getLeftSwapNodeRecursive(deleteNode.getLeftOrNull());
+            swapNode = getSwapNodeRecursive(deleteNode.getLeftOrNull(), deleteNode);
         } else {
-            swapNode = getRightSwapNodeRecursive(deleteNode.getRightOrNull());
+            swapNode = getSwapNodeRecursive(deleteNode.getRightOrNull(), deleteNode);
         }
 
         swapNode.setLeft(deleteNode.getLeftOrNull());
@@ -253,9 +253,7 @@ public class BinarySearchTree {
 
         if (deleteNode.getParentOrNull() == null) {
             this.root = swapNode;
-
             swapNode.setParent(null);
-            deleteNode.setParent(null);
 
             --this.count;
 
@@ -278,44 +276,44 @@ public class BinarySearchTree {
         return true;
     }
 
-    public PlayerNode getLeftSwapNodeRecursive(final PlayerNode start) {
-        if (start.getRightOrNull() == null) {
-            PlayerNode parent = start.getParentOrNull();
+    public PlayerNode getSwapNodeRecursive(final PlayerNode start, final PlayerNode deleteNode) {
+        if (start.getRating() < deleteNode.getRating()) {
+            if (start.getRightOrNull() == null) {
+                PlayerNode parent = start.getParentOrNull();
 
-            if (parent.getRating() < start.getRating()) {
-                parent.setRight(start.getLeftOrNull());
-            } else {
-                parent.setLeft(start.getLeftOrNull());
+                if (parent.getRating() < start.getRating()) {
+                    parent.setRight(start.getLeftOrNull());
+                } else {
+                    parent.setLeft(start.getLeftOrNull());
+                }
+
+                if (start.getLeftOrNull() != null) {
+                    start.getLeftOrNull().setParent(parent);
+                }
+
+                return start;
             }
 
-            if (start.getLeftOrNull() != null) {
-                start.getLeftOrNull().setParent(parent);
+            return getSwapNodeRecursive(start.getRightOrNull(), deleteNode);
+        } else {
+            if (start.getLeftOrNull() == null) {
+                PlayerNode parent = start.getParentOrNull();
+
+                if (parent.getRating() < start.getRating()) {
+                    parent.setRight(start.getRightOrNull());
+                } else {
+                    parent.setLeft(start.getRightOrNull());
+                }
+
+                if (start.getRightOrNull() != null) {
+                    start.getRightOrNull().setParent(parent);
+                }
+
+                return start;
             }
 
-            return start;
+            return getSwapNodeRecursive(start.getLeftOrNull(), deleteNode);
         }
-
-        return getLeftSwapNodeRecursive(start.getRightOrNull());
-    }
-
-    public PlayerNode getRightSwapNodeRecursive(final PlayerNode start) {
-        if (start.getLeftOrNull() == null) {
-            PlayerNode parent = start.getParentOrNull();
-
-            if (parent.getRating() < start.getRating()) {
-                parent.setRight(start.getRightOrNull());
-            } else {
-                parent.setLeft(start.getRightOrNull());
-            }
-
-            if (start.getRightOrNull() != null) {
-                start.getRightOrNull().setParent(parent);
-            }
-
-            return start;
-        }
-
-        return getRightSwapNodeRecursive(start.getLeftOrNull());
     }
 
     public void print() {
