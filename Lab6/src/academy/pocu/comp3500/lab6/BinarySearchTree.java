@@ -8,12 +8,20 @@ public class BinarySearchTree {
     private PlayerNode root;
     private int count;
 
-    public BinarySearchTree(PlayerNode root) {
+    public BinarySearchTree() {
+
+    }
+
+    public BinarySearchTree(final PlayerNode root) {
         this.root = root;
         this.count = 1;
     }
 
     public PlayerNode search(final Player player) {
+        if (this.root == null) {
+            return null;
+        }
+
         return searchOrNullRecursive(this.root, player);
     }
 
@@ -31,9 +39,20 @@ public class BinarySearchTree {
         }
     }
 
-    public void insert(final Player player) {
+    public boolean insert(final Player player) {
+        if (search(player) != null) {
+            return false;
+        } else if (this.root == null) {
+            this.root = new PlayerNode(player);
+            ++this.count;
+
+            return true;
+        }
+
         insertRecursive(this.root, player);
         ++this.count;
+
+        return true;
     }
 
     private void insertRecursive(final PlayerNode root, final Player player) {
@@ -60,8 +79,8 @@ public class BinarySearchTree {
         }
     }
 
-    public Player findMatchOrNull(Player player) {
-        PlayerNode target = searchOrNullRecursive(this.root, player);
+    public Player findMatchOrNull(final Player player) {
+        PlayerNode target = search(player);
 
         if (target == null) {
             return null;
@@ -124,11 +143,7 @@ public class BinarySearchTree {
 
         getTopRecursive(this.root, topCount, out);
 
-        for (int i = 0; i < topCount; ++i) {
-            result[i] = out.get(i);
-        }
-
-        return result;
+        return out.toArray(result);
     }
 
     private void getTopRecursive(final PlayerNode root, final int maxCount, final ArrayList<Player> out) {
@@ -164,11 +179,7 @@ public class BinarySearchTree {
 
         getBottomRecursive(this.root, bottomCount, out);
 
-        for (int i = 0; i < out.size(); ++i) {
-            result[i] = out.get(i);
-        }
-
-        return result;
+        return out.toArray(result);
     }
 
     private void getBottomRecursive(final PlayerNode root, final int maxCount, final ArrayList<Player> out) {
@@ -202,6 +213,7 @@ public class BinarySearchTree {
 
                 this.root = null;
                 --this.count;
+
                 return true;
             }
 
@@ -213,6 +225,7 @@ public class BinarySearchTree {
 
             deleteNode.setParent(null);
             --this.count;
+
             return true;
         }
 
@@ -245,6 +258,7 @@ public class BinarySearchTree {
             deleteNode.setParent(null);
 
             --this.count;
+
             return true;
         }
 

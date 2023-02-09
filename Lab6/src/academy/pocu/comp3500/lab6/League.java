@@ -8,6 +8,7 @@ public class League {
     private BinarySearchTree playerTreeRoot;
 
     public League() {
+        this.playerTreeRoot = new BinarySearchTree();
     }
 
     public League(Player[] players) {
@@ -18,41 +19,28 @@ public class League {
         }
     }
 
-    public boolean checkPlayerJoined(Player player) {
-        return (this.playerTreeRoot.search(player) != null);
-    }
-
     public Player findMatchOrNull(final Player player) {
-        if (this.playerTreeRoot == null) {
-            return null;
-        }
-
         return this.playerTreeRoot.findMatchOrNull(player);
     }
 
     public Player[] getTop(final int count) {
-        if (this.playerTreeRoot == null) {
-            return new Player[count];
+        if (count == 0) {
+            return new Player[0];
         }
 
         return this.playerTreeRoot.getTop(count);
     }
 
     public Player[] getBottom(final int count) {
-        if (this.playerTreeRoot == null) {
-            return new Player[count];
+        if (count == 0) {
+            return new Player[0];
         }
 
         return this.playerTreeRoot.getBottom(count);
     }
 
     public boolean join(final Player player) {
-        if (this.playerTreeRoot.search(player) != null) {
-            return false;
-        }
-
-        this.playerTreeRoot.insert(player);
-        return true;
+        return this.playerTreeRoot.insert(player);
     }
 
     public boolean leave(final Player player) {
@@ -60,6 +48,10 @@ public class League {
         this.playerTreeRoot.print();
 
         return result;
+    }
+
+    public boolean checkPlayerJoined(Player player) {
+        return (this.playerTreeRoot.search(player) != null);
     }
 
     public void printAllMember() {
