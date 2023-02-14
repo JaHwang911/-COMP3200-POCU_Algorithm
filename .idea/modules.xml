@@ -19,6 +19,7 @@
       <module fileurl="file://$PROJECT_DIR$/Lab8/Lab8.iml" filepath="$PROJECT_DIR$/Lab8/Lab8.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lab9/Lab9.iml" filepath="$PROJECT_DIR$/Lab9/Lab9.iml" />
       <module fileurl="file://$PROJECT_DIR$/PracticeBST/PracticeBST.iml" filepath="$PROJECT_DIR$/PracticeBST/PracticeBST.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PracticeRotateArray/PracticeRotateArray.iml" filepath="$PROJECT_DIR$/PracticeRotateArray/PracticeRotateArray.iml" />
       <module fileurl="file://$PROJECT_DIR$/PracticeSort/PracticeSort.iml" filepath="$PROJECT_DIR$/PracticeSort/PracticeSort.iml" />
     </modules>
   </component>
