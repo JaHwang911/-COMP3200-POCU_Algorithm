@@ -4,41 +4,53 @@ import java.util.Random;
 
 public class Program {
     public static void main(String[] args) {
-        TestBubbleSort();
-        TestSelectionSort();
-        TestInsertionSort();
-        TestQuickSort();
+        System.out.println("##### Start bubble sort test #####");
+        for (int i = 0; i < 100; ++i) {
+            TestBubbleSort();
+        }
+
+        System.out.println("##### Start selection sort test #####");
+        for (int i = 0; i < 100; ++i) {
+            TestSelectionSort();
+        }
+
+        System.out.println("##### Start insertion sort test #####");
+        for (int i = 0; i < 100; ++i) {
+            TestInsertionSort();
+        }
+
+        System.out.println("##### Start quick sort test #####");
+        for (int i = 0; i < 100; ++i) {
+            TestQuickSort();
+        }
+
+//        TestInsertionSort();
+//        TestQuickSort();
     }
 
     private static void checkSortResult(int[] nums) {
-        for (int i = 0; i < nums.length; ++i) {
-            assert(nums[i] == i + 1);
+        for (int i = 0; i < nums.length - 1; ++i) {
+            assert(nums[i] <= nums[i + 1]);
         }
     }
 
-    private static void shuffleNumbers(int[] nums) {
+    private static int[] generateNumbers() {
         Random random = new Random();
+        final int SIZE = random.nextInt(100 - 50) + 50;
+        int[] result = new int[SIZE];
 
-        for (int i = 0; i < nums.length; ++i) {
-            int index = random.nextInt(1000) % nums.length;
-            int swap = random.nextInt(1000) % nums.length;
-
-            assert(index < nums.length);
-            assert(swap < nums.length);
-
-            int tmp = nums[index];
-            nums[index] = nums[swap];
-            nums[swap] = tmp;
+        for (int i = 0; i < SIZE; ++i) {
+            result[i] = random.nextInt(1000 - 1) + 1;
         }
+
+        return result;
     }
 
     private static void TestBubbleSort() {
-        int[] nums = new int[] { 1, 2, 3, 4, 5, 6, 7 };
-
-        shuffleNumbers(nums);
+        int[] nums = generateNumbers();
 
         for (int i = 0; i < nums.length; ++i) {
-            for (int j = 0; j < nums.length - 1 - i; ++j) {
+            for (int j = 0; j < nums.length - i - 1; ++j) {
                 if (nums[j] > nums[j + 1]) {
                     int tmp = nums[j];
                     nums[j] = nums[j + 1];
@@ -51,37 +63,34 @@ public class Program {
     }
 
     private static void TestSelectionSort() {
-        int[] nums = new int[] { 1, 2, 3, 4, 5, 6, 7 };
-
-        shuffleNumbers(nums);
+        int[] nums = generateNumbers();
 
         for (int i = 0; i < nums.length; ++i) {
-            int index = i;
+            int minIndex = i;
 
             for (int j = i + 1; j < nums.length; ++j) {
-                if (nums[index] > nums[j]) {
-                    index = j;
+                if (nums[minIndex] > nums[j]) {
+                    minIndex = j;
                 }
             }
 
             int tmp = nums[i];
-            nums[i] = nums[index];
-            nums[index] = tmp;
+            nums[i] = nums[minIndex];
+            nums[minIndex] = tmp;
         }
 
         checkSortResult(nums);
     }
 
     private static void TestInsertionSort() {
-        int[] nums = new int[] { 1, 2, 3, 4, 5, 6, 7 };
-        shuffleNumbers(nums);
+        int[] nums = generateNumbers();
 
-        for (int i = 0; i < nums.length; ++i) {
+        for (int i = 1; i < nums.length; ++i) {
             for (int j = i; j > 0; --j) {
-                if (nums[j] < nums[j - 1]) {
-                    int tmp = nums[j];
-                    nums[j] = nums[j - 1];
-                    nums[j - 1] = tmp;
+                if (nums[j - 1] > nums[j]) {
+                    int tmp = nums[j - 1];
+                    nums[j - 1] = nums[j];
+                    nums[j] = tmp;
                 }
             }
         }
@@ -90,62 +99,43 @@ public class Program {
     }
 
     private static void TestQuickSort() {
-        int[] nums = new int[] { 1, 2, 3, 4, 5, 6, 7 };
-        shuffleNumbers(nums);
+        int[] nums = generateNumbers();
 
         quickSortRecursive(nums, 0, nums.length - 1);
+
+        checkSortResult(nums);
     }
 
-    private static void quickSortRecursive(int[] nums, int left, int right) {
-        if (left >= right) {
+    private static void quickSortRecursive(int[] arr, int left, int right) {
+        if (left > right) {
             return;
         }
 
-        int pivotPos = partition(nums, left, right);
-
-        quickSortRecursive(nums, left, pivotPos - 1);
-        quickSortRecursive(nums, pivotPos + 1, right);
-    }
-
-    private static int partition(int[] nums, int left, int right) {
-        int pivotValue = nums[right];
         int i = left;
 
-        for (int j = i; j < right; ++j) {
-            if (nums[j] < pivotValue) {
-                int tmp = nums[j];
-                nums[j] = nums[i];
-                nums[i] = tmp;
+        for (int j = left; j < right; ++j) {
+            if (arr[j] < arr[right]) {
+                int tmp = arr[j];
+                arr[j] = arr[i];
+                arr[i] = tmp;
 
                 ++i;
             }
         }
 
-        int tmp = nums[right];
-        nums[right] = nums[i];
-        nums[i] = tmp;
+        int tmp = arr[i];
+        arr[i] = arr[right];
+        arr[right] = tmp;
 
-        return i;
+        quickSortRecursive(arr, left, i - 1);
+        quickSortRecursive(arr, i + 1, right);
     }
 
     private static void TestMergeSort() {
-        int[] nums = new int[] { 1, 2, 3, 4, 5, 6, 7 };
-        int[] outNums = new int[nums.length];
-        shuffleNumbers(nums);
+        int[] nums = generateNumbers();
 
-        mergeSortReucursive(nums, 0, nums.length - 1, outNums);
+
 
         checkSortResult(nums);
-    }
-
-    private static void mergeSortReucursive(int[] nums, int left, int right, int[] outNums) {
-        if (left >= right) {
-            return;
-        }
-
-        int mid = (left + right) / 2;
-
-        mergeSortReucursive(nums, left, mid, outNums);
-        mergeSortReucursive(nums, mid + 1, right, outNums);
     }
 }
