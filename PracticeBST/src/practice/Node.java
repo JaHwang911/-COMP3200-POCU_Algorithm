@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Node {
     private final int data;
+    private Node parent;
     private Node left;
     private Node right;
 
@@ -15,6 +16,10 @@ public class Node {
         return this.data;
     }
 
+    public Node getParent() {
+        return this.parent;
+    }
+
     public Node getLeft() {
         return this.left;
     }
@@ -23,33 +28,15 @@ public class Node {
         return this.right;
     }
 
-    public static Node search(int data) {
-        return null;
+    public void setParent(Node parent) {
+        this.parent = parent;
     }
 
-    public static Node insertRecursive(Node node, int data) {
-        if (node == null) {
-            return new Node(data);
-        }
-
-        if (node.getData() > data) {
-            return insertRecursive(node.getLeft(), data);
-        }
-
-        return insertRecursive(node.getRight(), data);
+    public void setLeft(Node leftOrNull) {
+        this.left = leftOrNull;
     }
 
-    public static void traverseInOrder(Node root, ArrayList<Integer> out) {
-        traverseInOrderRecursive(root, out);
-    }
-
-    private static void traverseInOrderRecursive(Node root, ArrayList<Integer> out) {
-        if (root == null) {
-            return;
-        }
-
-        traverseInOrderRecursive(root.getLeft(), out);
-        out.add(root.data);
-        traverseInOrderRecursive(root.getRight(), out);
+    public void setRight(Node rightOrNull) {
+        this.right = rightOrNull;
     }
 }
