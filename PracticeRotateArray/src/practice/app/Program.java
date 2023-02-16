@@ -44,7 +44,7 @@ public class Program {
         assert (index == -1);
     }
 
-    private static int indexOfRotateArray(int[] arr, int start, int end, int num) {
+    private static int indexOfRotateArray(final int[] arr, final int start, final int end, final int num) {
         if (start > end) {
             return -1;
         }
@@ -63,7 +63,7 @@ public class Program {
             return indexOfRotateArray(arr, mid + 1, end, num);
         }
 
-        if (num >= arr[mid] && num <= arr[end]) {
+        if (num > arr[mid] && num <= arr[end]) {
             return indexOfRotateArray(arr, mid + 1, end, num);
         }
 
