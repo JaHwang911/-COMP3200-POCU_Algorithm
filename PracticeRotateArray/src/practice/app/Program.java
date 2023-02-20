@@ -1,7 +1,15 @@
 package practice.app;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Random;
+
 public class Program {
     public static void main(String[] args) {
+        testBasicBinarySearch();
         testGetIndexOf();
         testGetSecondMax();
     }
@@ -47,6 +55,44 @@ public class Program {
 
         index = indexOfRotateArray(arr, 0, arr.length - 1, 7);
         assert (index == -1);
+    }
+
+    private static void testBasicBinarySearch() {
+        Random random = new Random();
+        final int DATA_SIZE = 100;
+        HashSet<Integer> uniqueNums = new HashSet<>(DATA_SIZE);
+
+        for (int i = 0; uniqueNums.size() < DATA_SIZE; ++i) {
+            uniqueNums.add(random.nextInt(100000 - 1) + 1);
+        }
+
+        assert (uniqueNums.size() == DATA_SIZE);
+
+        ArrayList<Integer> nums = new ArrayList<>(uniqueNums);
+        Collections.sort(nums);
+
+        final int MID = (DATA_SIZE - 1) / 2 - 1;
+        int index = indexOfRecursive(nums, 0, nums.size(), nums.get(MID), 1);
+        assert (index == MID);
+    }
+
+    private static int indexOfRecursive(final ArrayList<Integer> nums, final int left, final int right, final int target, int level) {
+        if (left >= right) {
+            return -1;
+        }
+
+        int mid = left + (right - left) / 2;
+
+        if (nums.get(mid) == target) {
+            System.out.println(level);
+            return mid;
+        }
+
+        if (nums.get(mid) < target) {
+            return indexOfRecursive(nums, mid + 1, right, target, level + 1);
+        }
+
+        return indexOfRecursive(nums, left, mid - 1, target, level + 1);
     }
 
     private static void testGetSecondMax() {
