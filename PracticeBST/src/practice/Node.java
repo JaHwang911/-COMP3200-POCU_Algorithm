@@ -1,7 +1,7 @@
 package practice;
 
 public class Node {
-    public final int data;
+    public int data;
     public Node left;
     public Node right;
 

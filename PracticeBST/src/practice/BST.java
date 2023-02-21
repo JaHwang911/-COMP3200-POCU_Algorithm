@@ -67,12 +67,16 @@ public class BST {
     public static boolean delete(final int data) {
         boolean[] isDeleteNode = new boolean[] {false};
 
-        deleteRecursive(isDeleteNode, root, data);
+        root = deleteRecursive(isDeleteNode, root, data);
 
         return isDeleteNode[0];
     }
 
-    private static Node deleteRecursive(boolean[] isDeleteNode, final Node node, final int data) {
+    private static Node deleteRecursive(boolean[] isDeleteNode, Node node, final int data) {
+        if (node == null) {
+            return null;
+        }
+
         if (node.data < data) {
             node.right = deleteRecursive(isDeleteNode, node.right, data);
         } else if (node.data > data) {
@@ -87,22 +91,13 @@ public class BST {
             }
 
             Node swapNode = node.right;
-            Node returnNode;
 
             while (swapNode.left != null) {
                 swapNode = swapNode.left;
             }
 
-            returnNode = swapNode.right;
-
-            if (node == root) {
-                root = swapNode;
-            }
-
-            swapNode.left = node.left;
-            swapNode.right = node.right;
-
-            return returnNode;
+            node.data = swapNode.data;
+            node.right = deleteRecursive(isDeleteNode, node.right, swapNode.data);
         }
 
         return node;
