@@ -1,307 +1,110 @@
 package practice;
 
-import practice.Node;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class BST {
-    private Node root;
-    private int count;
+    private static Node root;
+    private static int count;
 
     public BST() { }
 
     public BST(final int data) {
-        this.root = new Node(data);
-        this.count = 1;
+        root = new Node(data);
+        count = 1;
     }
 
-    public boolean search(final int data) {
-        return (searchOrNullRecursive(this.root, data) != null);
+    public void insert(final int data) {
+        if (root == null) {
+            root = new Node(data);
+            ++count;
+
+            return;
+        }
+
+        insertRecursive(root, data);
+        ++count;
     }
 
-    private Node searchOrNullRecursive(final Node root, final int data) {
+    private void insertRecursive(final Node root, final int data) {
+        if (root.data < data) {
+            if (root.right == null) {
+                root.right = new Node(data);
+                return;
+            }
+
+            insertRecursive(root.right, data);
+            return;
+        }
+
+        if (root.left == null) {
+            root.left = new Node(data);
+            return;
+        }
+
+        insertRecursive(root.left, data);
+    }
+
+    public static boolean search(final int data) {
+        return searchOrNullRecursive(root, data) != null;
+    }
+
+    private static Node searchOrNullRecursive(Node root, final int data) {
         if (root == null) {
             return null;
         }
 
-        if (root.getData() == data) {
+        if (root.data ==  data) {
             return root;
         }
 
-        if (root.getData() < data) {
-            return searchOrNullRecursive(root.getRight(), data);
+        if (root.data < data) {
+            return searchOrNullRecursive(root.right, data);
         }
 
-        return searchOrNullRecursive(root.getLeft(), data);
+        return searchOrNullRecursive(root.left, data);
     }
 
-    public void insert(final int data) {
-        if (this.root == null) {
-            this.root = new Node(data);
-            ++this.count;
+    public static boolean delete(final int data) {
+        boolean[] isDeleteNode = new boolean[] {false};
 
-            return;
-        }
+        deleteRecursive(isDeleteNode, root, data);
 
-        insertRecursive(this.root, data);
-        ++this.count;
+        return isDeleteNode[0];
     }
 
-    private void insertRecursive(final Node root, final int data) {
-        if (root.getData() < data) {
-            if (root.getRight() == null) {
-                Node newNode = new Node(data);
-                newNode.setParent(root);
-
-                root.setRight(newNode);
-                return;
-            }
-
-            insertRecursive(root.getRight(), data);
-
-            return;
-        }
-
-        if (root.getLeft() == null) {
-            Node newNode = new Node(data);
-            newNode.setParent(root);
-
-            root.setLeft(newNode);
-            return;
-        }
-
-        insertRecursive(root.getLeft(), data);
-    }
-
-    public boolean delete(final int data) {
-        Node deleteNode = searchOrNullRecursive(this.root, data);
-
-        if (deleteNode == null) {
-            return false;
-        }
-
-        --this.count;
-
-        if (deleteNode.getLeft() == null && deleteNode.getRight() == null){
-            Node parent = deleteNode.getParent();
-
-            if (parent == null) {
-                assert (this.root == deleteNode);
-                this.root = null;
-
-                return true;
-            }
-
-            if (parent.getData() < deleteNode.getData()) {
-                parent.setRight(null);
-            } else {
-                parent.setLeft(null);
-            }
-
-            deleteNode.setParent(null);
-
-            return true;
-        }
-
-        Node swapNode;
-
-        if (deleteNode.getLeft() == null) {
-            swapNode = getSwapNodeRecursive(deleteNode.getRight(), deleteNode);
+    private static Node deleteRecursive(boolean[] isDeleteNode, final Node node, final int data) {
+        if (node.data < data) {
+            node.right = deleteRecursive(isDeleteNode, node.right, data);
+        } else if (node.data > data) {
+            node.left = deleteRecursive(isDeleteNode, node.left, data);
         } else {
-            swapNode = getSwapNodeRecursive(deleteNode.getLeft(), deleteNode);
-        }
+            isDeleteNode[0] = true;
 
-        swapNode.setParent(deleteNode.getParent());
-        swapNode.setLeft(deleteNode.getLeft());
-        swapNode.setRight(deleteNode.getRight());
-
-        if (swapNode.getLeft() != null) {
-            swapNode.getLeft().setParent(swapNode);
-        }
-
-        if (swapNode.getRight() != null) {
-            swapNode.getRight().setParent(swapNode);
-        }
-
-        Node parent = swapNode.getParent();
-
-        if (parent != null) {
-            if (parent.getData() < swapNode.getData()) {
-                parent.setRight(swapNode);
-            } else {
-                parent.setLeft(swapNode);
-            }
-        } else {
-            assert (this.root == deleteNode);
-            this.root = swapNode;
-        }
-
-        deleteNode.setParent(null);
-        deleteNode.setRight(null);
-        deleteNode.setRight(null);
-
-        return true;
-    }
-
-    private Node getSwapNodeRecursive(final Node swapNode, final Node deleteNode) {
-        if (swapNode.getData() < deleteNode.getData()) {
-            if (swapNode.getRight() == null) {
-                Node parent = swapNode.getParent();
-
-                if (parent.getData() < swapNode.getData()) {
-                    parent.setRight(swapNode.getLeft());
-                } else {
-                    parent.setLeft(swapNode.getLeft());
-                }
-
-                if (swapNode.getLeft() != null) {
-                    swapNode.getLeft().setParent(parent);
-                }
-
-                return swapNode;
+            if (node.left == null) {
+                return node.right;
+            } else if (node.right == null) {
+                return node.left;
             }
 
-            return getSwapNodeRecursive(swapNode.getRight(), deleteNode);
-        }
+            Node swapNode = node.right;
+            Node returnNode;
 
-        if (swapNode.getLeft() == null) {
-            Node parent = swapNode.getParent();
-
-            if (parent.getData() < swapNode.getData()) {
-                parent.setRight(swapNode.getRight());
-            } else {
-                parent.setLeft(swapNode.getRight());
+            while (swapNode.left != null) {
+                swapNode = swapNode.left;
             }
 
-            if (swapNode.getRight() != null) {
-                swapNode.getRight().setParent(parent);
+            returnNode = swapNode.right;
+
+            if (node == root) {
+                root = swapNode;
             }
 
-            return swapNode;
+            swapNode.left = node.left;
+            swapNode.right = node.right;
+
+            return returnNode;
         }
 
-        return getSwapNodeRecursive(swapNode.getLeft(), deleteNode);
-    }
-
-    public int[] getTop(final int count) {
-        final int SIZE;
-
-        if (count > this.count) {
-            SIZE = this.count;
-        } else {
-            SIZE = count;
-        }
-
-        int[] result = new int[SIZE];
-        ArrayList<Integer> out = new ArrayList<>(SIZE);
-
-        getTopRecursive(this.root, SIZE, out);
-        assert (out.size() == SIZE);
-
-        for (int i = 0; i < out.size(); ++i) {
-            result[i] = out.get(i);
-        }
-
-        return result;
-    }
-
-    private void getTopRecursive(final Node root, final int count, final ArrayList<Integer> out) {
-        if (root == null) {
-            return;
-        }
-
-        getTopRecursive(root.getRight(), count, out);
-
-        if (out.size() < count) {
-            out.add(root.getData());
-        } else {
-            return;
-        }
-
-        getTopRecursive(root.getLeft(), count, out);
-    }
-
-    public int[] getBottom(final int count) {
-        final int SIZE;
-
-        if (count > this.count) {
-            SIZE = this.count;
-        } else {
-            SIZE = count;
-        }
-
-        int[] result = new int[SIZE];
-        ArrayList<Integer> out = new ArrayList<>(SIZE);
-
-        getBottomRecursive(this.root, SIZE, out);
-        assert (out.size() == SIZE);
-
-        for (int i = 0; i < out.size(); ++i) {
-            result[i] = out.get(i);
-        }
-
-        return result;
-    }
-
-    private void getBottomRecursive(final Node root, final int count, final ArrayList<Integer> out) {
-        if (root == null) {
-            return;
-        }
-
-        getBottomRecursive(root.getLeft(), count, out);
-
-        if (out.size() < count) {
-            out.add(root.getData());
-        } else {
-            return;
-        }
-
-        getBottomRecursive(root.getRight(), count, out);
-    }
-
-    public int[] traversalInOrder() {
-        int[] result = new int[this.count];
-        ArrayList<Integer> out = new ArrayList<>(this.count);
-        traversalInOrderRecursive(this.root, out);
-
-        for (int i = 0; i < out.size(); ++i) {
-            result[i] = out.get(i);
-        }
-
-        return result;
-    }
-
-    private void traversalInOrderRecursive(Node node, ArrayList<Integer> out) {
-        if (node == null) {
-            return;
-        }
-
-        traversalInOrderRecursive(node.getLeft(), out);
-        out.add(node.getData());
-        traversalInOrderRecursive(node.getRight(), out);
-    }
-
-    public int[] traversalPreOrder() {
-        int[] result = new int[this.count];
-        ArrayList<Integer> out = new ArrayList<>(this.count);
-
-        traversalPreOrderRecursive(this.root, out);
-
-        for (int i = 0; i < out.size(); ++i) {
-            result[i] = out.get(i);
-        }
-
-        return result;
-    }
-
-    private void traversalPreOrderRecursive(Node node, ArrayList<Integer> out) {
-        if (node == null) {
-            return;
-        }
-
-        out.add(node.getData());
-        traversalPreOrderRecursive(node.getLeft(), out);
-        traversalPreOrderRecursive(node.getRight(), out);
+        return node;
     }
 }

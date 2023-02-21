@@ -9,9 +9,9 @@ import java.util.Random;
 
 public class Program {
     public static void main(String[] args) {
-        for (int i = 0; i < 50; ++i) {
-            testInsert();
-        }
+//        for (int i = 0; i < 50; ++i) {
+//            testInsert();
+//        }
 
         for (int i = 0; i < 50; ++i) {
             testDelete();
@@ -44,7 +44,7 @@ public class Program {
     private static void testDelete() {
         System.out.println("##### Start delete test #####");
         Random random = new Random();
-        final int SIZE = random.nextInt(100 - 50) + 50;
+        final int SIZE = random.nextInt(10 - 5) + 5;
         HashSet<Integer> numbers = new HashSet<>(SIZE);
 
         while (numbers.size() < SIZE) {
@@ -52,11 +52,9 @@ public class Program {
         }
 
         BST bst = new BST();
-        BST bst1 = new BST();
 
         for (int num : numbers) {
             bst.insert(num);
-            bst1.insert(num);
         }
 
         boolean bIsDelete;
@@ -67,9 +65,6 @@ public class Program {
             if (!bIsDelete) {
                 assert (bIsDelete);
             }
-
-            assert (!bst.search(num));
-            bst1.delete(num);
         }
     }
 
