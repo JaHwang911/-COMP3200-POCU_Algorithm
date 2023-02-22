@@ -9,52 +9,64 @@ import java.util.Random;
 
 public class Program {
     public static void main(String[] args) {
+        testGetIndexOfSecondMax();
+        testGetIndexOfSecondMin();
         testBasicBinarySearch();
-        testGetIndexOf();
-        testGetSecondMax();
     }
 
-    private static void testGetIndexOf() {
+    private static void rotateArray(int[] arr) {
+        assert (arr.length > 1);
+        int prev = arr[0];
+
+        for (int i = 1; i < arr.length; ++i) {
+            int temp = arr[i];
+            arr[i] = prev;
+            prev = temp;
+        }
+
+        arr[0] = prev;
+    }
+
+    private static void testGetIndexOfSecondMax() {
         int[] arr = new int[] { 20, 25, 26, 29, 33, 1, 3, 5, 6, 10, 11, 19 };
 
-        int index = indexOfRotateArray(arr, 0, arr.length - 1, 20);
-        assert (index == 0);
+        rotateArray(arr);
+        int expectedIndex = 4;
+        int actual = getIndexOfSecondMax(arr, 0, arr.length - 1);
+        assert (expectedIndex == actual);
 
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 25);
-        assert (index == 1);
+        for (int i = 0; i < arr.length - 1; ++i) {
+            rotateArray(arr);
 
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 26);
-        assert (index == 2);
+            ++expectedIndex;
+            if (expectedIndex == arr.length) {
+                expectedIndex = 0;
+            }
 
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 29);
-        assert (index == 3);
+            actual = getIndexOfSecondMax(arr, 0, arr.length - 1);
+            assert (expectedIndex == actual);
+        }
+    }
 
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 33);
-        assert (index == 4);
+    private static void testGetIndexOfSecondMin() {
+        int[] arr = new int[] { 20, 25, 26, 29, 33, 1, 3, 5, 6, 10, 11, 19 };
 
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 1);
-        assert (index == 5);
+        rotateArray(arr);
+        int expectedIndex = 7;
+        int actual = getIndexOfSecondMin(arr, 0, arr.length - 1);
+        assert (expectedIndex == actual);
 
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 3);
-        assert (index == 6);
+        for (int i = 0; i < arr.length; ++i) {
+            rotateArray(arr);
+            ++expectedIndex;
 
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 5);
-        assert (index == 7);
+            if (expectedIndex == arr.length) {
+                expectedIndex = 0;
+            }
 
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 6);
-        assert (index == 8);
-
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 10);
-        assert (index == 9);
-
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 11);
-        assert (index == 10);
-
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 19);
-        assert (index == 11);
-
-        index = indexOfRotateArray(arr, 0, arr.length - 1, 7);
-        assert (index == -1);
+            actual = getIndexOfSecondMin(arr, 0, arr.length - 1);
+            assert (expectedIndex == actual);
+        }
     }
 
     private static void testBasicBinarySearch() {
@@ -95,28 +107,9 @@ public class Program {
         return indexOfRecursive(nums, left, mid - 1, target, level + 1);
     }
 
-    private static void testGetSecondMax() {
-        int[] arr1 = new int[] { 20, 25, 26, 29, 33, 1, 3, 5, 6, 10, 11, 19 };
-        int[] arr2 = new int[] { 33, 1, 3, 5, 6, 10, 11, 19, 20, 25, 26, 29 };
-        int[] arr3 = new int[] { 1, 3, 5, 6, 10, 11, 19, 20, 25, 26, 29, 33 };
-        int[] arr4 = new int[] { 19, 20, 25, 26, 29, 33, 1, 3, 5, 6, 10, 11 };
-
-        int index = getIndexOfSecondMax(arr1, 0, arr1.length - 1);
-        assert (index == 3);
-
-        index = getIndexOfSecondMax(arr2, 0, arr2.length - 1);
-        assert (index == 11);
-
-        index = getIndexOfSecondMax(arr3, 0, arr3.length - 1);
-        assert (index == 10);
-
-        index = getIndexOfSecondMax(arr4, 0, arr4.length - 1);
-        assert (index == 4);
-    }
-
     private static int getIndexOfSecondMax(final int[] arr, int left, int right) {
         if (right - left <= 1) {
-            int maxIndex = arr[right] > arr[left] ? right : left;
+            int maxIndex = arr[left] > arr[right] ? left : right;
 
             if (maxIndex == 0) {
                 return arr.length - 1;
@@ -136,6 +129,30 @@ public class Program {
         }
 
         return getIndexOfSecondMax(arr, left, mid - 1);
+    }
+
+    private static int getIndexOfSecondMin(final int[] arr, int left, int right) {
+        if (right - left <= 1) {
+            int minIndex = arr[left] < arr[right] ? left : right;
+
+            if (minIndex == arr.length - 1) {
+                return 0;
+            }
+
+            return minIndex + 1;
+        }
+
+        int mid = left + (right - left) / 2;
+
+        if (arr[mid - 1] > arr[mid] && arr[mid + 1] > arr[mid]) {
+            return mid + 1;
+        }
+
+        if (arr[mid] < arr[right]) {
+            return getIndexOfSecondMin(arr, left, mid - 1);
+        }
+
+        return getIndexOfSecondMin(arr, mid + 1, right);
     }
 
     private static int indexOfRotateArray(final int[] arr, final int start, final int end, final int num) {
