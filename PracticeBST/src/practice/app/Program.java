@@ -9,9 +9,9 @@ import java.util.Random;
 
 public class Program {
     public static void main(String[] args) {
-//        for (int i = 0; i < 50; ++i) {
-//            testInsert();
-//        }
+        for (int i = 0; i < 50; ++i) {
+            testInsert();
+        }
 
         for (int i = 0; i < 50; ++i) {
             testDelete();
@@ -67,24 +67,4 @@ public class Program {
             }
         }
     }
-
-    private static void testGetTop() {
-        Random random = new Random();
-        final int SIZE = random.nextInt(1000 - 50) + 50;
-        ArrayList<Integer> numbers = new ArrayList<>(SIZE);
-
-        for (int i = 0; i < SIZE; ++i) {
-            numbers.add(random.nextInt(1000 - 1) + 1);
-        }
-
-        BST bst = new BST();
-
-        for (int num : numbers) {
-            bst.insert(num);
-        }
-
-        Collections.sort(numbers);
-    }
-
-    
 }

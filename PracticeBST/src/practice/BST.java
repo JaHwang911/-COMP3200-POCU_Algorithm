@@ -1,71 +1,59 @@
 package practice;
 
-import java.util.ArrayList;
-
 public class BST {
     private static Node root;
-    private static int count;
 
     public BST() { }
 
     public BST(final int data) {
         root = new Node(data);
-        count = 1;
     }
 
-    public void insert(final int data) {
+    public static void insert(final int data) {
         if (root == null) {
             root = new Node(data);
-            ++count;
-
             return;
         }
 
-        insertRecursive(root, data);
-        ++count;
+        root = insertRecursive(root, data);
     }
 
-    private void insertRecursive(final Node root, final int data) {
-        if (root.data < data) {
-            if (root.right == null) {
-                root.right = new Node(data);
-                return;
-            }
-
-            insertRecursive(root.right, data);
-            return;
+    private static Node insertRecursive(Node node, final int data) {
+        if (node == null) {
+            return new Node(data);
         }
 
-        if (root.left == null) {
-            root.left = new Node(data);
-            return;
+        if (node.data < data) {
+            node.right = insertRecursive(node.right, data);
+        } else {
+            node.left = insertRecursive(node.left, data);
         }
 
-        insertRecursive(root.left, data);
+        return node;
     }
 
     public static boolean search(final int data) {
-        return searchOrNullRecursive(root, data) != null;
+        return searchRecursive(root, data);
     }
 
-    private static Node searchOrNullRecursive(Node root, final int data) {
-        if (root == null) {
-            return null;
+    private static boolean searchRecursive(Node node, final int data) {
+        if (node == null) {
+            return false;
         }
 
-        if (root.data ==  data) {
-            return root;
+        if (node.data == data) {
+            return true;
         }
 
-        if (root.data < data) {
-            return searchOrNullRecursive(root.right, data);
+        if (node.data < data) {
+            return searchRecursive(node.right, data);
         }
 
-        return searchOrNullRecursive(root.left, data);
+        return searchRecursive(node.left, data);
     }
 
     public static boolean delete(final int data) {
-        boolean[] isDeleteNode = new boolean[] {false};
+        boolean[] isDeleteNode = new boolean[] { false };
 
         root = deleteRecursive(isDeleteNode, root, data);
 
@@ -73,10 +61,6 @@ public class BST {
     }
 
     private static Node deleteRecursive(boolean[] isDeleteNode, Node node, final int data) {
-        if (node == null) {
-            return null;
-        }
-
         if (node.data < data) {
             node.right = deleteRecursive(isDeleteNode, node.right, data);
         } else if (node.data > data) {
