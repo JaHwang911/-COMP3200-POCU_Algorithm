@@ -98,7 +98,7 @@ public class Program {
         for (int i = 0; i < nums.length; ++i) {
             int minIndex = i;
 
-            for (int j = i + 1; j < nums.length; ++j) {
+            for (int j = i + 1; j < nums.length; j++) {
                 if (nums[minIndex] > nums[j]) {
                     minIndex = j;
                 }
@@ -133,7 +133,7 @@ public class Program {
     private static void testInsertionSort() {
         int[] nums = generateNumbers();
 
-        for (int i = 1; i < nums.length; ++i) {
+        for(int i = 1; i < nums.length; ++i) {
             int j = i;
 
             while (j > 0 && nums[j] < nums[j - 1]) {
@@ -153,9 +153,9 @@ public class Program {
             int j = i;
 
             while (j > 0 && nums[j] > nums[j - 1]) {
-                int tmp = nums[j - 1];
-                nums[j - 1] = nums[j];
-                nums[j] = tmp;
+                int tmp = nums[j];
+                nums[j] = nums[j- 1];
+                nums[j - 1] = tmp;
 
                 --j;
             }
