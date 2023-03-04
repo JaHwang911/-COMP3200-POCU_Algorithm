@@ -5,7 +5,7 @@ import academy.pocu.comp3500.assignment3.chess.PlayerBase;
 
 public class Player extends PlayerBase {
     private final static int BOARD_SIZE = 8;
-    private final static int MAX_DEPTH = 4;
+    private final static int MAX_DEPTH = 3;
 
     private static final int[][] knightMoveOffset = {
             {1, 2},
@@ -63,12 +63,12 @@ public class Player extends PlayerBase {
 
     @Override
     public Move getNextMove(char[][] board, final Move opponentMove) {
-        getMinimax(board, 0, true);
+        getMinimax(board, 0, true, super.isWhite());
 
         return this.currentMove;
     }
 
-    private int getMinimax(char[][] board, final int depth, boolean isMax) {
+    private int getMinimax(char[][] board, final int depth, boolean isMax, boolean isWhiteTurn) {
         if (depth == MAX_DEPTH) {
             return getEvaluate(board);
         }
@@ -84,9 +84,9 @@ public class Player extends PlayerBase {
             for (int j = 0; j < BOARD_SIZE; ++j) {
                 if (board[i][j] == 0) {
                     continue;
-                } else if (super.isWhite() && Character.isUpperCase(board[i][j])) {
+                } else if (isWhiteTurn && Character.isUpperCase(board[i][j])) {
                     continue;
-                } else if (!super.isWhite() && Character.isLowerCase(board[i][j])) {
+                } else if (!isWhiteTurn && Character.isLowerCase(board[i][j])) {
                     continue;
                 }
 
@@ -100,7 +100,7 @@ public class Player extends PlayerBase {
                                 board[i][j] = 0;
                                 board[i - 2][j] = symbol;
 
-                                score = getMinimax(board, depth + 1, !isMax);
+                                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                                 if (isMax) {
                                     if (score > result) {
@@ -129,7 +129,7 @@ public class Player extends PlayerBase {
                             board[i][j] = 0;
                             board[i - 1][j] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax);
+                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                             if (isMax) {
                                 if (score > result) {
@@ -158,7 +158,7 @@ public class Player extends PlayerBase {
                             board[i][j] = 0;
                             board[i - 1][j - 1] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax);
+                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                             if (isMax) {
                                 if (score > result) {
@@ -187,7 +187,7 @@ public class Player extends PlayerBase {
                             board[i][j] = 0;
                             board[i - 1][j + 1] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax);
+                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                             if (isMax) {
                                 if (score > result) {
@@ -216,7 +216,7 @@ public class Player extends PlayerBase {
                                 board[i][j] = 0;
                                 board[i + 2][j] = symbol;
 
-                                score = getMinimax(board, depth + 1, !isMax);
+                                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                                 if (isMax) {
                                     if (score > result) {
@@ -245,7 +245,7 @@ public class Player extends PlayerBase {
                             board[i][j] = 0;
                             board[i + 1][j] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax);
+                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                             if (isMax) {
                                 if (score > result) {
@@ -273,7 +273,7 @@ public class Player extends PlayerBase {
                             board[i][j] = 0;
                             board[i + 1][j - 1] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax);
+                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                             if (isMax) {
                                 if (score > result) {
@@ -301,7 +301,7 @@ public class Player extends PlayerBase {
                             board[i][j] = 0;
                             board[i + 1][j + 1] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax);
+                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                             if (isMax) {
                                 if (score > result) {
@@ -337,7 +337,7 @@ public class Player extends PlayerBase {
                                 board[i][j] = 0;
                                 board[toY][toX] = symbol;
 
-                                score = getMinimax(board, depth + 1, !isMax);
+                                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                                 if (isMax) {
                                     if (score > result) {
@@ -364,7 +364,7 @@ public class Player extends PlayerBase {
                         break;
                     case 'b':
                     case 'B':
-                        score = bishopMove(board, j, i, depth, isMax);
+                        score = bishopMove(board, j, i, depth, isMax, isWhiteTurn);
 
                         if (isMax) {
                             if (score > result) {
@@ -378,7 +378,7 @@ public class Player extends PlayerBase {
                         break;
                     case 'r':
                     case 'R':
-                        score = rookMove(board, j, i, depth, isMax);
+                        score = rookMove(board, j, i, depth, isMax, isWhiteTurn);
 
                         if (isMax) {
                             if (score > result) {
@@ -392,7 +392,7 @@ public class Player extends PlayerBase {
                         break;
                     case 'q':
                     case 'Q':
-                        score = bishopMove(board, j, i, depth, isMax);
+                        score = bishopMove(board, j, i, depth, isMax, isWhiteTurn);
 
                         if (isMax) {
                             if (score > result) {
@@ -404,7 +404,7 @@ public class Player extends PlayerBase {
                             }
                         }
 
-                        score = rookMove(board, j, i, depth, isMax);
+                        score = rookMove(board, j, i, depth, isMax, isWhiteTurn);
 
                         if (isMax) {
                             if (score > result) {
@@ -426,7 +426,7 @@ public class Player extends PlayerBase {
                                 board[i][j] = 0;
                                 board[toY][toX] = symbol;
 
-                                score = getMinimax(board, depth + 1, !isMax);
+                                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                                 if (isMax) {
                                     if (score > result) {
@@ -463,7 +463,7 @@ public class Player extends PlayerBase {
         return result;
     }
 
-    private int bishopMove(char[][] board, int fromX, int fromY, final int depth, boolean isMax) {
+    private int bishopMove(char[][] board, int fromX, int fromY, final int depth, boolean isMax, boolean isWhiteTurn) {
         int result;
         int score;
         int offsetX = 1;
@@ -485,7 +485,7 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax);
+                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                 if (isMax) {
                     if (score > result) {
@@ -528,7 +528,7 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax);
+                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                 if (isMax) {
                     if (score > result) {
@@ -569,7 +569,7 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax);
+                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                 if (isMax) {
                     if (score > result) {
@@ -602,7 +602,7 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax);
+                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                 if (isMax) {
                     if (score > result) {
@@ -627,7 +627,7 @@ public class Player extends PlayerBase {
         return result;
     }
 
-    private int rookMove(char[][] board, int fromX, int fromY, final int depth, boolean isMax) {
+    private int rookMove(char[][] board, int fromX, int fromY, final int depth, boolean isMax, boolean isWhiteTurn) {
         int result;
         int score;
         int offsetX = 1;
@@ -648,7 +648,7 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax);
+                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                 if (isMax) {
                     if (score > result) {
@@ -679,7 +679,7 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax);
+                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                 if (isMax) {
                     if (score > result) {
@@ -711,7 +711,7 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax);
+                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                 if (isMax) {
                     if (score > result) {
@@ -742,7 +742,7 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax);
+                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
 
                 if (isMax) {
                     if (score > result) {
@@ -770,7 +770,11 @@ public class Player extends PlayerBase {
 
         for (int i = 0; i < BOARD_SIZE; ++i) {
             for (int j = 0; j < BOARD_SIZE; ++j) {
-                char symbol = Character.toLowerCase(board[i][j]);
+                if (board[i][j] == 0) {
+                    continue;
+                }
+
+                char symbol = board[i][j];
 
                 switch (symbol) {
                     case 'p':
@@ -822,7 +826,7 @@ public class Player extends PlayerBase {
     private boolean isMoveValid(char[][] board, int fromX, int fromY, int toX, int toY) {
         if (toX < 0 || toX >= BOARD_SIZE || toY < 0 || toY >= BOARD_SIZE) {
             return false;
-        } else if (board[toY][toX] != 0 && Character.isLowerCase(board[fromY][fromX]) == Character.isUpperCase(board[toY][toX])) {
+        } else if (board[toY][toX] != 0 && Character.isLowerCase(board[fromY][fromX]) == Character.isLowerCase(board[toY][toX])) {
             return false;
         }
 
@@ -831,6 +835,8 @@ public class Player extends PlayerBase {
 
     private boolean isPawnMoveValid(char[][] board, int fromX, int fromY, int toX, int toY) {
         if (!isMoveValid(board, fromX, fromY, toX, toY)) {
+            return false;
+        } else if (fromX == toX && board[toY][toX] != 0) {
             return false;
         } else if (fromX != toX && board[toY][toX] == 0) {
             return false;
