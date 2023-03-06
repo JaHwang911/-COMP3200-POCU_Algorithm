@@ -8,14 +8,14 @@ public class Player extends PlayerBase {
     private final static int MAX_DEPTH = 3;
 
     private static final int[][] knightMoveOffset = {
+            {1, -2},
+            {2, -1},
+            {2, 1},
             {1, 2},
             {-1, 2},
-            {1, -2},
-            {-1, -2},
-            {2, 1},
-            {2, -1},
             {-2, 1},
-            {-2, -1}
+            {-2, -1},
+            {-1, -2}
     };
 
     private static final int[][] kingMoveOffset = {
@@ -68,17 +68,12 @@ public class Player extends PlayerBase {
         return this.currentMove;
     }
 
-    private int getMinimax(char[][] board, final int depth, boolean isMax, boolean isWhiteTurn) {
+    private int getMinimax(char[][] board, final int depth, boolean isMyTurn, boolean isWhiteTurn) {
         if (depth == MAX_DEPTH) {
             return getEvaluate(board);
         }
 
-        int result;
-        if (isMax) {
-            result = Integer.MIN_VALUE;
-        } else {
-            result = Integer.MAX_VALUE;
-        }
+        int result = isMyTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
         for (int i = 0; i < BOARD_SIZE; ++i) {
             for (int j = 0; j < BOARD_SIZE; ++j) {
@@ -92,269 +87,246 @@ public class Player extends PlayerBase {
 
                 char symbol = board[i][j];
                 int score;
+                int toX;
+                int toY;
 
                 switch (symbol) {
                     case 'p':
                         if (i == 6) {
-                            if (isPawnMoveValid(board, j, i, j, i - 2)) {
+                            toX = j;
+                            toY = i - 2;
+
+                            if (isPawnMoveValid(board, j, i, toX, toY)) {
                                 board[i][j] = 0;
-                                board[i - 2][j] = symbol;
+                                board[toY][toX] = symbol;
 
-                                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                                if (isMax) {
+                                if (isMyTurn) {
                                     if (score > result) {
                                         result = score;
-                                        currentMove.fromX = j;
-                                        currentMove.fromY = i;
-                                        currentMove.toX = j;
-                                        currentMove.toY = i - 2;
+
+                                        this.currentMove.fromX = j;
+                                        this.currentMove.fromY = i;
+                                        this.currentMove.toX = toX;
+                                        this.currentMove.toY = toY;
                                     }
                                 } else {
-                                    if (score < result) {
-                                        result = score;
-                                        currentMove.fromX = j;
-                                        currentMove.fromY = i;
-                                        currentMove.toX = j;
-                                        currentMove.toY = i - 2;
-                                    }
+                                    result = Math.min(score, result);
                                 }
 
                                 board[i][j] = symbol;
-                                board[i - 2][j] = 0;
+                                board[toY][toX] = 0;
                             }
                         }
 
-                        if (isPawnMoveValid(board, j, i, j, i - 1)) {
+                        toX = j;
+                        toY = i - 1;
+
+                        if (isPawnMoveValid(board, j, i, toX, toY)) {
                             board[i][j] = 0;
-                            board[i - 1][j] = symbol;
+                            board[toY][toX] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                            score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                            if (isMax) {
+                            if (isMyTurn) {
                                 if (score > result) {
                                     result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j;
-                                    currentMove.toY = i - 1;
+
+                                    this.currentMove.fromX = j;
+                                    this.currentMove.fromY = i;
+                                    this.currentMove.toX = toX;
+                                    this.currentMove.toY = toY;
                                 }
                             } else {
-                                if (score < result) {
-                                    result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j;
-                                    currentMove.toY = i - 1;
-                                }
+                                result = Math.min(score, result);
                             }
 
-
                             board[i][j] = symbol;
-                            board[i - 1][j] = 0;
+                            board[toY][toX] = 0;
                         }
 
-                        if (isPawnMoveValid(board, j, i, j - 1, i - 1)) {
+                        toX = j - 1;
+                        toY = i - 1;
+
+                        if (isPawnMoveValid(board, j, i, toX, toY)) {
                             board[i][j] = 0;
-                            board[i - 1][j - 1] = symbol;
+                            board[toY][toX] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                            score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                            if (isMax) {
+                            if (isMyTurn) {
                                 if (score > result) {
                                     result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j - 1;
-                                    currentMove.toY = i - 1;
+
+                                    this.currentMove.fromX = j;
+                                    this.currentMove.fromY = i;
+                                    this.currentMove.toX = toX;
+                                    this.currentMove.toY = toY;
                                 }
                             } else {
-                                if (score < result) {
-                                    result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j - 1;
-                                    currentMove.toY = i - 1;
-                                }
+                                result = Math.min(score, result);
                             }
 
-
                             board[i][j] = symbol;
-                            board[i - 1][j - 1] = 0;
+                            board[toY][toX] = 0;
                         }
 
-                        if (isPawnMoveValid(board, j, i, j + 1, i - 1)) {
+                        toX = j + 1;
+                        toY = i - 1;
+
+                        if (isPawnMoveValid(board, j, i, toX, toY)) {
                             board[i][j] = 0;
-                            board[i - 1][j + 1] = symbol;
+                            board[toY][toX] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                            score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                            if (isMax) {
+                            if (isMyTurn) {
                                 if (score > result) {
                                     result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j + 1;
-                                    currentMove.toY = i - 1;
+
+                                    this.currentMove.fromX = j;
+                                    this.currentMove.fromY = i;
+                                    this.currentMove.toX = toX;
+                                    this.currentMove.toY = toY;
                                 }
                             } else {
-                                if (score < result) {
-                                    result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j + 1;
-                                    currentMove.toY = i - 1;
-                                }
+                                result = Math.min(score, result);
                             }
 
                             board[i][j] = symbol;
-                            board[i - 1][j + 1] = 0;
+                            board[toY][toX] = 0;
                         }
                     case 'P':
+                        toX = j;
+                        toY = i + 2;
+
                         if (i == 1) {
-                            if (isPawnMoveValid(board, j, i, j, i + 2)) {
+                            if (isPawnMoveValid(board, j, i, toX, toY)) {
                                 board[i][j] = 0;
-                                board[i + 2][j] = symbol;
+                                board[toY][toX] = symbol;
 
-                                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                                if (isMax) {
+                                if (isMyTurn) {
                                     if (score > result) {
                                         result = score;
-                                        currentMove.fromX = j;
-                                        currentMove.fromY = i;
-                                        currentMove.toX = j;
-                                        currentMove.toY = i + 2;
+
+                                        this.currentMove.fromX = j;
+                                        this.currentMove.fromY = i;
+                                        this.currentMove.toX = toX;
+                                        this.currentMove.toY = toY;
                                     }
                                 } else {
-                                    if (score < result) {
-                                        result = score;
-                                        currentMove.fromX = j;
-                                        currentMove.fromY = i;
-                                        currentMove.toX = j;
-                                        currentMove.toY = i + 2;
-                                    }
+                                    result = Math.min(score, result);
                                 }
 
                                 board[i][j] = symbol;
-                                board[i + 2][j] = 0;
+                                board[toY][toX] = 0;
                             }
                         }
 
-                        if (isPawnMoveValid(board, j, i, j, i + 1)) {
+                        toX = j;
+                        toY = i + 1;
+
+                        if (isPawnMoveValid(board, j, i, toX, toY)) {
                             board[i][j] = 0;
-                            board[i + 1][j] = symbol;
+                            board[toY][toX] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                            score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                            if (isMax) {
+                            if (isMyTurn) {
                                 if (score > result) {
                                     result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j;
-                                    currentMove.toY = i + 1;
+
+                                    this.currentMove.fromX = j;
+                                    this.currentMove.fromY = i;
+                                    this.currentMove.toX = toX;
+                                    this.currentMove.toY = toY;
                                 }
                             } else {
-                                if (score < result) {
-                                    result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j;
-                                    currentMove.toY = i + 1;
-                                }
+                                result = Math.min(score, result);
                             }
 
                             board[i][j] = symbol;
-                            board[i + 1][j] = 0;
+                            board[toY][toX] = 0;
                         }
 
-                        if (isPawnMoveValid(board, j, i, j - 1, i + 1)) {
+                        toX = j - 1;
+                        toY = i + 1;
+
+                        if (isPawnMoveValid(board, j, i, toX, toY)) {
                             board[i][j] = 0;
-                            board[i + 1][j - 1] = symbol;
+                            board[toY][toX] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                            score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                            if (isMax) {
+                            if (isMyTurn) {
                                 if (score > result) {
                                     result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j - 1;
-                                    currentMove.toY = i + 1;
+
+                                    this.currentMove.fromX = j;
+                                    this.currentMove.fromY = i;
+                                    this.currentMove.toX = toX;
+                                    this.currentMove.toY = toY;
                                 }
                             } else {
-                                if (score < result) {
-                                    result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j - 1;
-                                    currentMove.toY = i + 1;
-                                }
+                                result = Math.min(score, result);
                             }
 
                             board[i][j] = symbol;
-                            board[i + 1][j - 1] = 0;
+                            board[toY][toX] = 0;
                         }
 
-                        if (isPawnMoveValid(board, j, i, j + 1, i + 1)) {
+                        toX = j + 1;
+                        toY = i + 1;
+
+                        if (isPawnMoveValid(board, j, i, toX, toY)) {
                             board[i][j] = 0;
-                            board[i + 1][j + 1] = symbol;
+                            board[toY][toX] = symbol;
 
-                            score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                            score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                            if (isMax) {
+                            if (isMyTurn) {
                                 if (score > result) {
                                     result = score;
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j + 1;
-                                    currentMove.toY = i + 1;
+
+                                    this.currentMove.fromX = j;
+                                    this.currentMove.fromY = i;
+                                    this.currentMove.toX = toX;
+                                    this.currentMove.toY = toY;
                                 }
                             } else {
-                                if (score < result) {
-                                    result = score;
-
-                                    currentMove.fromX = j;
-                                    currentMove.fromY = i;
-                                    currentMove.toX = j + 1;
-                                    currentMove.toY = i + 1;
-                                }
+                                result = Math.min(score, result);
                             }
 
                             board[i][j] = symbol;
-                            board[i + 1][j + 1] = 0;
+                            board[toY][toX] = 0;
                         }
                         break;
                     case 'n':
                     case 'N':
-
                         for (int k = 0; k < knightMoveOffset.length; ++k) {
-                            int toX = j + knightMoveOffset[k][0];
-                            int toY = i + knightMoveOffset[k][1];
+                            toX = j + knightMoveOffset[k][0];
+                            toY = i + knightMoveOffset[k][1];
 
                             if (isMoveValid(board, j, i, toX, toY)) {
                                 board[i][j] = 0;
                                 board[toY][toX] = symbol;
 
-                                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                                if (isMax) {
+                                if (isMyTurn) {
                                     if (score > result) {
                                         result = score;
-                                        currentMove.fromX = j;
-                                        currentMove.fromY = i;
-                                        currentMove.toX = toX;
-                                        currentMove.toY = toY;
+
+                                        this.currentMove.fromX = j;
+                                        this.currentMove.fromY = i;
+                                        this.currentMove.toX = toX;
+                                        this.currentMove.toY = toY;
                                     }
                                 } else {
-                                    if (score < result) {
-                                        result = score;
-                                        currentMove.fromX = j;
-                                        currentMove.fromY = i;
-                                        currentMove.toX = toX;
-                                        currentMove.toY = toY;
-                                    }
+                                    result = Math.min(score, result);
                                 }
 
                                 board[i][j] = symbol;
@@ -364,9 +336,9 @@ public class Player extends PlayerBase {
                         break;
                     case 'b':
                     case 'B':
-                        score = bishopMove(board, j, i, depth, isMax, isWhiteTurn);
+                        score = bishopMove(board, j, i, depth, isMyTurn, isWhiteTurn);
 
-                        if (isMax) {
+                        if (isMyTurn) {
                             if (score > result) {
                                 result = score;
                             }
@@ -378,57 +350,45 @@ public class Player extends PlayerBase {
                         break;
                     case 'r':
                     case 'R':
-                        score = rookMove(board, j, i, depth, isMax, isWhiteTurn);
+                        score = rookMove(board, j, i, depth, isMyTurn, isWhiteTurn);
 
-                        if (isMax) {
-                            if (score > result) {
-                                result = score;
-                            }
+                        if (isMyTurn) {
+                            result = Math.max(score, result);
                         } else {
-                            if (score < result) {
-                                result = score;
-                            }
+                            result = Math.min(score, result);
                         }
                         break;
                     case 'q':
                     case 'Q':
-                        score = bishopMove(board, j, i, depth, isMax, isWhiteTurn);
+                        score = bishopMove(board, j, i, depth, isMyTurn, isWhiteTurn);
 
-                        if (isMax) {
-                            if (score > result) {
-                                result = score;
-                            }
+                        if (isMyTurn) {
+                            result = Math.max(score, result);
                         } else {
-                            if (score < result) {
-                                result = score;
-                            }
+                            result = Math.min(score, result);
                         }
 
-                        score = rookMove(board, j, i, depth, isMax, isWhiteTurn);
+                        score = rookMove(board, j, i, depth, isMyTurn, isWhiteTurn);
 
-                        if (isMax) {
-                            if (score > result) {
-                                result = score;
-                            }
+                        if (isMyTurn) {
+                            result = Math.max(score, result);
                         } else {
-                            if (score < result) {
-                                result = score;
-                            }
+                            result = Math.min(score, result);
                         }
                         break;
                     case 'k':
                     case 'K':
                         for (int k = 0; k < kingMoveOffset.length; ++k) {
-                            int toX = j + kingMoveOffset[k][0];
-                            int toY = i + kingMoveOffset[k][1];
+                            toX = j + kingMoveOffset[k][0];
+                            toY = i + kingMoveOffset[k][1];
 
                             if (isMoveValid(board, j, i, toX, toY)) {
                                 board[i][j] = 0;
                                 board[toY][toX] = symbol;
 
-                                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                                if (isMax) {
+                                if (isMyTurn) {
                                     if (score > result) {
                                         result = score;
 
@@ -438,14 +398,7 @@ public class Player extends PlayerBase {
                                         currentMove.toY = toY;
                                     }
                                 } else {
-                                    if (score < result) {
-                                        result = score;
-
-                                        currentMove.fromX = j;
-                                        currentMove.fromY = i;
-                                        currentMove.toX = toX;
-                                        currentMove.toY = toY;
-                                    }
+                                    result = Math.min(score, result);
                                 }
 
                                 board[i][j] = symbol;
@@ -463,13 +416,13 @@ public class Player extends PlayerBase {
         return result;
     }
 
-    private int bishopMove(char[][] board, int fromX, int fromY, final int depth, boolean isMax, boolean isWhiteTurn) {
+    private int bishopMove(char[][] board, int fromX, int fromY, final int depth, boolean isMyTurn, boolean isWhiteTurn) {
         int result;
         int score;
         int offsetX = 1;
         int offsetY = 1;
 
-        if (isMax) {
+        if (isMyTurn) {
             result = Integer.MIN_VALUE;
         } else {
             result = Integer.MAX_VALUE;
@@ -485,26 +438,19 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                if (isMax) {
+                if (isMyTurn) {
                     if (score > result) {
                         result = score;
 
-                        currentMove.fromX = fromX;
-                        currentMove.fromY = fromY;
-                        currentMove.toX = toX;
-                        currentMove.toY = toY;
+                        this.currentMove.fromX = fromX;
+                        this.currentMove.fromY = fromY;
+                        this.currentMove.toX = toX;
+                        this.currentMove.toY = toY;
                     }
                 } else {
-                    if (score < result) {
-                        result = score;
-
-                        currentMove.fromX = fromX;
-                        currentMove.fromY = fromY;
-                        currentMove.toX = toX;
-                        currentMove.toY = toY;
-                    }
+                    result = Math.min(score, result);
                 }
 
                 board[fromY][fromX] = temp;
@@ -528,24 +474,19 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                if (isMax) {
+                if (isMyTurn) {
                     if (score > result) {
                         result = score;
-                        currentMove.fromX = fromX;
-                        currentMove.fromY = fromY;
-                        currentMove.toX = toX;
-                        currentMove.toY = toY;
+
+                        this.currentMove.fromX = fromX;
+                        this.currentMove.fromY = fromY;
+                        this.currentMove.toX = toX;
+                        this.currentMove.toY = toY;
                     }
                 } else {
-                    if (score < result) {
-                        result = score;
-                        currentMove.fromX = fromX;
-                        currentMove.fromY = fromY;
-                        currentMove.toX = toX;
-                        currentMove.toY = toY;
-                    }
+                    result = Math.min(score, result);
                 }
 
                 board[fromY][fromX] = temp;
@@ -569,16 +510,19 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                if (isMax) {
+                if (isMyTurn) {
                     if (score > result) {
                         result = score;
+
+                        this.currentMove.fromX = fromX;
+                        this.currentMove.fromY = fromY;
+                        this.currentMove.toX = toX;
+                        this.currentMove.toY = toY;
                     }
                 } else {
-                    if (score < result) {
-                        result = score;
-                    }
+                    result = Math.min(score, result);
                 }
 
                 board[fromY][fromX] = temp;
@@ -602,16 +546,19 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                if (isMax) {
+                if (isMyTurn) {
                     if (score > result) {
                         result = score;
+
+                        this.currentMove.fromX = fromX;
+                        this.currentMove.fromY = fromY;
+                        this.currentMove.toX = toX;
+                        this.currentMove.toY = toY;
                     }
                 } else {
-                    if (score < result) {
-                        result = score;
-                    }
+                    result = Math.min(score, result);
                 }
 
                 board[fromY][fromX] = temp;
@@ -627,13 +574,13 @@ public class Player extends PlayerBase {
         return result;
     }
 
-    private int rookMove(char[][] board, int fromX, int fromY, final int depth, boolean isMax, boolean isWhiteTurn) {
+    private int rookMove(char[][] board, int fromX, int fromY, final int depth, boolean isMyTurn, boolean isWhiteTurn) {
         int result;
         int score;
         int offsetX = 1;
         int offsetY = 0;
 
-        if (isMax) {
+        if (isMyTurn) {
             result = Integer.MIN_VALUE;
         } else {
             result = Integer.MAX_VALUE;
@@ -648,16 +595,19 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                if (isMax) {
+                if (isMyTurn) {
                     if (score > result) {
                         result = score;
+
+                        this.currentMove.fromX = fromX;
+                        this.currentMove.fromY = fromY;
+                        this.currentMove.toX = toX;
+                        this.currentMove.toY = toY;
                     }
                 } else {
-                    if (score < result) {
-                        result = score;
-                    }
+                    result = Math.min(score, result);
                 }
 
                 board[fromY][fromX] = temp;
@@ -679,16 +629,19 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                if (isMax) {
+                if (isMyTurn) {
                     if (score > result) {
                         result = score;
+
+                        this.currentMove.fromX = fromX;
+                        this.currentMove.fromY = fromY;
+                        this.currentMove.toX = toX;
+                        this.currentMove.toY = toY;
                     }
                 } else {
-                    if (score < result) {
-                        result = score;
-                    }
+                    result = Math.min(score, result);
                 }
 
                 board[fromY][fromX] = temp;
@@ -711,16 +664,19 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                if (isMax) {
+                if (isMyTurn) {
                     if (score > result) {
                         result = score;
+
+                        this.currentMove.fromX = fromX;
+                        this.currentMove.fromY = fromY;
+                        this.currentMove.toX = toX;
+                        this.currentMove.toY = toY;
                     }
                 } else {
-                    if (score < result) {
-                        result = score;
-                    }
+                    result = Math.min(score, result);
                 }
 
                 board[fromY][fromX] = temp;
@@ -742,16 +698,19 @@ public class Player extends PlayerBase {
                 board[fromY][fromX] = 0;
                 board[toY][toX] = temp;
 
-                score = getMinimax(board, depth + 1, !isMax, !isWhiteTurn);
+                score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
-                if (isMax) {
+                if (isMyTurn) {
                     if (score > result) {
                         result = score;
+
+                        this.currentMove.fromX = fromX;
+                        this.currentMove.fromY = fromY;
+                        this.currentMove.toX = toX;
+                        this.currentMove.toY = toY;
                     }
                 } else {
-                    if (score < result) {
-                        result = score;
-                    }
+                    result = Math.min(score, result);
                 }
 
                 board[fromY][fromX] = temp;
