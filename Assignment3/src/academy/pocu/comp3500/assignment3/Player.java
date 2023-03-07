@@ -6,8 +6,14 @@ import academy.pocu.comp3500.assignment3.chess.PlayerBase;
 public class Player extends PlayerBase {
     private final static int BOARD_SIZE = 8;
     private final static int MAX_DEPTH = 4;
+    private final static int PAWN_VALUE = 10;
+    private final static int KNIGHT_VALUE = 30;
+    private final static int BISHOP_VALUE = 40;
+    private final static int ROOK_VALUE = 50;
+    private final static int QUEEN_VALUE = 90;
+    private final static int KING_VALUE = 900;
 
-    private static final int[][] knightMoveOffset = {
+    private static final int[][] KNIGHT_MOVE_OFFSET = {
             {1, -2},
             {2, -1},
             {2, 1},
@@ -18,7 +24,7 @@ public class Player extends PlayerBase {
             {-1, -2}
     };
 
-    private static final int[][] kingMoveOffset = {
+    private static final int[][] KING_MOVE_OFFSET = {
             {0, -1},
             {1, -1},
             {1, 0},
@@ -39,24 +45,7 @@ public class Player extends PlayerBase {
 
     @Override
     public Move getNextMove(char[][] board) {
-        if (super.isWhite()) {
-            this.currentMove.fromX = 3;
-            this.currentMove.fromY = 6;
-            this.currentMove.toX = 3;
-            this.currentMove.toY = 4;
-        } else {
-            if (board[4][4] == 'p' || board[2][4] == 'p') {
-                this.currentMove.fromX = 4;
-                this.currentMove.fromY = 1;
-                this.currentMove.toX = 4;
-            } else {
-                this.currentMove.fromX = 3;
-                this.currentMove.fromY = 1;
-                this.currentMove.toX = 3;
-            }
-
-            this.currentMove.toY = 3;
-        }
+        getMinimax(board, 0, true, super.isWhite());
 
         return this.currentMove;
     }
@@ -85,12 +74,12 @@ public class Player extends PlayerBase {
                     continue;
                 }
 
-                char symbol = board[i][j];
+                char piece = board[i][j];
                 int score;
                 int toX;
                 int toY;
 
-                switch (symbol) {
+                switch (piece) {
                     case 'p':
                         if (i == 6) {
                             toX = j;
@@ -101,7 +90,7 @@ public class Player extends PlayerBase {
                                 char toPiece = board[toY][toX];
 
                                 board[i][j] = 0;
-                                board[toY][toX] = symbol;
+                                board[toY][toX] = piece;
 
                                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -133,7 +122,7 @@ public class Player extends PlayerBase {
                             char toPiece = board[toY][toX];
 
                             board[i][j] = 0;
-                            board[toY][toX] = symbol;
+                            board[toY][toX] = piece;
 
                             score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -164,7 +153,7 @@ public class Player extends PlayerBase {
                             char toPiece = board[toY][toX];
 
                             board[i][j] = 0;
-                            board[toY][toX] = symbol;
+                            board[toY][toX] = piece;
 
                             score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -195,7 +184,7 @@ public class Player extends PlayerBase {
                             char toPiece = board[toY][toX];
 
                             board[i][j] = 0;
-                            board[toY][toX] = symbol;
+                            board[toY][toX] = piece;
 
                             score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -228,7 +217,7 @@ public class Player extends PlayerBase {
                                 char toPiece = board[toY][toX];
 
                                 board[i][j] = 0;
-                                board[toY][toX] = symbol;
+                                board[toY][toX] = piece;
 
                                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -260,7 +249,7 @@ public class Player extends PlayerBase {
                             char toPiece = board[toY][toX];
 
                             board[i][j] = 0;
-                            board[toY][toX] = symbol;
+                            board[toY][toX] = piece;
 
                             score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -291,7 +280,7 @@ public class Player extends PlayerBase {
                             char toPiece = board[toY][toX];
 
                             board[i][j] = 0;
-                            board[toY][toX] = symbol;
+                            board[toY][toX] = piece;
 
                             score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -322,7 +311,7 @@ public class Player extends PlayerBase {
                             char toPiece = board[toY][toX];
 
                             board[i][j] = 0;
-                            board[toY][toX] = symbol;
+                            board[toY][toX] = piece;
 
                             score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -347,16 +336,16 @@ public class Player extends PlayerBase {
                         break;
                     case 'n':
                     case 'N':
-                        for (int k = 0; k < knightMoveOffset.length; ++k) {
-                            toX = j + knightMoveOffset[k][0];
-                            toY = i + knightMoveOffset[k][1];
+                        for (int k = 0; k < KNIGHT_MOVE_OFFSET.length; ++k) {
+                            toX = j + KNIGHT_MOVE_OFFSET[k][0];
+                            toY = i + KNIGHT_MOVE_OFFSET[k][1];
 
                             if (isMoveValid(board, j, i, toX, toY)) {
                                 char fromPiece = board[i][j];
                                 char toPiece = board[toY][toX];
 
                                 board[i][j] = 0;
-                                board[toY][toX] = symbol;
+                                board[toY][toX] = piece;
 
                                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -424,16 +413,16 @@ public class Player extends PlayerBase {
                         break;
                     case 'k':
                     case 'K':
-                        for (int k = 0; k < kingMoveOffset.length; ++k) {
-                            toX = j + kingMoveOffset[k][0];
-                            toY = i + kingMoveOffset[k][1];
+                        for (int k = 0; k < KING_MOVE_OFFSET.length; ++k) {
+                            toX = j + KING_MOVE_OFFSET[k][0];
+                            toY = i + KING_MOVE_OFFSET[k][1];
 
                             if (isMoveValid(board, j, i, toX, toY)) {
                                 char fromPiece = board[i][j];
                                 char toPiece = board[toY][toX];
 
                                 board[i][j] = 0;
-                                board[toY][toX] = symbol;
+                                board[toY][toX] = piece;
 
                                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -830,6 +819,14 @@ public class Player extends PlayerBase {
     }
 
     private int getEvaluate(char[][] board) {
+        if (super.isWhite()) {
+            return getEvaluateForWhite(board);
+        }
+
+        return getEvaluateForBlack(board);
+    }
+
+    private int getEvaluateForWhite(char[][] board) {
         int score = 0;
 
         for (int i = 0; i < BOARD_SIZE; ++i) {
@@ -838,50 +835,124 @@ public class Player extends PlayerBase {
                     continue;
                 }
 
-                char symbol = board[i][j];
+                char piece = board[i][j];
+                int tempScore;
 
-                switch (symbol) {
+                switch (piece) {
                     case 'p':
-                        score += 10;
+                        tempScore = PAWN_VALUE;
                         break;
                     case 'P':
-                        score -= 10;
+                        tempScore = -PAWN_VALUE;
                         break;
                     case 'n':
-                    case 'b':
-                        score += 30;
+                        tempScore = KNIGHT_VALUE;
                         break;
                     case 'N':
+                        tempScore = -KNIGHT_VALUE;
+                        break;
+                    case 'b':
+                        tempScore = BISHOP_VALUE;
+                        break;
                     case 'B':
-                        score -= 30;
+                        tempScore = -BISHOP_VALUE;
                         break;
                     case 'r':
-                        score += 50;
+                        tempScore = ROOK_VALUE;
                         break;
                     case 'R':
-                        score -= 50;
+                        tempScore = -ROOK_VALUE;
                         break;
                     case 'q':
-                        score += 90;
+                        tempScore = QUEEN_VALUE;
                         break;
                     case 'Q':
-                        score -= 90;
+                        tempScore = -QUEEN_VALUE;
                         break;
                     case 'k':
-                        score += 900;
+                        tempScore = KING_VALUE;
                         break;
                     case 'K':
-                        score -= 900;
+                        tempScore = -KING_VALUE;
                         break;
                     default:
                         assert (false);
-                        break;
+                        return -1;
                 }
+
+                if (i == 3 && j == 3 || i == 4 && j == 3
+                    || i == 3 && j == 4 || i == 4 && j == 4) {
+                    tempScore *= 2;
+                }
+
+                score += tempScore;
             }
         }
 
-        if (!super.isWhite()) {
-            score *= -1;
+        return score;
+    }
+
+    private int getEvaluateForBlack(char[][] board) {
+        int score = 0;
+
+        for (int i = 0; i < BOARD_SIZE; ++i) {
+            for (int j = 0; j < BOARD_SIZE; ++j) {
+                if (board[i][j] == 0) {
+                    continue;
+                }
+
+                char piece = board[i][j];
+                int tempScore;
+
+                switch (piece) {
+                    case 'p':
+                        tempScore = -PAWN_VALUE;
+                        break;
+                    case 'P':
+                        tempScore = PAWN_VALUE;
+                        break;
+                    case 'n':
+                        tempScore = -KNIGHT_VALUE;
+                        break;
+                    case 'N':
+                        tempScore = KNIGHT_VALUE;
+                        break;
+                    case 'b':
+                        tempScore = -BISHOP_VALUE;
+                        break;
+                    case 'B':
+                        tempScore = BISHOP_VALUE;
+                        break;
+                    case 'r':
+                        tempScore = -ROOK_VALUE;
+                        break;
+                    case 'R':
+                        tempScore = ROOK_VALUE;
+                        break;
+                    case 'q':
+                        tempScore = -QUEEN_VALUE;
+                        break;
+                    case 'Q':
+                        tempScore = QUEEN_VALUE;
+                        break;
+                    case 'k':
+                        tempScore = -KING_VALUE;
+                        break;
+                    case 'K':
+                        tempScore = KING_VALUE;
+                        break;
+                    default:
+                        assert (false);
+                        return -1;
+                }
+
+                if (i == 3 && j == 3 || i == 4 && j == 3
+                        || i == 3 && j == 4 || i == 4 && j == 4) {
+                    tempScore *= 2;
+                }
+
+                score += tempScore;
+            }
         }
 
         return score;

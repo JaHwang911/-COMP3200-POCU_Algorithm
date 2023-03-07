@@ -361,6 +361,14 @@ final class Game {
         return board;
     }
 
+    private static char[][] createNewBoardByOnlyKing() {
+        final char[][] board = new char[BOARD_SIZE][BOARD_SIZE];
+        board[3][3] = 'K';
+        board[4][4] = 'k';
+
+        return board;
+    }
+
     private static boolean isBishopMoveValid(char[][] board, Move move) {
         char fromPiece = board[move.fromY][move.fromX];
         char toPiece = board[move.toY][move.toX];
