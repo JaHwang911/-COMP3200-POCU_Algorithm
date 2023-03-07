@@ -5,7 +5,7 @@ import academy.pocu.comp3500.assignment3.chess.PlayerBase;
 
 public class Player extends PlayerBase {
     private final static int BOARD_SIZE = 8;
-    private final static int MAX_DEPTH = 3;
+    private final static int MAX_DEPTH = 4;
 
     private static final int[][] knightMoveOffset = {
             {1, -2},
@@ -97,6 +97,9 @@ public class Player extends PlayerBase {
                             toY = i - 2;
 
                             if (isPawnMoveValid(board, j, i, toX, toY)) {
+                                char fromPiece = board[i][j];
+                                char toPiece = board[toY][toX];
+
                                 board[i][j] = 0;
                                 board[toY][toX] = symbol;
 
@@ -106,17 +109,19 @@ public class Player extends PlayerBase {
                                     if (score > result) {
                                         result = score;
 
-                                        this.currentMove.fromX = j;
-                                        this.currentMove.fromY = i;
-                                        this.currentMove.toX = toX;
-                                        this.currentMove.toY = toY;
+                                        if (depth == 0) {
+                                            this.currentMove.fromX = j;
+                                            this.currentMove.fromY = i;
+                                            this.currentMove.toX = toX;
+                                            this.currentMove.toY = toY;
+                                        }
                                     }
                                 } else {
                                     result = Math.min(score, result);
                                 }
 
-                                board[i][j] = symbol;
-                                board[toY][toX] = 0;
+                                board[i][j] = fromPiece;
+                                board[toY][toX] = toPiece;
                             }
                         }
 
@@ -124,6 +129,9 @@ public class Player extends PlayerBase {
                         toY = i - 1;
 
                         if (isPawnMoveValid(board, j, i, toX, toY)) {
+                            char fromPiece = board[i][j];
+                            char toPiece = board[toY][toX];
+
                             board[i][j] = 0;
                             board[toY][toX] = symbol;
 
@@ -133,23 +141,28 @@ public class Player extends PlayerBase {
                                 if (score > result) {
                                     result = score;
 
-                                    this.currentMove.fromX = j;
-                                    this.currentMove.fromY = i;
-                                    this.currentMove.toX = toX;
-                                    this.currentMove.toY = toY;
+                                    if (depth == 0) {
+                                        this.currentMove.fromX = j;
+                                        this.currentMove.fromY = i;
+                                        this.currentMove.toX = toX;
+                                        this.currentMove.toY = toY;
+                                    }
                                 }
                             } else {
                                 result = Math.min(score, result);
                             }
 
-                            board[i][j] = symbol;
-                            board[toY][toX] = 0;
+                            board[i][j] = fromPiece;
+                            board[toY][toX] = toPiece;
                         }
 
                         toX = j - 1;
                         toY = i - 1;
 
                         if (isPawnMoveValid(board, j, i, toX, toY)) {
+                            char fromPiece = board[i][j];
+                            char toPiece = board[toY][toX];
+
                             board[i][j] = 0;
                             board[toY][toX] = symbol;
 
@@ -159,23 +172,28 @@ public class Player extends PlayerBase {
                                 if (score > result) {
                                     result = score;
 
-                                    this.currentMove.fromX = j;
-                                    this.currentMove.fromY = i;
-                                    this.currentMove.toX = toX;
-                                    this.currentMove.toY = toY;
+                                    if (depth == 0) {
+                                        this.currentMove.fromX = j;
+                                        this.currentMove.fromY = i;
+                                        this.currentMove.toX = toX;
+                                        this.currentMove.toY = toY;
+                                    }
                                 }
                             } else {
                                 result = Math.min(score, result);
                             }
 
-                            board[i][j] = symbol;
-                            board[toY][toX] = 0;
+                            board[i][j] = fromPiece;
+                            board[toY][toX] = toPiece;
                         }
 
                         toX = j + 1;
                         toY = i - 1;
 
                         if (isPawnMoveValid(board, j, i, toX, toY)) {
+                            char fromPiece = board[i][j];
+                            char toPiece = board[toY][toX];
+
                             board[i][j] = 0;
                             board[toY][toX] = symbol;
 
@@ -185,24 +203,30 @@ public class Player extends PlayerBase {
                                 if (score > result) {
                                     result = score;
 
-                                    this.currentMove.fromX = j;
-                                    this.currentMove.fromY = i;
-                                    this.currentMove.toX = toX;
-                                    this.currentMove.toY = toY;
+                                    if (depth == 0) {
+                                        this.currentMove.fromX = j;
+                                        this.currentMove.fromY = i;
+                                        this.currentMove.toX = toX;
+                                        this.currentMove.toY = toY;
+                                    }
                                 }
                             } else {
                                 result = Math.min(score, result);
                             }
 
-                            board[i][j] = symbol;
-                            board[toY][toX] = 0;
+                            board[i][j] = fromPiece;
+                            board[toY][toX] = toPiece;
                         }
+                        break;
                     case 'P':
                         toX = j;
                         toY = i + 2;
 
                         if (i == 1) {
                             if (isPawnMoveValid(board, j, i, toX, toY)) {
+                                char fromPiece = board[i][j];
+                                char toPiece = board[toY][toX];
+
                                 board[i][j] = 0;
                                 board[toY][toX] = symbol;
 
@@ -212,17 +236,19 @@ public class Player extends PlayerBase {
                                     if (score > result) {
                                         result = score;
 
-                                        this.currentMove.fromX = j;
-                                        this.currentMove.fromY = i;
-                                        this.currentMove.toX = toX;
-                                        this.currentMove.toY = toY;
+                                        if (depth == 0) {
+                                            this.currentMove.fromX = j;
+                                            this.currentMove.fromY = i;
+                                            this.currentMove.toX = toX;
+                                            this.currentMove.toY = toY;
+                                        }
                                     }
                                 } else {
                                     result = Math.min(score, result);
                                 }
 
-                                board[i][j] = symbol;
-                                board[toY][toX] = 0;
+                                board[i][j] = fromPiece;
+                                board[toY][toX] = toPiece;
                             }
                         }
 
@@ -230,6 +256,9 @@ public class Player extends PlayerBase {
                         toY = i + 1;
 
                         if (isPawnMoveValid(board, j, i, toX, toY)) {
+                            char fromPiece = board[i][j];
+                            char toPiece = board[toY][toX];
+
                             board[i][j] = 0;
                             board[toY][toX] = symbol;
 
@@ -239,23 +268,28 @@ public class Player extends PlayerBase {
                                 if (score > result) {
                                     result = score;
 
-                                    this.currentMove.fromX = j;
-                                    this.currentMove.fromY = i;
-                                    this.currentMove.toX = toX;
-                                    this.currentMove.toY = toY;
+                                    if (depth == 0) {
+                                        this.currentMove.fromX = j;
+                                        this.currentMove.fromY = i;
+                                        this.currentMove.toX = toX;
+                                        this.currentMove.toY = toY;
+                                    }
                                 }
                             } else {
                                 result = Math.min(score, result);
                             }
 
-                            board[i][j] = symbol;
-                            board[toY][toX] = 0;
+                            board[i][j] = fromPiece;
+                            board[toY][toX] = toPiece;
                         }
 
                         toX = j - 1;
                         toY = i + 1;
 
                         if (isPawnMoveValid(board, j, i, toX, toY)) {
+                            char fromPiece = board[i][j];
+                            char toPiece = board[toY][toX];
+
                             board[i][j] = 0;
                             board[toY][toX] = symbol;
 
@@ -265,23 +299,28 @@ public class Player extends PlayerBase {
                                 if (score > result) {
                                     result = score;
 
-                                    this.currentMove.fromX = j;
-                                    this.currentMove.fromY = i;
-                                    this.currentMove.toX = toX;
-                                    this.currentMove.toY = toY;
+                                    if (depth == 0) {
+                                        this.currentMove.fromX = j;
+                                        this.currentMove.fromY = i;
+                                        this.currentMove.toX = toX;
+                                        this.currentMove.toY = toY;
+                                    }
                                 }
                             } else {
                                 result = Math.min(score, result);
                             }
 
-                            board[i][j] = symbol;
-                            board[toY][toX] = 0;
+                            board[i][j] = fromPiece;
+                            board[toY][toX] = toPiece;
                         }
 
                         toX = j + 1;
                         toY = i + 1;
 
                         if (isPawnMoveValid(board, j, i, toX, toY)) {
+                            char fromPiece = board[i][j];
+                            char toPiece = board[toY][toX];
+
                             board[i][j] = 0;
                             board[toY][toX] = symbol;
 
@@ -291,17 +330,19 @@ public class Player extends PlayerBase {
                                 if (score > result) {
                                     result = score;
 
-                                    this.currentMove.fromX = j;
-                                    this.currentMove.fromY = i;
-                                    this.currentMove.toX = toX;
-                                    this.currentMove.toY = toY;
+                                    if (depth == 0) {
+                                        this.currentMove.fromX = j;
+                                        this.currentMove.fromY = i;
+                                        this.currentMove.toX = toX;
+                                        this.currentMove.toY = toY;
+                                    }
                                 }
                             } else {
                                 result = Math.min(score, result);
                             }
 
-                            board[i][j] = symbol;
-                            board[toY][toX] = 0;
+                            board[i][j] = fromPiece;
+                            board[toY][toX] = toPiece;
                         }
                         break;
                     case 'n':
@@ -311,6 +352,9 @@ public class Player extends PlayerBase {
                             toY = i + knightMoveOffset[k][1];
 
                             if (isMoveValid(board, j, i, toX, toY)) {
+                                char fromPiece = board[i][j];
+                                char toPiece = board[toY][toX];
+
                                 board[i][j] = 0;
                                 board[toY][toX] = symbol;
 
@@ -320,17 +364,19 @@ public class Player extends PlayerBase {
                                     if (score > result) {
                                         result = score;
 
-                                        this.currentMove.fromX = j;
-                                        this.currentMove.fromY = i;
-                                        this.currentMove.toX = toX;
-                                        this.currentMove.toY = toY;
+                                        if (depth == 0) {
+                                            this.currentMove.fromX = j;
+                                            this.currentMove.fromY = i;
+                                            this.currentMove.toX = toX;
+                                            this.currentMove.toY = toY;
+                                        }
                                     }
                                 } else {
                                     result = Math.min(score, result);
                                 }
 
-                                board[i][j] = symbol;
-                                board[toY][toX] = 0;
+                                board[i][j] = fromPiece;
+                                board[toY][toX] = toPiece;
                             }
                         }
                         break;
@@ -383,6 +429,9 @@ public class Player extends PlayerBase {
                             toY = i + kingMoveOffset[k][1];
 
                             if (isMoveValid(board, j, i, toX, toY)) {
+                                char fromPiece = board[i][j];
+                                char toPiece = board[toY][toX];
+
                                 board[i][j] = 0;
                                 board[toY][toX] = symbol;
 
@@ -392,17 +441,19 @@ public class Player extends PlayerBase {
                                     if (score > result) {
                                         result = score;
 
-                                        currentMove.fromX = j;
-                                        currentMove.fromY = i;
-                                        currentMove.toX = toX;
-                                        currentMove.toY = toY;
+                                        if (depth == 0) {
+                                            this.currentMove.fromX = j;
+                                            this.currentMove.fromY = i;
+                                            this.currentMove.toX = toX;
+                                            this.currentMove.toY = toY;
+                                        }
                                     }
                                 } else {
                                     result = Math.min(score, result);
                                 }
 
-                                board[i][j] = symbol;
-                                board[toY][toX] = 0;
+                                board[i][j] = fromPiece;
+                                board[toY][toX] = toPiece;
                             }
                         }
                         break;
@@ -422,21 +473,18 @@ public class Player extends PlayerBase {
         int offsetX = 1;
         int offsetY = 1;
 
-        if (isMyTurn) {
-            result = Integer.MIN_VALUE;
-        } else {
-            result = Integer.MAX_VALUE;
-        }
-
+        result = isMyTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
         while (offsetX < BOARD_SIZE && offsetY < BOARD_SIZE) {
             int toX = fromX + offsetX;
             int toY = fromY + offsetY;
 
             if (isMoveValid(board, fromX, fromY, toX, toY)) {
-                char temp = board[fromY][fromX];
+                char fromPiece = board[fromY][fromX];
+                char toPiece = board[toY][toX];
+
                 board[fromY][fromX] = 0;
-                board[toY][toX] = temp;
+                board[toY][toX] = fromPiece;
 
                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -444,17 +492,23 @@ public class Player extends PlayerBase {
                     if (score > result) {
                         result = score;
 
-                        this.currentMove.fromX = fromX;
-                        this.currentMove.fromY = fromY;
-                        this.currentMove.toX = toX;
-                        this.currentMove.toY = toY;
+                        if (depth == 0) {
+                            this.currentMove.fromX = fromX;
+                            this.currentMove.fromY = fromY;
+                            this.currentMove.toX = toX;
+                            this.currentMove.toY = toY;
+                        }
                     }
                 } else {
                     result = Math.min(score, result);
                 }
 
-                board[fromY][fromX] = temp;
-                board[toY][toX] = 0;
+                board[fromY][fromX] = fromPiece;
+                board[toY][toX] = toPiece;
+
+                if (toPiece != 0) {
+                    break;
+                }
             } else {
                 break;
             }
@@ -470,9 +524,11 @@ public class Player extends PlayerBase {
             int toY = fromY + offsetY;
 
             if (isMoveValid(board, fromX, fromY, toX, toY)) {
-                char temp = board[fromY][fromX];
+                char fromPiece = board[fromY][fromX];
+                char toPiece = board[toY][toX];
+
                 board[fromY][fromX] = 0;
-                board[toY][toX] = temp;
+                board[toY][toX] = fromPiece;
 
                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -480,17 +536,23 @@ public class Player extends PlayerBase {
                     if (score > result) {
                         result = score;
 
-                        this.currentMove.fromX = fromX;
-                        this.currentMove.fromY = fromY;
-                        this.currentMove.toX = toX;
-                        this.currentMove.toY = toY;
+                        if (depth == 0) {
+                            this.currentMove.fromX = fromX;
+                            this.currentMove.fromY = fromY;
+                            this.currentMove.toX = toX;
+                            this.currentMove.toY = toY;
+                        }
                     }
                 } else {
                     result = Math.min(score, result);
                 }
 
-                board[fromY][fromX] = temp;
-                board[toY][toX] = 0;
+                board[fromY][fromX] = fromPiece;
+                board[toY][toX] = toPiece;
+
+                if (toPiece != 0) {
+                    break;
+                }
             } else {
                 break;
             }
@@ -506,9 +568,11 @@ public class Player extends PlayerBase {
             int toY = fromY + offsetY;
 
             if (isMoveValid(board, fromX, fromY, toX, toY)) {
-                char temp = board[fromY][fromX];
+                char fromPiece = board[fromY][fromX];
+                char toPiece = board[toY][toX];
+
                 board[fromY][fromX] = 0;
-                board[toY][toX] = temp;
+                board[toY][toX] = fromPiece;
 
                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -516,17 +580,23 @@ public class Player extends PlayerBase {
                     if (score > result) {
                         result = score;
 
-                        this.currentMove.fromX = fromX;
-                        this.currentMove.fromY = fromY;
-                        this.currentMove.toX = toX;
-                        this.currentMove.toY = toY;
+                        if (depth == 0) {
+                            this.currentMove.fromX = fromX;
+                            this.currentMove.fromY = fromY;
+                            this.currentMove.toX = toX;
+                            this.currentMove.toY = toY;
+                        }
                     }
                 } else {
                     result = Math.min(score, result);
                 }
 
-                board[fromY][fromX] = temp;
-                board[toY][toX] = 0;
+                board[fromY][fromX] = fromPiece;
+                board[toY][toX] = toPiece;
+
+                if (toPiece != 0) {
+                    break;
+                }
             } else {
                 break;
             }
@@ -542,9 +612,11 @@ public class Player extends PlayerBase {
             int toY = fromY + offsetY;
 
             if (isMoveValid(board, fromX, fromY, toX, toY)) {
-                char temp = board[fromY][fromX];
+                char fromPiece = board[fromY][fromX];
+                char toPiece = board[toY][toX];
+
                 board[fromY][fromX] = 0;
-                board[toY][toX] = temp;
+                board[toY][toX] = fromPiece;
 
                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -552,21 +624,26 @@ public class Player extends PlayerBase {
                     if (score > result) {
                         result = score;
 
-                        this.currentMove.fromX = fromX;
-                        this.currentMove.fromY = fromY;
-                        this.currentMove.toX = toX;
-                        this.currentMove.toY = toY;
+                        if (depth == 0) {
+                            this.currentMove.fromX = fromX;
+                            this.currentMove.fromY = fromY;
+                            this.currentMove.toX = toX;
+                            this.currentMove.toY = toY;
+                        }
                     }
                 } else {
                     result = Math.min(score, result);
                 }
 
-                board[fromY][fromX] = temp;
-                board[toY][toX] = 0;
+                board[fromY][fromX] = fromPiece;
+                board[toY][toX] = toPiece;
+
+                if (toPiece != 0) {
+                    break;
+                }
             } else {
                 break;
             }
-
             --offsetX;
             ++offsetY;
         }
@@ -580,20 +657,18 @@ public class Player extends PlayerBase {
         int offsetX = 1;
         int offsetY = 0;
 
-        if (isMyTurn) {
-            result = Integer.MIN_VALUE;
-        } else {
-            result = Integer.MAX_VALUE;
-        }
+        result = isMyTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
         while (offsetX < BOARD_SIZE) {
             int toX = fromX + offsetX;
             int toY = fromY + offsetY;
 
             if (isMoveValid(board, fromX, fromY, toX, toY)) {
-                char temp = board[fromY][fromX];
+                char fromPiece = board[fromY][fromX];
+                char toPiece = board[toY][toX];
+
                 board[fromY][fromX] = 0;
-                board[toY][toX] = temp;
+                board[toY][toX] = fromPiece;
 
                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -601,17 +676,23 @@ public class Player extends PlayerBase {
                     if (score > result) {
                         result = score;
 
-                        this.currentMove.fromX = fromX;
-                        this.currentMove.fromY = fromY;
-                        this.currentMove.toX = toX;
-                        this.currentMove.toY = toY;
+                        if (depth == 0) {
+                            this.currentMove.fromX = fromX;
+                            this.currentMove.fromY = fromY;
+                            this.currentMove.toX = toX;
+                            this.currentMove.toY = toY;
+                        }
                     }
                 } else {
                     result = Math.min(score, result);
                 }
 
-                board[fromY][fromX] = temp;
-                board[toY][toX] = 0;
+                board[fromY][fromX] = fromPiece;
+                board[toY][toX] = toPiece;
+
+                if (toPiece != 0) {
+                    break;
+                }
             } else {
                 break;
             }
@@ -625,9 +706,11 @@ public class Player extends PlayerBase {
             int toY = fromY + offsetY;
 
             if (isMoveValid(board, fromX, fromY, toX, toY)) {
-                char temp = board[fromY][fromX];
+                char fromPiece = board[fromY][fromX];
+                char toPiece = board[toY][toX];
+
                 board[fromY][fromX] = 0;
-                board[toY][toX] = temp;
+                board[toY][toX] = fromPiece;
 
                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -635,17 +718,23 @@ public class Player extends PlayerBase {
                     if (score > result) {
                         result = score;
 
-                        this.currentMove.fromX = fromX;
-                        this.currentMove.fromY = fromY;
-                        this.currentMove.toX = toX;
-                        this.currentMove.toY = toY;
+                        if (depth == 0) {
+                            this.currentMove.fromX = fromX;
+                            this.currentMove.fromY = fromY;
+                            this.currentMove.toX = toX;
+                            this.currentMove.toY = toY;
+                        }
                     }
                 } else {
                     result = Math.min(score, result);
                 }
 
-                board[fromY][fromX] = temp;
-                board[toY][toX] = 0;
+                board[fromY][fromX] = fromPiece;
+                board[toY][toX] = toPiece;
+
+                if (toPiece != 0) {
+                    break;
+                }
             } else {
                 break;
             }
@@ -660,9 +749,11 @@ public class Player extends PlayerBase {
             int toY = fromY + offsetY;
 
             if (isMoveValid(board, fromX, fromY, toX, toY)) {
-                char temp = board[fromY][fromX];
+                char fromPiece = board[fromY][fromX];
+                char toPiece = board[toY][toX];
+
                 board[fromY][fromX] = 0;
-                board[toY][toX] = temp;
+                board[toY][toX] = fromPiece;
 
                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -670,17 +761,23 @@ public class Player extends PlayerBase {
                     if (score > result) {
                         result = score;
 
-                        this.currentMove.fromX = fromX;
-                        this.currentMove.fromY = fromY;
-                        this.currentMove.toX = toX;
-                        this.currentMove.toY = toY;
+                        if (depth == 0) {
+                            this.currentMove.fromX = fromX;
+                            this.currentMove.fromY = fromY;
+                            this.currentMove.toX = toX;
+                            this.currentMove.toY = toY;
+                        }
                     }
                 } else {
                     result = Math.min(score, result);
                 }
 
-                board[fromY][fromX] = temp;
-                board[toY][toX] = 0;
+                board[fromY][fromX] = fromPiece;
+                board[toY][toX] = toPiece;
+
+                if (toPiece != 0) {
+                    break;
+                }
             } else {
                 break;
             }
@@ -694,9 +791,11 @@ public class Player extends PlayerBase {
             int toY = fromY + offsetY;
 
             if (isMoveValid(board, fromX, fromY, toX, toY)) {
-                char temp = board[fromY][fromX];
+                char fromPiece = board[fromY][fromX];
+                char toPiece = board[toY][toX];
+
                 board[fromY][fromX] = 0;
-                board[toY][toX] = temp;
+                board[toY][toX] = fromPiece;
 
                 score = getMinimax(board, depth + 1, !isMyTurn, !isWhiteTurn);
 
@@ -704,17 +803,23 @@ public class Player extends PlayerBase {
                     if (score > result) {
                         result = score;
 
-                        this.currentMove.fromX = fromX;
-                        this.currentMove.fromY = fromY;
-                        this.currentMove.toX = toX;
-                        this.currentMove.toY = toY;
+                        if (depth == 0) {
+                            this.currentMove.fromX = fromX;
+                            this.currentMove.fromY = fromY;
+                            this.currentMove.toX = toX;
+                            this.currentMove.toY = toY;
+                        }
                     }
                 } else {
                     result = Math.min(score, result);
                 }
 
-                board[fromY][fromX] = temp;
-                board[toY][toX] = 0;
+                board[fromY][fromX] = fromPiece;
+                board[toY][toX] = toPiece;
+
+                if (toPiece != 0) {
+                    break;
+                }
             } else {
                 break;
             }
