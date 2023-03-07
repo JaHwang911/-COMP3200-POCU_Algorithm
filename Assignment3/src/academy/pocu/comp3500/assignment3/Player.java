@@ -63,6 +63,7 @@ public class Player extends PlayerBase {
         }
 
         int result = isMyTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        Move outMove = new Move();
 
         for (int i = 0; i < BOARD_SIZE; ++i) {
             for (int j = 0; j < BOARD_SIZE; ++j) {
@@ -371,11 +372,18 @@ public class Player extends PlayerBase {
                         break;
                     case 'b':
                     case 'B':
-                        score = bishopMove(board, j, i, depth, isMyTurn, isWhiteTurn);
+                        score = bishopMove(board, j, i, depth, isMyTurn, isWhiteTurn, outMove);
 
                         if (isMyTurn) {
                             if (score > result) {
                                 result = score;
+
+                                if (depth == 0) {
+                                    this.currentMove.fromX = outMove.fromX;
+                                    this.currentMove.fromY = outMove.fromY;
+                                    this.currentMove.toX = outMove.toX;
+                                    this.currentMove.toY = outMove.toY;
+                                }
                             }
                         } else {
                             if (score < result) {
@@ -385,28 +393,55 @@ public class Player extends PlayerBase {
                         break;
                     case 'r':
                     case 'R':
-                        score = rookMove(board, j, i, depth, isMyTurn, isWhiteTurn);
+                        score = rookMove(board, j, i, depth, isMyTurn, isWhiteTurn, outMove);
 
                         if (isMyTurn) {
-                            result = Math.max(score, result);
+                            if (score > result) {
+                                result = score;
+
+                                if (depth == 0) {
+                                    this.currentMove.fromX = outMove.fromX;
+                                    this.currentMove.fromY = outMove.fromY;
+                                    this.currentMove.toX = outMove.toX;
+                                    this.currentMove.toY = outMove.toY;
+                                }
+                            }
                         } else {
                             result = Math.min(score, result);
                         }
                         break;
                     case 'q':
                     case 'Q':
-                        score = bishopMove(board, j, i, depth, isMyTurn, isWhiteTurn);
+                        score = bishopMove(board, j, i, depth, isMyTurn, isWhiteTurn, outMove);
 
                         if (isMyTurn) {
-                            result = Math.max(score, result);
+                            if (score > result) {
+                                result = score;
+
+                                if (depth == 0) {
+                                    this.currentMove.fromX = outMove.fromX;
+                                    this.currentMove.fromY = outMove.fromY;
+                                    this.currentMove.toX = outMove.toX;
+                                    this.currentMove.toY = outMove.toY;
+                                }
+                            }
                         } else {
                             result = Math.min(score, result);
                         }
 
-                        score = rookMove(board, j, i, depth, isMyTurn, isWhiteTurn);
+                        score = rookMove(board, j, i, depth, isMyTurn, isWhiteTurn, outMove);
 
                         if (isMyTurn) {
-                            result = Math.max(score, result);
+                            if (score > result) {
+                                result = score;
+
+                                if (depth == 0) {
+                                    this.currentMove.fromX = outMove.fromX;
+                                    this.currentMove.fromY = outMove.fromY;
+                                    this.currentMove.toX = outMove.toX;
+                                    this.currentMove.toY = outMove.toY;
+                                }
+                            }
                         } else {
                             result = Math.min(score, result);
                         }
@@ -456,7 +491,7 @@ public class Player extends PlayerBase {
         return result;
     }
 
-    private int bishopMove(char[][] board, int fromX, int fromY, final int depth, boolean isMyTurn, boolean isWhiteTurn) {
+    private int bishopMove(char[][] board, int fromX, int fromY, final int depth, boolean isMyTurn, boolean isWhiteTurn, Move out) {
         int result;
         int score;
         int offsetX = 1;
@@ -482,10 +517,10 @@ public class Player extends PlayerBase {
                         result = score;
 
                         if (depth == 0) {
-                            this.currentMove.fromX = fromX;
-                            this.currentMove.fromY = fromY;
-                            this.currentMove.toX = toX;
-                            this.currentMove.toY = toY;
+                            out.fromX = fromX;
+                            out.fromY = fromY;
+                            out.toX = toX;
+                            out.toY = toY;
                         }
                     }
                 } else {
@@ -526,10 +561,10 @@ public class Player extends PlayerBase {
                         result = score;
 
                         if (depth == 0) {
-                            this.currentMove.fromX = fromX;
-                            this.currentMove.fromY = fromY;
-                            this.currentMove.toX = toX;
-                            this.currentMove.toY = toY;
+                            out.fromX = fromX;
+                            out.fromY = fromY;
+                            out.toX = toX;
+                            out.toY = toY;
                         }
                     }
                 } else {
@@ -570,10 +605,10 @@ public class Player extends PlayerBase {
                         result = score;
 
                         if (depth == 0) {
-                            this.currentMove.fromX = fromX;
-                            this.currentMove.fromY = fromY;
-                            this.currentMove.toX = toX;
-                            this.currentMove.toY = toY;
+                            out.fromX = fromX;
+                            out.fromY = fromY;
+                            out.toX = toX;
+                            out.toY = toY;
                         }
                     }
                 } else {
@@ -614,10 +649,10 @@ public class Player extends PlayerBase {
                         result = score;
 
                         if (depth == 0) {
-                            this.currentMove.fromX = fromX;
-                            this.currentMove.fromY = fromY;
-                            this.currentMove.toX = toX;
-                            this.currentMove.toY = toY;
+                            out.fromX = fromX;
+                            out.fromY = fromY;
+                            out.toX = toX;
+                            out.toY = toY;
                         }
                     }
                 } else {
@@ -640,7 +675,7 @@ public class Player extends PlayerBase {
         return result;
     }
 
-    private int rookMove(char[][] board, int fromX, int fromY, final int depth, boolean isMyTurn, boolean isWhiteTurn) {
+    private int rookMove(char[][] board, int fromX, int fromY, final int depth, boolean isMyTurn, boolean isWhiteTurn, Move out) {
         int result;
         int score;
         int offsetX = 1;
@@ -666,10 +701,10 @@ public class Player extends PlayerBase {
                         result = score;
 
                         if (depth == 0) {
-                            this.currentMove.fromX = fromX;
-                            this.currentMove.fromY = fromY;
-                            this.currentMove.toX = toX;
-                            this.currentMove.toY = toY;
+                            out.fromX = fromX;
+                            out.fromY = fromY;
+                            out.toX = toX;
+                            out.toY = toY;
                         }
                     }
                 } else {
@@ -708,10 +743,10 @@ public class Player extends PlayerBase {
                         result = score;
 
                         if (depth == 0) {
-                            this.currentMove.fromX = fromX;
-                            this.currentMove.fromY = fromY;
-                            this.currentMove.toX = toX;
-                            this.currentMove.toY = toY;
+                            out.fromX = fromX;
+                            out.fromY = fromY;
+                            out.toX = toX;
+                            out.toY = toY;
                         }
                     }
                 } else {
@@ -751,10 +786,10 @@ public class Player extends PlayerBase {
                         result = score;
 
                         if (depth == 0) {
-                            this.currentMove.fromX = fromX;
-                            this.currentMove.fromY = fromY;
-                            this.currentMove.toX = toX;
-                            this.currentMove.toY = toY;
+                            out.fromX = fromX;
+                            out.fromY = fromY;
+                            out.toX = toX;
+                            out.toY = toY;
                         }
                     }
                 } else {
@@ -793,10 +828,10 @@ public class Player extends PlayerBase {
                         result = score;
 
                         if (depth == 0) {
-                            this.currentMove.fromX = fromX;
-                            this.currentMove.fromY = fromY;
-                            this.currentMove.toX = toX;
-                            this.currentMove.toY = toY;
+                            out.fromX = fromX;
+                            out.fromY = fromY;
+                            out.toX = toX;
+                            out.toY = toY;
                         }
                     }
                 } else {
@@ -878,11 +913,6 @@ public class Player extends PlayerBase {
                     default:
                         assert (false);
                         return -1;
-                }
-
-                if (i == 3 && j == 3 || i == 4 && j == 3
-                    || i == 3 && j == 4 || i == 4 && j == 4) {
-                    tempScore *= 2;
                 }
 
                 score += tempScore;

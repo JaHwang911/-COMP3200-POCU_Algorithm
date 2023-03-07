@@ -55,7 +55,7 @@ final class Game {
             this.black = player1;
         }
 
-        this.board = createNewBoard();
+        this.board = createCustomBoard();
     }
 
     public void nextTurn() {
@@ -361,10 +361,11 @@ final class Game {
         return board;
     }
 
-    private static char[][] createNewBoardByOnlyKing() {
+    private static char[][] createCustomBoard() {
         final char[][] board = new char[BOARD_SIZE][BOARD_SIZE];
-        board[3][3] = 'K';
-        board[4][4] = 'k';
+        board[2][5] = 'q';
+        board[4][3] = 'K';
+        board[7][4] = 'k';
 
         return board;
     }
