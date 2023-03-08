@@ -876,20 +876,10 @@ public class Player extends PlayerBase {
 
                 switch (piece) {
                     case 'p':
-                        if (x == 3 && y == 3 || x == 3 && y == 4
-                                || x == 4 && y == 3 || x == 4 && y == 4) {
-                            whiteScore += PAWN_VALUE * 2;
-                        } else {
-                            whiteScore += PAWN_VALUE;
-                        }
+                        whiteScore += PAWN_VALUE;
                         break;
                     case 'P':
-                        if (x == 3 && y == 3 || x == 3 && y == 4
-                                || x == 4 && y == 3 || x == 4 && y == 4) {
-                            blackScore += PAWN_VALUE * 2;
-                        } else {
-                            blackScore += PAWN_VALUE;
-                        }
+                        blackScore += PAWN_VALUE;
                         break;
                     case 'n':
                         whiteScore += KNIGHT_VALUE;
