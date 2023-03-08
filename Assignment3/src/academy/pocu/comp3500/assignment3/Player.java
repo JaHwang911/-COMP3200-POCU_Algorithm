@@ -5,13 +5,13 @@ import academy.pocu.comp3500.assignment3.chess.PlayerBase;
 
 public class Player extends PlayerBase {
     private final static int BOARD_SIZE = 8;
-    private final static int MAX_DEPTH = 4;
-    private final static int PAWN_VALUE = 10;
-    private final static int KNIGHT_VALUE = 30;
-    private final static int BISHOP_VALUE = 30;
-    private final static int ROOK_VALUE = 50;
-    private final static int QUEEN_VALUE = 90;
-    private final static int KING_VALUE = 900;
+    private final static int MAX_DEPTH = 3;
+    private final static int PAWN_VALUE = 1;
+    private final static int KNIGHT_VALUE = 3;
+    private final static int BISHOP_VALUE = 3;
+    private final static int ROOK_VALUE = 5;
+    private final static int QUEEN_VALUE = 9;
+    private final static int KING_VALUE = 90;
 
     private static final int[][] KNIGHT_MOVE_OFFSET = {
             {1, -2},
