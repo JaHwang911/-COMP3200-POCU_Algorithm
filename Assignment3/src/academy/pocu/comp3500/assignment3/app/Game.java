@@ -55,7 +55,7 @@ final class Game {
             this.black = player1;
         }
 
-        this.board = createCustomBoard();
+        this.board = createNewBoard();
     }
 
     public void nextTurn() {
