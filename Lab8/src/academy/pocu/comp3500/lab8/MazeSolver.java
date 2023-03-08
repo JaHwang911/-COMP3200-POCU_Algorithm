@@ -30,7 +30,7 @@ public final class MazeSolver {
         return result;
     }
 
-    private static boolean findPathRecursive(final char[][]maze, int currentX, int currentY, List<Point> out) {
+    private static boolean findPathRecursive(final char[][] maze, final int currentX, final int currentY, final List<Point> out) {
         if (maze[currentY][currentX] == 'E') {
             out.add(new Point(currentX, currentY));
             return true;
