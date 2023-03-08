@@ -855,17 +855,6 @@ public class Player extends PlayerBase {
         int whiteScore = 0;
         int blackScore = 0;
 
-        final StringBuilder sb = new StringBuilder(128);
-
-        sb.append("  ");
-        for (int x = 0; x < BOARD_SIZE; ++x) {
-            sb.append((char) (x + 'a'));
-        }
-
-        sb.append(System.lineSeparator());
-
-        addHorizontalBorder(sb);
-
         for (int y = 0; y < BOARD_SIZE; ++y) {
             for (int x = 0; x < BOARD_SIZE; ++x) {
                 if (board[y][x] == 0) {
@@ -925,16 +914,6 @@ public class Player extends PlayerBase {
         }
 
         return score;
-    }
-
-    private static void addHorizontalBorder(StringBuilder sb) {
-        sb.append(' ');
-        sb.append('+');
-        for (int y = 0; y < BOARD_SIZE; ++y) {
-            sb.append('-');
-        }
-        sb.append('+');
-        sb.append(System.lineSeparator());
     }
 
     private boolean isMoveValid(char[][] board, int fromX, int fromY, int toX, int toY) {
