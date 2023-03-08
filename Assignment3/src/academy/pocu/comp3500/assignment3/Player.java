@@ -8,7 +8,7 @@ public class Player extends PlayerBase {
     private final static int MAX_DEPTH = 4;
     private final static int PAWN_VALUE = 10;
     private final static int KNIGHT_VALUE = 30;
-    private final static int BISHOP_VALUE = 40;
+    private final static int BISHOP_VALUE = 30;
     private final static int ROOK_VALUE = 50;
     private final static int QUEEN_VALUE = 90;
     private final static int KING_VALUE = 900;
@@ -383,9 +383,7 @@ public class Player extends PlayerBase {
                                 }
                             }
                         } else {
-                            if (score < result) {
-                                result = score;
-                            }
+                            result = Math.min(score, result);
                         }
                         break;
                     case 'r':
@@ -851,9 +849,8 @@ public class Player extends PlayerBase {
     }
 
     private int getEvaluate(char[][] board) {
-        int score;
-        int whiteScore = 0;
-        int blackScore = 0;
+        int score = 0;
+        int tempScore;
 
         for (int y = 0; y < BOARD_SIZE; ++y) {
             for (int x = 0; x < BOARD_SIZE; ++x) {
@@ -865,52 +862,52 @@ public class Player extends PlayerBase {
 
                 switch (piece) {
                     case 'p':
-                        whiteScore += PAWN_VALUE;
+                        tempScore = PAWN_VALUE;
                         break;
                     case 'P':
-                        blackScore += PAWN_VALUE;
+                        tempScore = -PAWN_VALUE;
                         break;
                     case 'n':
-                        whiteScore += KNIGHT_VALUE;
+                        tempScore = KNIGHT_VALUE;
                         break;
                     case 'N':
-                        blackScore += KNIGHT_VALUE;
+                        tempScore = -KNIGHT_VALUE;
                         break;
                     case 'b':
-                        whiteScore += BISHOP_VALUE;
+                        tempScore = BISHOP_VALUE;
                         break;
                     case 'B':
-                        blackScore += BISHOP_VALUE;
+                        tempScore = -BISHOP_VALUE;
                         break;
                     case 'r':
-                        whiteScore += ROOK_VALUE;
+                        tempScore = ROOK_VALUE;
                         break;
                     case 'R':
-                        blackScore += ROOK_VALUE;
+                        tempScore = -ROOK_VALUE;
                         break;
                     case 'q':
-                        whiteScore += QUEEN_VALUE;
+                        tempScore = QUEEN_VALUE;
                         break;
                     case 'Q':
-                        blackScore += QUEEN_VALUE;
+                        tempScore = -QUEEN_VALUE;
                         break;
                     case 'k':
-                        whiteScore += KING_VALUE;
+                        tempScore = KING_VALUE;
                         break;
                     case 'K':
-                        blackScore += KING_VALUE;
+                        tempScore = -KING_VALUE;
                         break;
                     default:
                         assert (false);
                         return -1;
                 }
+
+                score += tempScore;
             }
         }
 
-        if (super.isWhite()) {
-            score = whiteScore - blackScore;
-        } else {
-            score = blackScore - whiteScore;
+        if (!super.isWhite()) {
+            score *= -1;
         }
 
         return score;
