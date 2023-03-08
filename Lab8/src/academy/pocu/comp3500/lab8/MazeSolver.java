@@ -3,7 +3,6 @@ package academy.pocu.comp3500.lab8;
 import academy.pocu.comp3500.lab8.maze.Point;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class MazeSolver {
@@ -14,39 +13,24 @@ public final class MazeSolver {
             {-1, 0}
     };
 
+    private static final char BLOCKED_SIGN = 'B';
+    private static final char VISITED_SIGN = 'V';
+
     public static List<Point> findPath(final char[][] maze, final Point start) {
-        List<Point> out = new ArrayList<>();
+        List<Point> result = new ArrayList<>();
 
         if (maze[start.getY()][start.getX()] == 'E') {
-            out.add(start);
+            result.add(start);
 
-            return out;
+            return result;
         }
 
-        final int MAZE_WIDTH = maze[0].length;
-        final int MAZE_HEIGHT = maze.length;
+        findPathRecursive(maze, start.getX(), start.getY(), result);
 
-        for (int i = 0; i < MOVE_OFFSET.length; ++i) {
-            int toX = start.getX() + MOVE_OFFSET[i][0];
-            int toY = start.getY() + MOVE_OFFSET[i][1];
-
-            if (toX < 0 || toX >= MAZE_WIDTH || toY < 0 || toY >= MAZE_HEIGHT) {
-                continue;
-            }
-
-            if (maze[toY][toX] != 'x') {
-                if (findPathRecursive(maze, start.getX(), start.getY(), toX, toY, out)) {
-                    out.add(new Point(start.getX(), start.getY()));
-                    break;
-                }
-            }
-        }
-
-        Collections.reverse(out);
-        return out;
+        return result;
     }
 
-    private static boolean findPathRecursive(final char[][]maze, int prevX, int prevY, int currentX, int currentY, final List<Point>out) {
+    private static boolean findPathRecursive(final char[][]maze, int currentX, int currentY, List<Point> out) {
         if (maze[currentY][currentX] == 'E') {
             out.add(new Point(currentX, currentY));
             return true;
@@ -59,20 +43,21 @@ public final class MazeSolver {
             int toX = currentX + MOVE_OFFSET[i][0];
             int toY = currentY + MOVE_OFFSET[i][1];
 
-            if (prevX == toX && prevY == toY) {
+            if (toX < 0 || toX >= MAZE_WIDTH || toY < 0 || toY >= MAZE_HEIGHT) {
                 continue;
-            } else if (toX < 0 || toX >= MAZE_WIDTH || toY < 0 || toY >= MAZE_HEIGHT) {
+            } else if (maze[toY][toX] == 'V' || maze[toY][toX] == 'B' || maze[toY][toX] == 'x') {
                 continue;
             }
 
-            if (maze[toY][toX] != 'x') {
-                if (findPathRecursive(maze, currentX, currentY, toX, toY, out)) {
-                    out.add(new Point(currentX, currentY));
-                    return true;
-                }
+            maze[currentY][currentX] = 'V';
+
+            if (findPathRecursive(maze, toX, toY, out)) {
+                out.add(0, new Point(currentX, currentY));
+                return true;
             }
         }
 
+        maze[currentY][currentX] = 'B';
         return false;
     }
 }
