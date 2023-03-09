@@ -5,7 +5,7 @@ import academy.pocu.comp3500.assignment3.chess.PlayerBase;
 
 public class Player extends PlayerBase {
     private final static int BOARD_SIZE = 8;
-    private final static int MAX_DEPTH = 3;
+    private final static int MAX_DEPTH = 2;
     private final static int PAWN_VALUE = 1;
     private final static int KNIGHT_VALUE = 3;
     private final static int BISHOP_VALUE = 3;

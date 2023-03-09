@@ -11,8 +11,10 @@ import java.io.InputStreamReader;
 public class Program {
 
     public static void main(String[] args) {
-//        testOfficial();
+        testOfficial();
         testWiki1();
+
+        System.out.println("No prob assignment3");
     }
 
     private static void testOfficial() {
