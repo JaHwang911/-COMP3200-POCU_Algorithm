@@ -18,23 +18,32 @@ public class CodingMan {
 
         int i = 0;
 
-        for (; i < preprocessed.size() - 1; ++i) {
+        for (; i < preprocessed.size(); ++i) {
             int nextIndex = i;
+            int maxRunningTime = 0;
 
             for (int j = i + 1; j < preprocessed.size(); ++j) {
-                if (preprocessed.get(i).getEndTime() == preprocessed.get(j).getStartTime()) {
-                    nextIndex = j;
+                int runningTime = preprocessed.get(j).getEndTime() - preprocessed.get(j).getStartTime();
+
+                if (preprocessed.get(i).getEndTime() >= preprocessed.get(j).getStartTime()) {
+                    if (maxRunningTime < runningTime) {
+                        nextIndex = j;
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            if (resultClips.size() == 0 || resultClips.get(resultClips.size() - 1).getEndTime() >= preprocessed.get(i).getStartTime()) {
+                resultClips.add(preprocessed.get(i));
+
+                if (preprocessed.get(i).getEndTime() >= time) {
                     break;
                 }
             }
 
             if (nextIndex != i) {
-                resultClips.add(clips[i]);
                 i = nextIndex - 1;
-
-                if (nextIndex >= preprocessed.size() - 1 || clips[nextIndex].getEndTime() >= time) {
-                    resultClips.add(clips[nextIndex]);
-                }
             }
         }
 
@@ -48,7 +57,7 @@ public class CodingMan {
     public static ArrayList<VideoClip> getMaxRunningTimeClips(final VideoClip[] clips) {
         ArrayList<VideoClip> preprocessedClips = new ArrayList<>(clips.length);
 
-        for (int i = 0; i < clips.length - 1; ++i) {
+        for (int i = 0; i < clips.length; ++i) {
             int index = i;
             int maxRunningTime = clips[i].getEndTime() - clips[i].getStartTime();
 

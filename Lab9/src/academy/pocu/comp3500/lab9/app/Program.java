@@ -70,6 +70,66 @@ public class Program {
     private static void testFindMinClipsCount() {
         {
             VideoClip[] clips = new VideoClip[]{
+                    new VideoClip(0, 15),
+                    new VideoClip(10, 20),
+                    new VideoClip(30, 35)
+            };
+
+            int count = CodingMan.findMinClipsCount(clips, 10); // 1
+            assert (count == 1);
+
+            count = CodingMan.findMinClipsCount(clips, 20); // 2
+            assert (count == 2);
+
+            count = CodingMan.findMinClipsCount(clips, 25); // -1
+            assert (count == -1);
+
+            count = CodingMan.findMinClipsCount(clips, 35); // -1
+            assert (count == -1);
+        }
+
+        {
+            VideoClip[] clips = new VideoClip[]{
+                    new VideoClip(0, 7),
+                    new VideoClip(8, 13),
+                    new VideoClip(9, 20)
+            };
+
+            int count = CodingMan.findMinClipsCount(clips, 7);
+            assert (count == 1);
+
+            count = CodingMan.findMinClipsCount(clips, 13);
+            assert (count == -1);
+
+            count = CodingMan.findMinClipsCount(clips, 20);
+            assert (count == -1);
+        }
+
+        {
+            VideoClip[] clips = new VideoClip[] {
+                    new VideoClip(0, 5),
+                    new VideoClip(1, 6),
+                    new VideoClip(2, 7),
+                    new VideoClip(3, 8),
+                    new VideoClip(4, 9)
+            };
+
+            int count = CodingMan.findMinClipsCount(clips, 6);
+            assert (count == 2);
+
+            count = CodingMan.findMinClipsCount(clips, 7);
+            assert (count == 2);
+
+            count = CodingMan.findMinClipsCount(clips, 8);
+            assert (count == 2);
+
+            count = CodingMan.findMinClipsCount(clips, 9);
+            assert (count == 2);
+        }
+
+        // Wiki Test
+        {
+            VideoClip[] clips = new VideoClip[]{
                     new VideoClip(0, 7),
                     new VideoClip(0, 15),
                     new VideoClip(10, 20),
@@ -88,7 +148,77 @@ public class Program {
                     new VideoClip(40, 50),
             };
 
+            int airTime = 35;
+
             int count = CodingMan.findMinClipsCount(clips, 35);
+            assert (count == 4);
+
+            clips = new VideoClip[]{
+                    new VideoClip(0, 7),
+                    new VideoClip(7, 15),
+                    new VideoClip(15, 20),
+                    new VideoClip(20, 25),
+                    new VideoClip(25, 35)
+            };
+
+            count = CodingMan.findMinClipsCount(clips, airTime);
+            assert (count == 5);
+
+            clips = new VideoClip[]{
+                    new VideoClip(0, 7),
+                    new VideoClip(4, 8),
+                    new VideoClip(5, 15),
+                    new VideoClip(13, 16),
+                    new VideoClip(15, 34),
+                    new VideoClip(20, 35),
+                    new VideoClip(23, 37),
+                    new VideoClip(35, 60),
+                    new VideoClip(38, 62)
+            };
+
+            airTime = 61;
+            count = CodingMan.findMinClipsCount(clips, airTime);
+
+            assert (count == 6);
+
+            clips = new VideoClip[]{
+                    new VideoClip(0, 3),
+                    new VideoClip(2, 4),
+                    new VideoClip(3, 5),
+                    new VideoClip(5, 12),
+                    new VideoClip(10, 17)
+            };
+
+            airTime = 13;
+            count = CodingMan.findMinClipsCount(clips, airTime);
+
+            assert (count == 4);
+
+            clips = new VideoClip[]{
+                    new VideoClip(0, 3),
+                    new VideoClip(2, 5),
+                    new VideoClip(4, 8),
+                    new VideoClip(1, 3),
+                    new VideoClip(2, 3),
+            };
+
+            airTime = 7;
+            count = CodingMan.findMinClipsCount(clips, airTime);
+
+            assert (count == 3);
+
+            clips = new VideoClip[]{
+                    new VideoClip(0, 3),
+                    new VideoClip(0, 3),
+                    new VideoClip(0, 4),
+                    new VideoClip(1, 4),
+                    new VideoClip(2, 3),
+            };
+
+            airTime = 4;
+            count = CodingMan.findMinClipsCount(clips, airTime);
+
+            assert (count == 1);
         }
     }
 }
