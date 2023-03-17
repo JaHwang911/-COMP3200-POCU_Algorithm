@@ -10,7 +10,25 @@ public class PyramidBuilder {
         int currLevelStoneWidth = 0;
         int currLevelStoneCount = 0;
 
-        for (int i = 0; i < widths.length; ++i) {
+        int i = 0;
+
+        for (; i < widths.length; ++i) {
+            currLevelStoneWidth += widths[i];
+            ++currLevelStoneCount;
+
+            if (currLevelStoneWidth > prevLevelStoneWidth && currLevelStoneCount > prevLevelStoneCount) {
+                prevLevelStoneWidth = currLevelStoneWidth;
+                prevLevelStoneCount = currLevelStoneCount;
+
+                currLevelStoneWidth = 0;
+                currLevelStoneCount = 0;
+
+                ++totalLevel;
+                break;
+            }
+        }
+
+        for (; i < widths.length; ++i) {
             currLevelStoneWidth += widths[i];
             ++currLevelStoneCount;
 

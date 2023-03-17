@@ -11,7 +11,9 @@ public class Program {
     public static void main(String[] args) {
         testPyramid();
         testMaxProfit();
-        testFindMinClipsCount();
+//        testFindMinClipsCount();
+
+        System.out.println("No prob lab9");
     }
 
     private static void testPyramid() {
@@ -23,6 +25,9 @@ public class Program {
 
         pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{3, 3, 4, 4, 30, 12, 10, 10, 6}, 5);
         assert (pyramidHeight == 3);
+
+        pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{2, 2, 2, 2, 3, 3}, 1);
+        assert (pyramidHeight == 2);
     }
 
     private static void testMaxProfit() {
