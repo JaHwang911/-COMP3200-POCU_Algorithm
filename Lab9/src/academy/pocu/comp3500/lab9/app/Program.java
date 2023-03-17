@@ -1,14 +1,17 @@
 package academy.pocu.comp3500.lab9.app;
 
+import academy.pocu.comp3500.lab9.CodingMan;
 import academy.pocu.comp3500.lab9.ProfitCalculator;
 import academy.pocu.comp3500.lab9.PyramidBuilder;
 import academy.pocu.comp3500.lab9.data.Task;
+import academy.pocu.comp3500.lab9.data.VideoClip;
 
 public class Program {
 
     public static void main(String[] args) {
         testPyramid();
         testMaxProfit();
+        testFindMinClipsCount();
     }
 
     private static void testPyramid() {
@@ -40,5 +43,46 @@ public class Program {
 
         profit = ProfitCalculator.findMaxProfit(tasks, new int[]{5, 4, 9});
         assert (profit == 0);
+    }
+
+    private static void testFindMinClipsCount() {
+        {
+            VideoClip[] clips = new VideoClip[]{
+                    new VideoClip(0, 15),
+                    new VideoClip(10, 20),
+                    new VideoClip(30, 35)
+            };
+
+            int count = CodingMan.findMinClipsCount(clips, 10); // 1
+            assert (count == 1);
+
+            count = CodingMan.findMinClipsCount(clips, 20); // 2
+            assert (count == 2);
+
+            count = CodingMan.findMinClipsCount(clips, 25); // -1
+            assert (count == -1);
+
+            count = CodingMan.findMinClipsCount(clips, 35); // -1
+            assert (count == -1);
+        }
+
+        {
+            VideoClip[] clips = new VideoClip[] {
+                    new VideoClip(0, 1),
+                    new VideoClip(0, 2),
+                    new VideoClip(0, 3),
+                    new VideoClip(2, 6),
+                    new VideoClip(3, 10)
+            };
+
+            int count = CodingMan.findMinClipsCount(clips, 10);
+            assert (count == 2);
+
+            count = CodingMan.findMinClipsCount(clips, 5);
+            assert (count == 2);
+
+            count = CodingMan.findMinClipsCount(clips, 8);
+            assert (count == 2);
+        }
     }
 }
