@@ -6,7 +6,10 @@ import java.util.ArrayList;
 
 public class CodingMan {
     public static int findMinClipsCount(final VideoClip[] clips, int time) {
-        assert (time > 0);
+        if (clips.length == 0) {
+            return -1;
+        }
+
         clipsSortByStartTimeRecursive(clips, 0, clips.length - 1);
 
         if (clips[0].getStartTime() != 0) {

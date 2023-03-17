@@ -220,5 +220,34 @@ public class Program {
 
             assert (count == 1);
         }
+
+        {
+            VideoClip[] clips1 = new VideoClip[]{
+                    new VideoClip(0, 7),
+                    new VideoClip(7, 15)
+            };
+
+            int count1 = CodingMan.findMinClipsCount(clips1, 35);
+            assert (count1 == -1);
+        }
+
+        {
+            VideoClip[] clips1 = new VideoClip[]{
+                    new VideoClip(0, 7),
+                    new VideoClip(8, 15),
+                    new VideoClip(15, 20),
+                    new VideoClip(20, 25),
+                    new VideoClip(25, 35)
+            };
+            int count1 = CodingMan.findMinClipsCount(clips1, 35);
+            assert (count1 == -1);
+
+        }
+
+        {
+            VideoClip[] clips1 = new VideoClip[]{};
+            int count1 = CodingMan.findMinClipsCount(clips1, 35);
+            assert (count1 == -1);
+        }
     }
 }
