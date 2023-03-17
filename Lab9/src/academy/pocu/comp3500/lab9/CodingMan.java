@@ -26,7 +26,7 @@ public class CodingMan {
                     currentClipsMaxRunningTime = runningTime;
                     selectedClipsIndex = i;
                 }
-            } else {
+            } else if (clips[selectedClipsIndex].getEndTime() >= clips[i].getStartTime()) {
                 resultClips.add(clips[selectedClipsIndex]);
             }
         }

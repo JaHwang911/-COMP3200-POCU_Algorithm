@@ -89,5 +89,15 @@ public class Program {
             count = CodingMan.findMinClipsCount(clips, 8);
             assert (count == 2);
         }
+
+        {
+            VideoClip[] clips = new VideoClip[] {
+                    new VideoClip(0, 1),
+                    new VideoClip(0, 2),
+                    new VideoClip(0, 3),
+                    new VideoClip(2, 6),
+                    new VideoClip(3, 10)
+            };
+        }
     }
 }
