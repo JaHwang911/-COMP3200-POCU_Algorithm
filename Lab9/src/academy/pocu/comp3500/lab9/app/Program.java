@@ -17,17 +17,32 @@ public class Program {
     }
 
     private static void testPyramid() {
-        int pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{5}, 10);
-        assert (pyramidHeight == 0);
+        {
+            int pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{5}, 10);
+            assert (pyramidHeight == 0);
 
-        pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{6, 8}, 10);
-        assert (pyramidHeight == 1);
+            pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{6, 8}, 10);
+            assert (pyramidHeight == 1);
 
-        pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{3, 3, 4, 4, 30, 12, 10, 10, 6}, 5);
-        assert (pyramidHeight == 3);
+            pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{3, 3, 4, 4, 30, 12, 10, 10, 6}, 5);
+            assert (pyramidHeight == 3);
 
-        pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{2, 2, 2, 2, 3, 3}, 1);
-        assert (pyramidHeight == 2);
+            pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{2, 2, 2, 2, 3, 3}, 1);
+            assert (pyramidHeight == 2);
+        }
+
+        {
+            int pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{25}, 2);
+            assert (pyramidHeight == 0);
+            pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{1, 1, 1, 1, 1, 1}, 2);
+            assert (pyramidHeight == 1);
+            pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{3, 3}, 2);
+            assert (pyramidHeight == 1);
+            pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{3, 3, 3, 3}, 2);
+            assert (pyramidHeight == 1);
+            pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{3, 3, 3, 3, 3}, 2);
+            assert (pyramidHeight == 2);
+        }
     }
 
     private static void testMaxProfit() {

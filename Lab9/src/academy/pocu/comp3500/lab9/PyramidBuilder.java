@@ -24,7 +24,7 @@ public class PyramidBuilder {
             }
         }
 
-        for (; i < widths.length; ++i) {
+        for (i = i + 1; i < widths.length; ++i) {
             ++currLevelStoneCount;
 
             if (prevLevelStoneCount < currLevelStoneCount) {
