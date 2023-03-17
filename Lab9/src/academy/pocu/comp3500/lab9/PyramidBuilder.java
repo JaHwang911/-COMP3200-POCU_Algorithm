@@ -5,7 +5,6 @@ public class PyramidBuilder {
         quickSortRecursive(widths, 0, widths.length - 1);
 
         int totalLevel = 0;
-        int prevLevelStoneWidth = statue;
         int prevLevelStoneCount = 1;
         int currLevelStoneWidth = 0;
         int currLevelStoneCount = 0;
@@ -16,11 +15,8 @@ public class PyramidBuilder {
             currLevelStoneWidth += widths[i];
             ++currLevelStoneCount;
 
-            if (currLevelStoneWidth > prevLevelStoneWidth && currLevelStoneCount > prevLevelStoneCount) {
-                prevLevelStoneWidth = currLevelStoneWidth;
+            if (currLevelStoneWidth > statue && currLevelStoneCount > prevLevelStoneCount) {
                 prevLevelStoneCount = currLevelStoneCount;
-
-                currLevelStoneWidth = 0;
                 currLevelStoneCount = 0;
 
                 ++totalLevel;
@@ -29,14 +25,10 @@ public class PyramidBuilder {
         }
 
         for (; i < widths.length; ++i) {
-            currLevelStoneWidth += widths[i];
             ++currLevelStoneCount;
 
-            if (currLevelStoneWidth >= prevLevelStoneWidth && currLevelStoneCount > prevLevelStoneCount) {
-                prevLevelStoneWidth = currLevelStoneWidth;
+            if (prevLevelStoneCount < currLevelStoneCount) {
                 prevLevelStoneCount = currLevelStoneCount;
-
-                currLevelStoneWidth = 0;
                 currLevelStoneCount = 0;
 
                 ++totalLevel;
