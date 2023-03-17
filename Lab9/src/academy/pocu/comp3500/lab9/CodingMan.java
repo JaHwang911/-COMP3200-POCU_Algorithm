@@ -13,21 +13,28 @@ public class CodingMan {
             return -1;
         }
 
-        ArrayList<VideoClip> resultClips = new ArrayList<>(clips.length);
-        int currentClipsStartTime = 0;
-        int selectedClipsIndex = 0;
-        int currentClipsMaxRunningTime = clips[0].getEndTime();
+        ArrayList<VideoClip> preprocessed = getMaxRunningTimeClips(clips);
+        ArrayList<VideoClip> resultClips = new ArrayList<>(preprocessed.size());
 
-        for (int i = 1; i < clips.length; ++i) {
-            int runningTime = clips[i].getEndTime() - clips[i].getStartTime();
+        int i = 0;
 
-            if (currentClipsStartTime == clips[i].getStartTime()) {
-                if (currentClipsMaxRunningTime < runningTime) {
-                    currentClipsMaxRunningTime = runningTime;
-                    selectedClipsIndex = i;
+        for (; i < preprocessed.size() - 1; ++i) {
+            int nextIndex = i;
+
+            for (int j = i + 1; j < preprocessed.size(); ++j) {
+                if (preprocessed.get(i).getEndTime() == preprocessed.get(j).getStartTime()) {
+                    nextIndex = j;
+                    break;
                 }
-            } else if (clips[selectedClipsIndex].getEndTime() >= clips[i].getStartTime()) {
-                resultClips.add(clips[selectedClipsIndex]);
+            }
+
+            if (nextIndex != i) {
+                resultClips.add(clips[i]);
+                i = nextIndex - 1;
+
+                if (nextIndex >= preprocessed.size() - 1 || clips[nextIndex].getEndTime() >= time) {
+                    resultClips.add(clips[nextIndex]);
+                }
             }
         }
 
@@ -38,14 +45,47 @@ public class CodingMan {
         return resultClips.size();
     }
 
-    private static void clipsSortByStartTimeRecursive(final VideoClip[] clips, int left, int right) {
+    public static ArrayList<VideoClip> getMaxRunningTimeClips(final VideoClip[] clips) {
+        ArrayList<VideoClip> preprocessedClips = new ArrayList<>(clips.length);
+
+        for (int i = 0; i < clips.length - 1; ++i) {
+            int index = i;
+            int maxRunningTime = clips[i].getEndTime() - clips[i].getStartTime();
+
+            for (int j = i + 1; j < clips.length; ++j) {
+                int runningTime = clips[j].getEndTime() - clips[j].getStartTime();
+
+                if (clips[i].getStartTime() == clips[j].getStartTime()) {
+                    if (maxRunningTime < runningTime) {
+                        index = j;
+                        maxRunningTime = runningTime;
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            preprocessedClips.add(clips[index]);
+            i = index;
+        }
+
+        return preprocessedClips;
+    }
+
+    public static void clipsSortByStartTimeRecursive(final VideoClip[] clips, int left, int right) {
         if (left >= right) {
             return;
         }
 
         int i = left;
         for (int j = left; j < right; ++j) {
-            if (clips[j].getStartTime() < clips[right].getStartTime()) {
+            if (clips[j].getStartTime() == clips[right].getStartTime() && clips[j].getEndTime() < clips[right].getEndTime()) {
+                VideoClip temp = clips[j];
+                clips[j] = clips[i];
+                clips[i] = temp;
+
+                ++i;
+            } else if (clips[j].getStartTime() < clips[right].getStartTime()) {
                 VideoClip temp = clips[j];
                 clips[j] = clips[i];
                 clips[i] = temp;
