@@ -29,8 +29,9 @@ public class CodingMan {
                 int runningTime = preprocessed.get(j).getEndTime() - preprocessed.get(j).getStartTime();
 
                 if (preprocessed.get(i).getEndTime() >= preprocessed.get(j).getStartTime()) {
-                    if (maxRunningTime < runningTime) {
+                    if (maxRunningTime <= runningTime) {
                         nextIndex = j;
+                        maxRunningTime = runningTime;
                     }
                 } else {
                     break;
