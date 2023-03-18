@@ -252,13 +252,16 @@ public class Program {
         {
             VideoClip[] clips1 = new VideoClip[]{
                     new VideoClip(0, 7),
-                    new VideoClip(7, 14),
                     new VideoClip(6, 15),
+                    new VideoClip(7, 14),
                     new VideoClip(14, 15),
                     new VideoClip(15, 20),
                     new VideoClip(20, 25),
                     new VideoClip(25, 35)
             };
+
+            int count = CodingMan.findMinClipsCount(clips1, 35);
+            assert (count == 7);
         }
     }
 }
