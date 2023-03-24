@@ -13,21 +13,22 @@ public class Project {
         int[][] matrix = new int[tasks.length][tasks.length];
 
         HashMap<String, Integer> taskIndex = new HashMap<>(tasks.length);
-        Node[] taskNodes = new Node[tasks.length];
+        Node[] nodes = new Node[tasks.length];
         Node[] reverseDirectionNodes = new Node[tasks.length];
         ArrayList<Node> startNodes = new ArrayList<>(tasks.length);
 
         for (int i = 0; i < tasks.length; ++i) {
             taskIndex.put(tasks[i].getTitle(), i);
-            taskNodes[i] = new Node(tasks[i].getTitle());
+            nodes[i] = new Node(tasks[i].getTitle());
             reverseDirectionNodes[i] = new Node(tasks[i].getTitle());
         }
 
+        // Make adjacency matrix
         for (int i = 0; i < tasks.length; ++i) {
             List<Task> tempPredecessors = tasks[i].getPredecessors();
 
             if (tempPredecessors.size() == 0) {
-                startNodes.add(taskNodes[i]);
+                startNodes.add(nodes[i]);
                 continue;
             }
 
@@ -36,10 +37,11 @@ public class Project {
             }
         }
 
-        for (int i = 0; i < taskNodes.length; ++i) {
+        // Connect nodes
+        for (int i = 0; i < nodes.length; ++i) {
             for (int j = 0; j < tasks.length; ++j) {
                 if (matrix[j][i] == 1) {
-                    taskNodes[i].addNeighbor(taskNodes[j]);
+                    nodes[i].addNeighbor(nodes[j]);
                 }
 
                 if (matrix[i][j] == 1) {
@@ -49,11 +51,12 @@ public class Project {
         }
 
         HashSet<Node> discovered = new HashSet<>(tasks.length);
-        LinkedList<Node> out = new LinkedList<>();
+        LinkedList<Node> outReversePostorderTraversal = new LinkedList<>();
 
         for (Node node : startNodes) {
-            postorderTraversalRecursive(node, discovered, out);
+            postorderTraversalRecursive(node, discovered, outReversePostorderTraversal);
         }
+
         ArrayList<String> result = new ArrayList<>();
 
         int i = 0;
@@ -61,23 +64,25 @@ public class Project {
         LinkedList<Node> tempOut = new LinkedList<>();
         discovered.clear();
 
-        while (i < out.size()) {
+        while (i < outReversePostorderTraversal.size()) {
             tempOut.clear();
-            int index = taskIndex.get(out.get(i).getTitle());
+            int index = taskIndex.get(outReversePostorderTraversal.get(i).getTitle());
 
             postorderTraversalRecursive(reverseDirectionNodes[index], discovered, tempOut);
 
             if (tempOut.size() == 1) {
-                result.add(tempOut.getFirst().getTitle());
+                result.add(tempOut.get(0).getTitle());
             } else if (includeMaintenance && tempOut.size() > 1) {
-                result.add(tempOut.getFirst().getTitle());
+                result.add(tempOut.get(0).getTitle());
 
                 for (int j = tempOut.size() - 1; j >= 1; --j) {
                     result.add(tempOut.get(j).getTitle());
                 }
-            }
 
-            i += tempOut.size();
+                i += tempOut.size();
+                continue;
+            }
+            ++i;
         }
 
         return result;
