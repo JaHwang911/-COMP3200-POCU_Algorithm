@@ -8,7 +8,7 @@ import java.util.List;
 public class Program {
     public static void main(String[] args) {
         testOfficial();
-        testSlack();
+//        testSlack();
 
         System.out.println("No prob lab 10");
     }
@@ -81,10 +81,6 @@ public class Program {
             assert (schedule.indexOf("N") < schedule.indexOf("L"));
             assert (schedule.indexOf("L") < schedule.indexOf("M"));
         }
-    }
-
-    private static void testXellos() {
-
     }
 
     private static Task[] createTasks() {

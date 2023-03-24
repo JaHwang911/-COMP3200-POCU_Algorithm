@@ -10,8 +10,6 @@ import java.util.List;
 
 public class Project {
     public static List<String> findSchedule(final Task[] tasks, final boolean includeMaintenance) {
-        int[][] matrix = new int[tasks.length][tasks.length];
-
         HashMap<String, Integer> taskIndex = new HashMap<>(tasks.length);
         Node[] nodes = new Node[tasks.length];
         Node[] reverseDirectionNodes = new Node[tasks.length];
@@ -23,7 +21,6 @@ public class Project {
             reverseDirectionNodes[i] = new Node(tasks[i].getTitle());
         }
 
-        // Make adjacency matrix
         for (int i = 0; i < tasks.length; ++i) {
             List<Task> tempPredecessors = tasks[i].getPredecessors();
 
@@ -32,21 +29,13 @@ public class Project {
                 continue;
             }
 
+            int toNodeIndex = taskIndex.get(tasks[i].getTitle());
+
             for (var pre : tempPredecessors) {
-                matrix[i][taskIndex.get(pre.getTitle())] = 1;
-            }
-        }
+                int fromNodeIndex = taskIndex.get(pre.getTitle());
 
-        // Connect nodes
-        for (int i = 0; i < nodes.length; ++i) {
-            for (int j = 0; j < tasks.length; ++j) {
-                if (matrix[j][i] == 1) {
-                    nodes[i].addNeighbor(nodes[j]);
-                }
-
-                if (matrix[i][j] == 1) {
-                    reverseDirectionNodes[i].addNeighbor(reverseDirectionNodes[j]);
-                }
+                nodes[fromNodeIndex].addNeighbor(nodes[toNodeIndex]);
+                reverseDirectionNodes[toNodeIndex].addNeighbor(reverseDirectionNodes[fromNodeIndex]);
             }
         }
 
