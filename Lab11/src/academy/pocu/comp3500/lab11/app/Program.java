@@ -11,7 +11,6 @@ public class Program {
         testOfficial();
         testOnePoint();
 
-
         System.out.println("No prob lab 11");
     }
 
@@ -77,15 +76,23 @@ public class Program {
 
         {
             Point[] points = {
-                    new Point(20, 15),
-                    new Point(20, 48),
-                    new Point(0, 63),
-                    new Point(-32, -4),
+                    new Point(2, 0),
+                    new Point(2, 2),
+                    new Point(0, 2),
+                    new Point(20, 20),
+                    new Point(22, 20),
+                    new Point(22, 22),
+                    new Point(20, 22)
             };
+
             String ballA = points[0].toString();
             String ballB = points[1].toString();
             String ballC = points[2].toString();
             String ballD = points[3].toString();
+            String ballE = points[4].toString();
+            String ballF = points[5].toString();
+            String ballG = points[6].toString();
+
 
             List<Point> path = BallBoy.findPath(points);
 
@@ -97,11 +104,14 @@ public class Program {
             String path3 = path.get(3).toString();
             String path4 = path.get(4).toString();
             String path5 = path.get(5).toString();
+            String path6 = path.get(6).toString();
+            String path7 = path.get(7).toString();
+            String path8 = path.get(8).toString();
 
             assert (path0.equals(startPoint));
-            assert ((path1.equals(ballA) && path2.equals(ballB) && path3.equals(ballC))
-                    || (path1.equals(ballC) && path2.equals(ballB) && path3.equals(ballA)));
-            assert (path5.equals(startPoint));
+            assert (path1.equals(ballA) && path2.equals(ballB) && path3.equals(ballD) && path4.equals(ballE)
+                     && path5.equals(ballF) && path6.equals(ballG) && path7.equals(ballC));
+            assert (path8.equals(startPoint));
         }
     }
 

@@ -60,21 +60,15 @@ public class BallBoy {
             int fromIndex = pointIndex.get(edge.getStartLocation());
             int toIndex = pointIndex.get(edge.getEndLocation());
 
-            if (cycleArray[fromIndex] == cycleArray[toIndex]) {
+            if (findParent(cycleArray, fromIndex, toIndex)) {
                 continue;
             }
 
-            cycleArray[toIndex] = cycleArray[fromIndex];
+            unionParent(cycleArray, fromIndex, toIndex);
             mstEdges.add(edge);
-
-            if (mstEdges.size() == totalPoints.length - 1) {
-                break;
-            }
         }
 
-        if (mstEdges.size() != totalPoints.length - 1) {
-            mstEdges.add(edges[edgesCount - 1]);
-        }
+        assert (mstEdges.size() == totalPoints.length - 1);
 
         ArrayList<Node> mstNodes = new ArrayList<>(points.length);
         HashMap<Node, Integer> discoveredNodes = new HashMap<>();
@@ -172,6 +166,37 @@ public class BallBoy {
 
         sortByDistanceRecursive(edges, left, i - 1);
         sortByDistanceRecursive(edges, i + 1, right);
+    }
+
+    private static int getParentRecursive(final int[] parent, final int n) {
+        if (parent[n] == n) {
+            return n;
+        }
+
+        parent[n] = getParentRecursive(parent, parent[n]);
+        return parent[n];
+    }
+
+    private static void unionParent(final int[] parent, int n, int m) {
+        n = getParentRecursive(parent, n);
+        m = getParentRecursive(parent, m);
+
+        if (n < m) {
+            parent[m] = n;
+        } else {
+            parent[n] = m;
+        }
+    }
+
+    private static boolean findParent(final int[] parent, int n, int m) {
+        n = getParentRecursive(parent, n);
+        m = getParentRecursive(parent, m);
+
+        if (n == m) {
+            return true;
+        }
+
+        return false;
     }
 
     private static void getMSTSearchListRecursive(Node node, HashMap<Node, Boolean> discoveredNodes, ArrayList<Node> out) {
