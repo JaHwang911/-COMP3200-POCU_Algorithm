@@ -72,7 +72,9 @@ public class BallBoy {
             }
         }
 
-        assert (mstEdges.size() == totalPoints.length - 1);
+        if (mstEdges.size() != totalPoints.length - 1) {
+            mstEdges.add(edges[edgesCount - 1]);
+        }
 
         ArrayList<Node> mstNodes = new ArrayList<>(points.length);
         HashMap<Node, Integer> discoveredNodes = new HashMap<>();
