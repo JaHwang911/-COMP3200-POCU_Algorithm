@@ -1,7 +1,6 @@
 package academy.pocu.comp3500.lab11.app;
 
 import academy.pocu.comp3500.lab11.BallBoy;
-import academy.pocu.comp3500.lab11.Edge;
 import academy.pocu.comp3500.lab11.data.Point;
 
 import java.util.List;
@@ -11,6 +10,7 @@ public class Program {
     public static void main(String[] args) {
         testOfficial();
         testOnePoint();
+
 
         System.out.println("No prob lab 11");
     }
