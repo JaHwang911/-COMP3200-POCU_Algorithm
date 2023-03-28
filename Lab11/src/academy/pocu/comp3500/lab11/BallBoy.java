@@ -3,6 +3,7 @@ package academy.pocu.comp3500.lab11;
 import academy.pocu.comp3500.lab11.data.Point;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -27,16 +28,21 @@ public class BallBoy {
             return result;
         }
 
+        Point[] totalPoints = new Point[points.length + 1];
+        HashMap<Point, Integer> pointIndex = new HashMap<>();
         Edge[] edges = new Edge[MAX_EDGES_COUNT];
         int edgesCount = 0;
 
-        for (Point p : points) {
-            edges[edgesCount++] = new Edge(startPoint, p);
+        totalPoints[0] = startPoint;
+        pointIndex.put(totalPoints[0], 0);
+        for (int i = 1; i < totalPoints.length; ++i) {
+            totalPoints[i] = points[i - 1];
+            pointIndex.put(totalPoints[i], i);
         }
 
-        for (int i = 0; i < points.length - 1; ++i) {
-            for (int j = i + 1; j < points.length; ++j) {
-                edges[edgesCount++] = new Edge(points[i], points[j]);
+        for (int i = 0; i < totalPoints.length - 1; ++i) {
+            for (int j = i + 1; j < totalPoints.length; ++j) {
+                edges[edgesCount++] = new Edge(totalPoints[i], totalPoints[j]);
             }
         }
 
@@ -44,40 +50,84 @@ public class BallBoy {
 
         sortByDistanceRecursive(edges, 0, edges.length - 1);
 
+        int[] cycleArray = new int[totalPoints.length];
+
+        for (int i = 0; i < cycleArray.length; ++i) {
+            cycleArray[i] = i;
+        }
+
         ArrayList<Edge> mstEdges = new ArrayList<>(points.length);
-        HashSet<Point> includedPoints = new HashSet<>();
-
         for (Edge edge : edges) {
-            if (!includedPoints.contains(edge.getStartLocation()) || !includedPoints.contains(edge.getEndLocation())) {
-                includedPoints.add(edge.getStartLocation());
-                includedPoints.add(edge.getEndLocation());
+            int fromIndex = pointIndex.get(edge.getStartLocation());
+            int toIndex = pointIndex.get(edge.getEndLocation());
 
-                mstEdges.add(edge);
+            if (cycleArray[fromIndex] == cycleArray[toIndex]) {
+                continue;
+            }
+
+            cycleArray[toIndex] = cycleArray[fromIndex];
+            mstEdges.add(edge);
+
+            if (mstEdges.size() == totalPoints.length - 1) {
+                break;
             }
         }
 
-        assert (mstEdges.size() == points.length);
+        assert (mstEdges.size() == totalPoints.length - 1);
 
-        HashSet<Node> mstNodes = new HashSet<>(points.length);
-        Node startNode = null;
+        ArrayList<Node> mstNodes = new ArrayList<>(points.length);
+        HashMap<Node, Integer> discoveredNodes = new HashMap<>();
+        int nodeIndex = 0;
 
         for (Edge edge : mstEdges) {
             Node from = new Node(edge.getStartLocation());
             Node to = new Node(edge.getEndLocation());
 
-            if (startNode == null) {
-                if (from.getPoint().equals(startPoint)) {
-                    startNode = from;
-                } else if (to.getPoint().equals(startPoint)) {
-                    startNode = to;
-                }
+            if (!discoveredNodes.containsKey(from) && !discoveredNodes.containsKey(to)) {
+                discoveredNodes.put(from, nodeIndex++);
+                discoveredNodes.put(to, nodeIndex++);
+
+                mstNodes.add(from);
+                mstNodes.add(to);
+
+                from.addNeighbor(to);
+                to.addNeighbor(from);
+
+                continue;
+            } else if (discoveredNodes.containsKey(from) && discoveredNodes.containsKey(to)) {
+                Node fromNode = mstNodes.get(discoveredNodes.get(from));
+                Node toNode = mstNodes.get(discoveredNodes.get(to));
+
+                fromNode.addNeighbor(toNode);
+                toNode.addNeighbor(fromNode);
+                continue;
             }
 
-            from.addNeighbor(to);
-            to.addNeighbor(from);
+            if (discoveredNodes.containsKey(from)) {
+                Node fromNode = mstNodes.get(discoveredNodes.get(from));
+                fromNode.addNeighbor(to);
+                to.addNeighbor(fromNode);
 
-            mstNodes.add(from);
-            mstNodes.add(to);
+                discoveredNodes.put(to, nodeIndex++);
+                mstNodes.add(to);
+            } else if (discoveredNodes.containsKey(to)) {
+                Node toNode = mstNodes.get(discoveredNodes.get(to));
+                toNode.addNeighbor(from);
+                from.addNeighbor(toNode);
+
+                discoveredNodes.put(from, nodeIndex++);
+                mstNodes.add(from);
+            }
+        }
+
+        assert (mstNodes.size() == totalPoints.length);
+
+        Node startNode = null;
+        for (Node n : mstNodes) {
+            if (n.getPoint().equals(startPoint)) {
+                startNode = n;
+                break;
+            }
         }
 
         assert (startNode != null);
@@ -93,6 +143,8 @@ public class BallBoy {
                 result.add(n.getPoint());
             }
         }
+
+        result.add(startPoint);
 
         return result;
     }
@@ -121,16 +173,16 @@ public class BallBoy {
         sortByDistanceRecursive(edges, i + 1, right);
     }
 
-    private static void getMSTSearchListRecursive(Node node, HashSet<Node> discovered, ArrayList<Node> out) {
-        if (discovered.contains(node)) {
+    private static void getMSTSearchListRecursive(Node node, HashSet<Node> discoveredNodes, ArrayList<Node> out) {
+        if (discoveredNodes.contains(node)) {
             return;
         }
 
-        discovered.add(node);
+        discoveredNodes.add(node);
         out.add(node);
 
         for (Node n : node.getNeighbor()) {
-            getMSTSearchListRecursive(n, discovered, out);
+            getMSTSearchListRecursive(n, discoveredNodes, out);
         }
 
         out.add(node);

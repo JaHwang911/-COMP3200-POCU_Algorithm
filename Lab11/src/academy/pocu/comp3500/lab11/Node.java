@@ -24,4 +24,18 @@ public final class Node {
     public void addNeighbor(final Node point) {
         this.neighbor.add(point);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        return obj instanceof Node && this.hashCode() == obj.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.point.hashCode();
+    }
 }
