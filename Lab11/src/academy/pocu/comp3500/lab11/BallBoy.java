@@ -4,7 +4,6 @@ import academy.pocu.comp3500.lab11.data.Point;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class BallBoy {
@@ -133,13 +132,13 @@ public class BallBoy {
         assert (startNode != null);
 
         ArrayList<Node> mstDFSList = new ArrayList<>();
-        HashSet<Node> discovered = new HashSet<>();
+        HashMap<Node, Boolean> discovered = new HashMap<>();
         getMSTSearchListRecursive(startNode, discovered, mstDFSList);
 
         discovered.clear();
         for (Node n : mstDFSList) {
-            if (!discovered.contains(n)) {
-                discovered.add(n);
+            if (discovered.get(n) == null) {
+                discovered.put(n, true);
                 result.add(n.getPoint());
             }
         }
@@ -173,12 +172,12 @@ public class BallBoy {
         sortByDistanceRecursive(edges, i + 1, right);
     }
 
-    private static void getMSTSearchListRecursive(Node node, HashSet<Node> discoveredNodes, ArrayList<Node> out) {
-        if (discoveredNodes.contains(node)) {
+    private static void getMSTSearchListRecursive(Node node, HashMap<Node, Boolean> discoveredNodes, ArrayList<Node> out) {
+        if (discoveredNodes.get(node) != null) {
             return;
         }
 
-        discoveredNodes.add(node);
+        discoveredNodes.put(node, true);
         out.add(node);
 
         for (Node n : node.getNeighbor()) {

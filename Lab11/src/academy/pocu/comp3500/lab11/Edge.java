@@ -11,15 +11,10 @@ public final class Edge {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
 
-        final int BASE = Math.abs(this.startLocation.getX() - this.endLocation.getX());
+        final int WIDTH = Math.abs(this.startLocation.getX() - this.endLocation.getX());
         final int HEIGHT = Math.abs(this.startLocation.getY() - this.endLocation.getY());
 
-        if (BASE == 0 || HEIGHT == 0) {
-            this.distance = BASE + HEIGHT;
-            return;
-        }
-
-        this.distance = BASE * BASE + HEIGHT * HEIGHT;
+        this.distance = WIDTH + HEIGHT;
     }
 
     public Point getStartLocation() {

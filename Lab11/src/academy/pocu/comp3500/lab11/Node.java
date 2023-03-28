@@ -2,22 +2,22 @@ package academy.pocu.comp3500.lab11;
 
 import academy.pocu.comp3500.lab11.data.Point;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public final class Node {
     private final Point point;
-    private final HashSet<Node> neighbor;
+    private final ArrayList<Node> neighbor;
 
     public Node(final Point point) {
         this.point = point;
-        this.neighbor = new HashSet<>();
+        this.neighbor = new ArrayList<>();
     }
 
     public Point getPoint() {
         return this.point;
     }
 
-    public HashSet<Node> getNeighbor() {
+    public ArrayList<Node> getNeighbor() {
         return this.neighbor;
     }
 
