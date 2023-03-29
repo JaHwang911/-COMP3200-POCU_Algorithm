@@ -6,22 +6,58 @@ import academy.pocu.comp3500.assignment4.project.Task;
 public class Program {
 
     public static void main(String[] args) {
+        testOfficial();
         testFindManMonth();
         testFindMinDuration();
 
         System.out.println("No prob");
     }
 
+    private static void testOfficial() {
+        Task[] tasks = createTasks();
+
+        Project project = new Project(tasks);
+
+        int manMonths1 = project.findTotalManMonths("ms1");
+        assert (manMonths1 == 17);
+
+        int manMonths2 = project.findTotalManMonths("ms2");
+        assert (manMonths2 == 46);
+
+        int minDuration1 = project.findMinDuration("ms1");
+        assert (minDuration1 == 14);
+
+        int minDuration2 = project.findMinDuration("ms2");
+        assert (minDuration2 == 32);
+    }
+
     private static void testFindManMonth() {
         {
-            Task[] tasks = createTasksBasic();
+            Task a = new Task("A", 3);
+            Task b = new Task("B", 1);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 10);
+
+            b.addPredecessor(a);
+            d.addPredecessor(b, c);
+            Task[] tasks = new Task[]{ a, b, c, d };
             Project p = new Project(tasks);
 
             int manMonths = p.findTotalManMonths("D");
             assert (manMonths == 16);
         }
         {
-            Task[] tasks = createTasksBasic2();
+            Task a = new Task("A", 3);
+            Task b = new Task("B", 1);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 10);
+            Task e = new Task("E", 5);
+            Task f = new Task("F", 20);
+
+            b.addPredecessor(a);
+            d.addPredecessor(b, c, e);
+
+            Task[] tasks = new Task[] { a, b, c, d, e, f };
             Project p = new Project(tasks);
 
             int manMonths = p.findTotalManMonths("D");
@@ -78,45 +114,36 @@ public class Program {
 
     private static void testFindMinDuration() {
         {
-            Task[] tasks = createTasksBasic();
+            Task a = new Task("A", 3);
+            Task b = new Task("B", 1);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 10);
+
+            b.addPredecessor(a);
+            d.addPredecessor(b, c);
+            Task[] tasks = new Task[]{ a, b, c, d };
             Project p = new Project(tasks);
 
             int minDuration = p.findMinDuration("D");
             assert (minDuration == 14);
         }
         {
-            Task[] tasks = createTasksBasic2();
+            Task a = new Task("A", 3);
+            Task b = new Task("B", 1);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 10);
+            Task e = new Task("E", 5);
+            Task f = new Task("F", 20);
+
+            b.addPredecessor(a);
+            d.addPredecessor(b, c, e);
+
+            Task[] tasks = new Task[] { a, b, c, d, e, f };
             Project p = new Project(tasks);
 
             int minDuration = p.findMinDuration("D");
             assert (minDuration == 16);
         }
-    }
-
-    private static Task[] createTasksBasic() {
-        Task a = new Task("A", 3);
-        Task b = new Task("B", 1);
-        Task c = new Task("C", 2);
-        Task d = new Task("D", 10);
-
-        b.addPredecessor(a);
-        d.addPredecessor(b, c);
-
-        return new Task[] { a, b, c, d };
-    }
-
-    private static Task[] createTasksBasic2() {
-        Task a = new Task("A", 3);
-        Task b = new Task("B", 1);
-        Task c = new Task("C", 2);
-        Task d = new Task("D", 10);
-        Task e = new Task("E", 5);
-        Task f = new Task("F", 20);
-
-        b.addPredecessor(a);
-        d.addPredecessor(b, c, e);
-
-        return new Task[] { a, b, c, d, e, f };
     }
 
     private static Task[] createTasks() {

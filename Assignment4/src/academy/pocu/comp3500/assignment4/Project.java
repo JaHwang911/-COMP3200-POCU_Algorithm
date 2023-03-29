@@ -12,13 +12,13 @@ public final class Project {
     private final HashMap<String, Integer> taskIndex;
     private final Node[] nodes;
     private final Node[] reverseDirectionNodes;
-    private final ArrayList<Node> startNodes;
+    private final ArrayList<Node> totalStartNodes;
 
     public Project(final Task[] tasks) {
         this.taskIndex = new HashMap<>(tasks.length);
         this.nodes = new Node[tasks.length];
         this.reverseDirectionNodes = new Node[tasks.length];
-        this.startNodes = new ArrayList<>(tasks.length);
+        this.totalStartNodes = new ArrayList<>(tasks.length);
 
         for (int i = 0; i < tasks.length; ++i) {
             this.taskIndex.put(tasks[i].getTitle(), i);
@@ -30,7 +30,7 @@ public final class Project {
             List<Task> tempPredecessors = tasks[i].getPredecessors();
 
             if (tempPredecessors.size() == 0) {
-                this.startNodes.add(nodes[i]);
+                this.totalStartNodes.add(nodes[i]);
                 continue;
             }
 
@@ -55,10 +55,9 @@ public final class Project {
 
         while (i < reversePostorderTraversal.size()) {
             tempOut.clear();
+            Node currentNode = this.reverseDirectionNodes[this.taskIndex.get(reversePostorderTraversal.get(i).getTitle())];
 
-            int index = this.taskIndex.get(reversePostorderTraversal.get(i).getTitle());
-
-            getSCC(this.reverseDirectionNodes[index], discovered, tempOut);
+            getSCC(currentNode, discovered, tempOut);
 
             int nodeCount = tempOut.size();
 
@@ -83,10 +82,9 @@ public final class Project {
 
         while (i < reversePostorderTraversal.size()) {
             tempOut.clear();
+            Node currentNode = this.reverseDirectionNodes[this.taskIndex.get(reversePostorderTraversal.get(i).getTitle())];
 
-            int index = this.taskIndex.get(reversePostorderTraversal.get(i).getTitle());
-
-            getSCC(this.reverseDirectionNodes[index], discovered, tempOut);
+            getSCC(currentNode, discovered, tempOut);
 
             int nodeCount = tempOut.size();
 
@@ -117,21 +115,6 @@ public final class Project {
         return -1;
     }
 
-    private LinkedList<Node> getReversePostorderTraversalList(final String task) {
-        ArrayList<Node> finishedNodes = new ArrayList<>(this.startNodes.size());
-
-        getStartNodes(task, finishedNodes);
-
-        LinkedList<Node> reversePostorderTraversal = new LinkedList<>();
-        HashMap<Node, Boolean> discovered = new HashMap<>();
-
-        for (Node n : finishedNodes) {
-            getReversePostorderTraversalListRecursive(task, n, discovered, reversePostorderTraversal);
-        }
-
-        return reversePostorderTraversal;
-    }
-
     private void getStartNodes(final String task, final ArrayList<Node> out) {
         int index = this.taskIndex.get(task);
         Node milestone = this.reverseDirectionNodes[index];
@@ -157,21 +140,41 @@ public final class Project {
         }
     }
 
-    private void getReversePostorderTraversalListRecursive(final String task, final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
+    private LinkedList<Node> getReversePostorderTraversalList(final String task) {
+        ArrayList<Node> startNodes = new ArrayList<>(this.totalStartNodes.size());
+
+        getStartNodes(task, startNodes);
+
+        LinkedList<Node> reversePostorderTraversal = new LinkedList<>();
+        HashMap<Node, Boolean> discovered = new HashMap<>();
+
+        for (Node n : startNodes) {
+            getReversePostorderTraversalListRecursive(task, n, discovered, reversePostorderTraversal);
+        }
+
+        return reversePostorderTraversal;
+    }
+
+    private boolean getReversePostorderTraversalListRecursive(final String task, final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
         if (discovered.get(node) != null) {
-            return;
+            return true;
         } else if (node.getTitle().equals(task)) {
             discovered.put(node, true);
             out.addFirst(node);
-            return;
+            return true;
         }
 
         discovered.put(node, true);
+        boolean hasTask = false;
         for (var neighbor : node.getNeighbors()) {
-            getReversePostorderTraversalListRecursive(task, neighbor, discovered, out);
+            hasTask = getReversePostorderTraversalListRecursive(task, neighbor, discovered, out);
         }
 
-        out.addFirst(node);
+        if (hasTask) {
+            out.addFirst(node);
+        }
+
+        return hasTask;
     }
 
     private void getSCC(final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
