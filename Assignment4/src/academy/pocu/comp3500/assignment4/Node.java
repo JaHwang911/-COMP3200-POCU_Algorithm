@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public final class Node {
     private final String title;
     private final ArrayList<Node> neighbors;
+    private final int estimate;
 
-    public Node(String title) {
+    public Node(String title, int estimate) {
         this.title = title;
-        this.neighbors = new ArrayList<>();
+        this.neighbors = new ArrayList<>(64);
+        this.estimate = estimate;
     }
 
     public String getTitle() {
@@ -16,11 +18,14 @@ public final class Node {
     }
 
     public void addNeighbor(final Node neighbor) {
-        assert (!this.neighbors.contains(neighbor));
         this.neighbors.add(neighbor);
     }
 
-    public ArrayList<Node> getNeighbor() {
+    public int getEstimate() {
+        return this.estimate;
+    }
+
+    public ArrayList<Node> getNeighbors() {
         return this.neighbors;
     }
 }
