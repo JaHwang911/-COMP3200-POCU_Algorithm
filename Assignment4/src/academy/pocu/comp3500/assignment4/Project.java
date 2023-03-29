@@ -58,7 +58,7 @@ public final class Project {
 
             int index = this.taskIndex.get(reversePostorderTraversal.get(i).getTitle());
 
-            getReversePostorderTraversalListRecursive(this.reverseDirectionNodes[index], discovered, tempOut);
+            getSCC(this.reverseDirectionNodes[index], discovered, tempOut);
 
             int nodeCount = tempOut.size();
 
@@ -72,7 +72,6 @@ public final class Project {
         return resultSum;
     }
 
-    // 스타트 노드의 최대치를 포함 시켜서 반환
     public int findMinDuration(final String task) {
         LinkedList<Node> reversePostorderTraversal = getReversePostorderTraversalList(task);
         HashMap<Node, Boolean> discovered = new HashMap<>();
@@ -87,7 +86,7 @@ public final class Project {
 
             int index = this.taskIndex.get(reversePostorderTraversal.get(i).getTitle());
 
-            getReversePostorderTraversalListRecursive(this.reverseDirectionNodes[index], discovered, tempOut);
+            getSCC(this.reverseDirectionNodes[index], discovered, tempOut);
 
             int nodeCount = tempOut.size();
 
@@ -127,7 +126,7 @@ public final class Project {
         HashMap<Node, Boolean> discovered = new HashMap<>();
 
         for (Node n : finishedNodes) {
-            getReversePostorderTraversalListRecursive(n, discovered, reversePostorderTraversal);
+            getReversePostorderTraversalListRecursive(task, n, discovered, reversePostorderTraversal);
         }
 
         return reversePostorderTraversal;
@@ -158,14 +157,31 @@ public final class Project {
         }
     }
 
-    private void getReversePostorderTraversalListRecursive(Node node, HashMap<Node, Boolean> discovered, LinkedList<Node> out) {
+    private void getReversePostorderTraversalListRecursive(final String task, final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
+        if (discovered.get(node) != null) {
+            return;
+        } else if (node.getTitle().equals(task)) {
+            discovered.put(node, true);
+            out.addFirst(node);
+            return;
+        }
+
+        discovered.put(node, true);
+        for (var neighbor : node.getNeighbors()) {
+            getReversePostorderTraversalListRecursive(task, neighbor, discovered, out);
+        }
+
+        out.addFirst(node);
+    }
+
+    private void getSCC(final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
         if (discovered.get(node) != null) {
             return;
         }
 
         discovered.put(node, true);
         for (var neighbor : node.getNeighbors()) {
-            getReversePostorderTraversalListRecursive(neighbor, discovered, out);
+            getSCC(neighbor, discovered, out);
         }
 
         out.addFirst(node);

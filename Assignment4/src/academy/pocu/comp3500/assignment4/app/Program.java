@@ -27,6 +27,53 @@ public class Program {
             int manMonths = p.findTotalManMonths("D");
             assert (manMonths == 21);
         }
+        {
+            Task t0 = new Task("0", 1);
+            Task t1 = new Task("1", 5);
+            Task t2 = new Task("2", 3);
+            Task t3 = new Task("3", 2);
+            Task t4 = new Task("4", 4);
+            Task t5 = new Task("5", 12);
+            Task t6 = new Task("6", 10);
+            Task t7 = new Task("7", 4);
+            Task t8 = new Task("8", 5);
+            Task t9 = new Task("9", 2);
+            Task t10 = new Task("10", 2);
+            Task t11 = new Task("11", 6);
+            Task t12 = new Task("12", 9);
+            Task t13 = new Task("13", 7);
+            Task t14 = new Task("14", 4);
+            Task t15 = new Task("15", 3);
+            Task t16 = new Task("16", 6);
+            Task t17 = new Task("17", 2);
+            Task t18 = new Task("18", 9);
+            Task t19 = new Task("19", 12);
+
+            t1.addPredecessor(t0);
+            t2.addPredecessor(t1, t3);
+            t3.addPredecessor(t4);
+            t4.addPredecessor(t5);
+            t5.addPredecessor(t2);
+            t7.addPredecessor(t6);
+            t8.addPredecessor(t7);
+            t9.addPredecessor(t13);
+            t10.addPredecessor(t9);
+            t11.addPredecessor(t10, t15);
+            t12.addPredecessor(t11);
+            t14.addPredecessor(t13);
+            t15.addPredecessor(t14);
+            t16.addPredecessor(t15, t18);
+            t17.addPredecessor(t16);
+            t18.addPredecessor(t17);
+            t19.addPredecessor(t1, t8, t12);
+
+            Task[] tasks = new Task[] {
+                t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19};
+
+            Project p = new Project(tasks);
+            int manMonths = p.findTotalManMonths("11");
+            assert (manMonths == 24);
+        }
     }
 
     private static void testFindMinDuration() {
