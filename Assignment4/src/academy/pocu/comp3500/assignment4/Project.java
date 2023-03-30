@@ -114,7 +114,7 @@ public final class Project {
             return;
         }
 
-        discovered.put(node,true);
+        discovered.put(node, true);
         
         for (Node n : node.getNeighbors()) {
             getPostorderTraversalReverseListRecursive(n, discovered, out);
