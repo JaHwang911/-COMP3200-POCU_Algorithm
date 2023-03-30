@@ -167,7 +167,9 @@ public final class Project {
         discovered.put(node, true);
         boolean hasTask = false;
         for (var neighbor : node.getNeighbors()) {
-            hasTask = getReversePostorderTraversalListRecursive(task, neighbor, discovered, out);
+            if (getReversePostorderTraversalListRecursive(task, neighbor, discovered, out)) {
+                hasTask = true;
+            }
         }
 
         if (hasTask) {
