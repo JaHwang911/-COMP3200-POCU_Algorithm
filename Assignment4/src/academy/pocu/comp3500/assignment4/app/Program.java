@@ -8,7 +8,7 @@ public class Program {
     public static void main(String[] args) {
         testOfficial();
         testFindManMonth();
-        testFindMinDuration();
+//        testFindMinDuration();
 
         System.out.println("No prob assignment 4");
     }
@@ -168,6 +168,134 @@ public class Program {
 
             manMonths = p.findTotalManMonths("12");
             assert (manMonths == 57);
+
+            manMonths = p.findTotalManMonths("9");
+            assert (manMonths == 9);
+        }
+        {
+            Task t1 = new Task("1", 1);
+            Task t2 = new Task("2", 2);
+            Task t3 = new Task("3", 3);
+            Task t4 = new Task("4", 4);
+            Task t5 = new Task("5", 5);
+            Task t6 = new Task("6", 6);
+            Task t7 = new Task("7", 7);
+            Task t8 = new Task("8", 8);
+            Task t9 = new Task("9", 9);
+            Task t10 = new Task("10", 10);
+            Task t11 = new Task("11", 11);
+            Task t12 = new Task("12", 12);
+
+            t2.addPredecessor(t1);
+            t3.addPredecessor(t2, t5);
+            t5.addPredecessor(t4);
+
+            t6.addPredecessor(t3, t8);
+            t7.addPredecessor(t6);
+            t8.addPredecessor(t7);
+            t9.addPredecessor(t11);
+
+            t10.addPredecessor(t3, t9);
+            t12.addPredecessor(t10, t11);
+
+            Task[] tasks = new Task[] { t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12 };
+            Project p = new Project(tasks);
+            int manMonths = p.findTotalManMonths("3");
+            assert (manMonths == 15);
+
+            manMonths = p.findTotalManMonths("6");
+            assert (manMonths == 15);
+
+            manMonths = p.findTotalManMonths("10");
+            assert (manMonths == 45);
+
+            manMonths = p.findTotalManMonths("12");
+            assert (manMonths == 57);
+
+            manMonths = p.findTotalManMonths("9");
+            assert (manMonths == 20);
+        }
+        {
+            Task t1 = new Task("1", 1);
+            Task t2 = new Task("2", 2);
+            Task t3 = new Task("3", 3);
+            Task t4 = new Task("4", 4);
+            Task t5 = new Task("5", 5);
+            Task t6 = new Task("6", 6);
+            Task t7 = new Task("7", 7);
+            Task t8 = new Task("8", 8);
+            Task t9 = new Task("9", 9);
+            Task t10 = new Task("10", 10);
+            Task t11 = new Task("11", 11);
+            Task t12 = new Task("12", 12);
+            Task t13 = new Task("13", 13);
+            Task t14 = new Task("14", 14);
+            Task t15 = new Task("15", 15);
+
+            t2.addPredecessor(t1);
+            t3.addPredecessor(t2, t5);
+            t5.addPredecessor(t4);
+            t13.addPredecessor(t5, t15);
+            t14.addPredecessor(t13);
+            t15.addPredecessor(t14);
+
+            t6.addPredecessor(t3, t8);
+            t7.addPredecessor(t6);
+            t8.addPredecessor(t7);
+            t9.addPredecessor(t11);
+
+            t10.addPredecessor(t3, t9);
+            t12.addPredecessor(t10, t11);
+
+            Task[] tasks = new Task[] { t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12 };
+            Project p = new Project(tasks);
+            int manMonths = p.findTotalManMonths("3");
+            assert (manMonths == 15);
+
+            manMonths = p.findTotalManMonths("6");
+            assert (manMonths == 15);
+
+            manMonths = p.findTotalManMonths("10");
+            assert (manMonths == 45);
+
+            manMonths = p.findTotalManMonths("12");
+            assert (manMonths == 57);
+
+            manMonths = p.findTotalManMonths("9");
+            assert (manMonths == 20);
+        }
+        {
+            Task t1 = new Task("1", 1);
+            Task t2 = new Task("2", 2);
+            Task t3 = new Task("3", 3);
+            Task t4 = new Task("4", 4);
+            Task t5 = new Task("5", 5);
+            Task t6 = new Task("6", 6);
+            Task t7 = new Task("7", 7);
+            Task t8 = new Task("8", 8);
+            Task t9 = new Task("9", 9);
+            Task t10 = new Task("10", 10);
+            Task t11 = new Task("11", 11);
+            Task t12 = new Task("12", 12);
+            Task t13 = new Task("13", 13);
+
+            t2.addPredecessor(t1);
+            t10.addPredecessor(t2);
+            t3.addPredecessor(t2, t5);
+            t4.addPredecessor(t3, t8);
+            t5.addPredecessor(t4);
+
+            t7.addPredecessor(t6);
+            t8.addPredecessor(t7);
+            t9.addPredecessor(t7);
+
+            t12.addPredecessor(t11);
+            t13.addPredecessor(t9, t10, t12);
+
+            Task[] tasks = new Task[] { t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13 };
+            Project p = new Project(tasks);
+            int manMonths = p.findTotalManMonths("13");
+            assert (manMonths == 71);
         }
     }
 

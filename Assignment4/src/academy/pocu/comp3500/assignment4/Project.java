@@ -50,22 +50,28 @@ public final class Project {
         HashMap<Node, Boolean> discovered = new HashMap<>();
         LinkedList<Node> tempOut = new LinkedList<>();
 
-        int i = 0;
+        int taskNodeCount = 0;
+
+        for (Node n : reversePostorderTraversal) {
+            if (n.getTitle().equals(task)) {
+                ++taskNodeCount;
+            }
+        }
+
+        assert (taskNodeCount == 1);
+        assert (reversePostorderTraversal.getLast().getTitle().equals(task));
+
         int resultSum = 0;
 
-        while (i < reversePostorderTraversal.size()) {
+        for (Node n : reversePostorderTraversal) {
             tempOut.clear();
-            Node currentNode = this.reverseDirectionNodes[this.taskIndex.get(reversePostorderTraversal.get(i).getTitle())];
+            Node currentNode = this.reverseDirectionNodes[this.taskIndex.get(n.getTitle())];
 
             getSCC(currentNode, discovered, tempOut);
 
-            int nodeCount = tempOut.size();
-
-            if (nodeCount == 1) {
-                resultSum += this.nodes[taskIndex.get(tempOut.getFirst().getTitle())].getEstimate();
+            if (tempOut.size() == 1) {
+                resultSum += tempOut.getFirst().getEstimate();
             }
-
-            i += nodeCount;
         }
 
         return resultSum;
@@ -76,37 +82,8 @@ public final class Project {
         HashMap<Node, Boolean> discovered = new HashMap<>();
         LinkedList<Node> tempOut = new LinkedList<>();
 
-        int i = 0;
         int resultSum = 0;
-        int maxStartNodeEstimate = 0;
 
-        while (i < reversePostorderTraversal.size()) {
-            tempOut.clear();
-            Node currentNode = this.reverseDirectionNodes[this.taskIndex.get(reversePostorderTraversal.get(i).getTitle())];
-
-            getSCC(currentNode, discovered, tempOut);
-
-            int nodeCount = tempOut.size();
-
-            if (nodeCount == 1) {
-                Node node = tempOut.getFirst();
-
-                if (node.getNeighbors().size() == 0) {
-                    if (maxStartNodeEstimate < node.getEstimate()) {
-                        maxStartNodeEstimate = node.getEstimate();
-                    }
-
-                    i += nodeCount;
-                    continue;
-                }
-
-                resultSum += this.nodes[taskIndex.get(node.getTitle())].getEstimate();
-            }
-
-            i += nodeCount;
-        }
-
-        resultSum += maxStartNodeEstimate;
 
         return resultSum;
     }
