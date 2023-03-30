@@ -18,16 +18,20 @@ public final class Node {
         return this.title;
     }
 
-    public void addNeighbor(final Node neighbor) {
-        this.neighbors.add(neighbor);
-    }
-
     public int getEstimate() {
         return this.estimate;
     }
 
     public ArrayList<Node> getNeighbors() {
         return this.neighbors;
+    }
+
+    public int getNeighborsSize() {
+        return this.neighbors.size();
+    }
+
+    public void addNeighbor(final Node neighbor) {
+        this.neighbors.add(neighbor);
     }
 
     public boolean isLoopNode() {

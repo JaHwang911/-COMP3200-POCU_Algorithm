@@ -24,11 +24,11 @@ public class Program {
         int manMonths2 = project.findTotalManMonths("ms2");
         assert (manMonths2 == 46);
 
-//        int minDuration1 = project.findMinDuration("ms1");
-//        assert (minDuration1 == 14);
-//
-//        int minDuration2 = project.findMinDuration("ms2");
-//        assert (minDuration2 == 32);
+        int minDuration1 = project.findMinDuration("ms1");
+        assert (minDuration1 == 14);
+
+        int minDuration2 = project.findMinDuration("ms2");
+        assert (minDuration2 == 32);
     }
 
     private static void testFindManMonth() {

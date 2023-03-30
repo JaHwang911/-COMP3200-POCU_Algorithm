@@ -70,43 +70,37 @@ public final class Project {
 
     public int findTotalManMonths(final String task) {
         LinkedList<Node> postorderTraversalReverseList = getPostorderTraversalReverseListToTask(task);
-        HashMap<Node, Boolean> discovered = new HashMap<>();
-        LinkedList<Node> tempOut = new LinkedList<>();
-
-        int taskNodeCount = 0;
-
-        for (Node n : postorderTraversalReverseList) {
-            if (n.getTitle().equals(task)) {
-                ++taskNodeCount;
-            }
-        }
-
-        assert (taskNodeCount == 1);
-        assert (postorderTraversalReverseList.getLast().getTitle().equals(task));
-
         int resultSum = 0;
 
         for (Node n : postorderTraversalReverseList) {
-            tempOut.clear();
-            Node currentNode = this.reverseDirectionNodes[this.taskIndex.get(n.getTitle())];
-
-            getSCC(currentNode, discovered, tempOut);
-
-            if (tempOut.size() == 1) {
-                resultSum += tempOut.getFirst().getEstimate();
-            }
+            resultSum += n.getEstimate();
         }
 
         return resultSum;
     }
 
     public int findMinDuration(final String task) {
-        LinkedList<Node> postorderTraversalReverseList = getPostorderTraversalReverseListToTask(task);
-        HashMap<Node, Boolean> discovered = new HashMap<>();
-        LinkedList<Node> tempOut = new LinkedList<>();
+        ArrayList<Node> startNodes = new ArrayList<>(this.totalStartNodes.size());
 
+        getStartNodesToTask(task, startNodes);
+        
+        LinkedList<Node> postorderTraversalReverseList = new LinkedList<>();
+        HashMap<Node, Boolean> discovered = new HashMap<>();
+        int[] estimate = new int[1];
         int resultSum = 0;
 
+        for (Node n : startNodes) {
+            estimate[0] = 0;
+            getPostorderTraversalReverseListToTaskRecursive(task, n, true, estimate ,discovered, postorderTraversalReverseList);
+
+            if (resultSum < estimate[0]) {
+                resultSum = estimate[0];
+            }
+        }
+
+        for (Node n : postorderTraversalReverseList) {
+            resultSum += n.getEstimate();
+        }
 
         return resultSum;
     }
@@ -115,7 +109,7 @@ public final class Project {
         return -1;
     }
 
-    private void getPostorderTraversalReverseListRecursive(final Node node, HashMap<Node, Boolean> discovered, LinkedList<Node> out) {
+    private void getPostorderTraversalReverseListRecursive(final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
         if (discovered.get(node) != null) {
             return;
         }
@@ -129,7 +123,7 @@ public final class Project {
         out.addFirst(node);
     }
 
-    private void getStartNodes(final String task, final ArrayList<Node> out) {
+    private void getStartNodesToTask(final String task, final ArrayList<Node> out) {
         int index = this.taskIndex.get(task);
         Node milestone = this.reverseDirectionNodes[index];
         HashMap<Node, Boolean> discovered = new HashMap<>();
@@ -141,7 +135,7 @@ public final class Project {
         while (!stack.empty()) {
             Node next = stack.pop();
 
-            if (next.getNeighbors().size() == 0) {
+            if (next.getNeighborsSize() == 0) {
                 out.add(this.nodes[this.taskIndex.get(next.getTitle())]);
             }
 
@@ -157,13 +151,13 @@ public final class Project {
     private LinkedList<Node> getPostorderTraversalReverseListToTask(final String task) {
         ArrayList<Node> startNodes = new ArrayList<>(this.totalStartNodes.size());
 
-        getStartNodes(task, startNodes);
+        getStartNodesToTask(task, startNodes);
 
         LinkedList<Node> postorderTraversalReverseList = new LinkedList<>();
-        HashMap<Node, Boolean> discovered = new HashMap<>();
+        HashMap<Node, Boolean> added = new HashMap<>();
 
         for (Node n : startNodes) {
-            getPostorderTraversalReverseListToTaskRecursive(task, n, discovered, postorderTraversalReverseList);
+            getPostorderTraversalReverseListToTaskRecursive(task, n, added, postorderTraversalReverseList);
         }
 
         return postorderTraversalReverseList;
@@ -171,13 +165,13 @@ public final class Project {
 
     private boolean getPostorderTraversalReverseListToTaskRecursive(final String task, final Node node, final HashMap<Node, Boolean> added, final LinkedList<Node> out) {
         if (node.getTitle().equals(task)) {
-            if (added.get(node) == null) {
+            if (added.get(node) == null && !node.isLoopNode()) {
                 added.put(node, true);
                 out.addFirst(node);
             }
 
             return true;
-        } else if (node.isLoopNode() || node.getNeighbors().size() == 0) {
+        } else if (node.isLoopNode() || node.getNeighborsSize() == 0) {
             return false;
         }
 
@@ -191,6 +185,46 @@ public final class Project {
         if (hasTask && added.get(node) == null) {
             out.addFirst(node);
             added.put(node, true);
+        }
+
+        return hasTask;
+    }
+
+    private boolean getPostorderTraversalReverseListToTaskRecursive(final String task,
+                                                                    final Node node,
+                                                                    boolean isSinglePath,
+                                                                    int[] maxEstimate,
+                                                                    final HashMap<Node, Boolean> added,
+                                                                    final LinkedList<Node> out) {
+        if (node.getTitle().equals(task)) {
+            if (added.get(node) == null) {
+                added.put(node, true);
+                out.addFirst(node);
+            }
+
+            return true;
+        } else if (node.isLoopNode() || node.getNeighborsSize() == 0) {
+            return false;
+        }
+
+        if (isSinglePath) {
+            isSinglePath = (this.reverseDirectionNodes[this.taskIndex.get(node.getTitle())].getNeighborsSize() <= 1);
+        }
+
+        boolean hasTask = false;
+        for (var neighbor : node.getNeighbors()) {
+            if (getPostorderTraversalReverseListToTaskRecursive(task, neighbor, isSinglePath, maxEstimate, added, out)) {
+                hasTask = true;
+            }
+        }
+
+        if (hasTask && added.get(node) == null) {
+            if (isSinglePath) {
+                maxEstimate[0] += node.getEstimate();
+            } else {
+                out.addFirst(node);
+                added.put(node, true);
+            }
         }
 
         return hasTask;
