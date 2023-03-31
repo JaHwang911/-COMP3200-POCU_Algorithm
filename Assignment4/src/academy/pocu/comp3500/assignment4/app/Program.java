@@ -8,7 +8,7 @@ public class Program {
     public static void main(String[] args) {
         testOfficial();
         testFindManMonth();
-//        testFindMinDuration();
+        testFindMinDuration();
 
         System.out.println("No prob assignment 4");
     }
@@ -329,7 +329,7 @@ public class Program {
             Project p = new Project(tasks);
 
             int minDuration = p.findMinDuration("D");
-            assert (minDuration == 16);
+            assert (minDuration == 15);
         }
     }
 

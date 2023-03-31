@@ -80,29 +80,9 @@ public final class Project {
     }
 
     public int findMinDuration(final String task) {
-        ArrayList<Node> startNodes = new ArrayList<>(this.totalStartNodes.size());
+        Node milestone = this.reverseDirectionNodes[this.taskIndex.get(task)];
 
-        getStartNodesToTask(task, startNodes);
-        
-        LinkedList<Node> postorderTraversalReverseList = new LinkedList<>();
-        HashMap<Node, Boolean> discovered = new HashMap<>();
-        int[] estimate = new int[1];
-        int resultSum = 0;
-
-        for (Node n : startNodes) {
-            estimate[0] = 0;
-            getPostorderTraversalReverseListToTaskRecursive(task, n, true, estimate ,discovered, postorderTraversalReverseList);
-
-            if (resultSum < estimate[0]) {
-                resultSum = estimate[0];
-            }
-        }
-
-        for (Node n : postorderTraversalReverseList) {
-            resultSum += n.getEstimate();
-        }
-
-        return resultSum;
+        return getMinDurationRecursive(milestone);
     }
 
     public int findMaxBonusCount(final String task) {
@@ -190,44 +170,24 @@ public final class Project {
         return hasTask;
     }
 
-    private boolean getPostorderTraversalReverseListToTaskRecursive(final String task,
-                                                                    final Node node,
-                                                                    boolean isSinglePath,
-                                                                    int[] maxEstimate,
-                                                                    final HashMap<Node, Boolean> added,
-                                                                    final LinkedList<Node> out) {
-        if (node.getTitle().equals(task)) {
-            if (added.get(node) == null) {
-                added.put(node, true);
-                out.addFirst(node);
-            }
-
-            return true;
-        } else if (node.isLoopNode() || node.getNeighborsSize() == 0) {
-            return false;
+    private int getMinDurationRecursive(final Node node) {
+        if (node.getNeighborsSize() == 0) {
+            return node.getEstimate();
         }
 
-        if (isSinglePath) {
-            isSinglePath = (this.reverseDirectionNodes[this.taskIndex.get(node.getTitle())].getNeighborsSize() <= 1);
-        }
+        int sum = node.getEstimate();
+        int max = Integer.MIN_VALUE;
 
-        boolean hasTask = false;
-        for (var neighbor : node.getNeighbors()) {
-            if (getPostorderTraversalReverseListToTaskRecursive(task, neighbor, isSinglePath, maxEstimate, added, out)) {
-                hasTask = true;
+        for (Node n : node.getNeighbors()) {
+            int temp = getMinDurationRecursive(n);
+            if (max < temp) {
+                max = temp;
             }
         }
 
-        if (hasTask && added.get(node) == null) {
-            if (isSinglePath) {
-                maxEstimate[0] += node.getEstimate();
-            } else {
-                out.addFirst(node);
-                added.put(node, true);
-            }
-        }
+        sum += max;
 
-        return hasTask;
+        return sum;
     }
 
     private void getSCC(final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
