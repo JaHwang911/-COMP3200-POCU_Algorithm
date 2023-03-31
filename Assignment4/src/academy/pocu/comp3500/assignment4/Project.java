@@ -13,8 +13,8 @@ public final class Project {
     private final HashMap<String, Integer> taskIndex;
     private final Node[] nodes;
     private final Node[] reverseDirectionNodes;
-    private final HashMap<String, ArrayList<Node>> edges;
-    private final HashMap<String, ArrayList<Node>> backEdges;
+    private final HashMap<Node, ArrayList<Edge>> edges;
+    private final HashMap<Node, ArrayList<Edge>> backEdges;
     private final Node virtualStartNode;
 
     public Project(final Task[] tasks) {
@@ -71,6 +71,26 @@ public final class Project {
                 }
             }
         }
+
+        for (Node n : this.nodes) {
+            ArrayList<Edge> tempEdges = new ArrayList<>(n.getNeighborsSize());
+
+            for (Node neighbor : n.getNeighbors()) {
+                tempEdges.add(new Edge(n, neighbor, n.getEstimate()));
+            }
+
+            this.edges.put(n, tempEdges);
+        }
+
+        for (Node n : this.reverseDirectionNodes) {
+            ArrayList<Edge> tempBackEdges = new ArrayList<>(n.getNeighborsSize());
+
+            for (Node neighbor : n.getNeighbors()) {
+                tempBackEdges.add(new Edge(n, neighbor, 0));
+            }
+
+            this.backEdges.put(n, tempBackEdges);
+        }
     }
 
     public int findTotalManMonths(final String task) {
@@ -91,6 +111,8 @@ public final class Project {
     public int findMaxBonusCount(final String task) {
         int result = 0;
 
+        initEdgesAmount();
+
         LinkedList<Node> outShortestPath = new LinkedList<>();
         int minFlow = getMinFlowToTask(task, outShortestPath);
 
@@ -102,6 +124,13 @@ public final class Project {
 
             outShortestPath.clear();
             minFlow = getMinFlowToTask(task, outShortestPath);
+        }
+
+        Node milestone = this.reverseDirectionNodes[this.taskIndex.get(task)];
+        ArrayList<Edge> backEdges = this.backEdges.get(milestone);
+
+        for (Edge e : backEdges) {
+            result += e.getAmount();
         }
 
         return result;
@@ -218,30 +247,34 @@ public final class Project {
         boolean isFindTask = false;
 
         while (!queue.isEmpty() && !isFindTask) {
-            Node node = queue.poll();
+            Node curr = queue.poll();
 
-            for (Node n : node.getNeighbors()) {
-                if (n.getRemainingAmount() == 0) {
-                    if (n.getRemainingBackEdgeAmount() != 0) {
-                        Node reverseNode = this.reverseDirectionNodes[this.taskIndex.get(n.getTitle())];
+            if (prevNode.get(curr) != null) {
+                continue;
+            }
 
-                        for (Node rn : reverseNode.getNeighbors()) {
-                            if (prevNode.get(rn) == null) {
-                                queue.add(rn);
-                                prevNode.put(rn, reverseNode);
-                            }
+            for (Edge e : this.edges.get(curr)) {
+                if (e.getRemainingAmount() == 0) {
+                    ArrayList<Edge> backEdges = this.backEdges.get(curr);
+
+                    for (Edge b : backEdges) {
+                        if (e.getRemainingAmount() == 0) {
+                            continue;
                         }
+
+                        prevNode.put(b.getStartNode(), b.getEndNode());
                     }
 
                     continue;
                 }
 
-                if (prevNode.get(n) == null) {
-                    queue.add(n);
-                    prevNode.put(n, node);
+                Node next = e.getEndNode();
+                if (prevNode.get(next) == null) {
+                    queue.add(next);
+                    prevNode.put(next, curr);
 
-                    if (n.getTitle().equals(task)) {
-                        out.addFirst(n);
+                    if (next.getTitle().equals(task)) {
+                        out.addFirst(next);
                         isFindTask = true;
                         break;
                     }
@@ -254,19 +287,46 @@ public final class Project {
         }
 
         Node currNode = out.getFirst();
-
-        int resultMinFlow = Integer.MAX_VALUE;
-
         while (!prevNode.get(currNode).getTitle().equals(this.virtualStartNode.getTitle())) {
             Node node = prevNode.get(currNode);
             out.addFirst(node);
 
-            resultMinFlow = Math.min(resultMinFlow, node.getRemainingAmount());
-
             currNode = node;
         }
 
+        int resultMinFlow = Integer.MAX_VALUE;
+        ArrayList<Edge> edgesResult = new ArrayList<>();
+
+        // Todo
+        // 밑에 반복문에서 경로 간선들만 전부 받아서 반환.
+        // 현재 최단 경로를 찾는 out은 이 함수의 지역 변수 선언
+
+        for (int i = 0; i < out.size() - 1; ++i) {
+            ArrayList<Edge> temp = this.edges.get(out.get(i));
+
+            for (Edge e : temp) {
+                if (e.getEndNode().equals(out.get(i + 1))) {
+                    resultMinFlow = Math.min(resultMinFlow, e.getRemainingAmount());
+                    break;
+                }
+            }
+        }
+
         return resultMinFlow;
+    }
+
+    private void initEdgesAmount() {
+        for (Node n : this.nodes) {
+            for (Edge e : this.edges.get(n)) {
+                e.initAmount();
+            }
+        }
+
+        for (Node rn : this.reverseDirectionNodes) {
+            for (Edge bE: this.backEdges.get(rn)) {
+                bE.initAmount();
+            }
+        }
     }
 
     private void getSCC(final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
