@@ -6,19 +6,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
 public final class Project {
     private final HashMap<String, Integer> taskIndex;
     private final Node[] nodes;
     private final Node[] reverseDirectionNodes;
-    private final ArrayList<Node> totalStartNodes;
+    private final Node virtualStartNode;
 
     public Project(final Task[] tasks) {
         this.taskIndex = new HashMap<>(tasks.length);
         this.nodes = new Node[tasks.length];
         this.reverseDirectionNodes = new Node[tasks.length];
-        this.totalStartNodes = new ArrayList<>(tasks.length);
+        this.virtualStartNode = new Node("", 0);
 
         for (int i = 0; i < tasks.length; ++i) {
             this.taskIndex.put(tasks[i].getTitle(), i);
@@ -30,7 +31,7 @@ public final class Project {
             List<Task> tempPredecessors = tasks[i].getPredecessors();
 
             if (tempPredecessors.size() == 0) {
-                this.totalStartNodes.add(nodes[i]);
+                this.virtualStartNode.addNeighbor(this.nodes[i]);
                 continue;
             }
 
@@ -46,7 +47,7 @@ public final class Project {
 
         HashMap<Node, Boolean> discovered = new HashMap<>();
         LinkedList<Node> postorderTraversalReverseList = new LinkedList<>();
-        for (Node n : this.totalStartNodes) {
+        for (Node n : this.virtualStartNode.getNeighbors()) {
             getPostorderTraversalReverseListRecursive(n, discovered, postorderTraversalReverseList);
         }
 
@@ -129,7 +130,7 @@ public final class Project {
     }
 
     private LinkedList<Node> getPostorderTraversalReverseListToTask(final String task) {
-        ArrayList<Node> startNodes = new ArrayList<>(this.totalStartNodes.size());
+        ArrayList<Node> startNodes = new ArrayList<>(this.virtualStartNode.getNeighborsSize());
 
         getStartNodesToTask(task, startNodes);
 
