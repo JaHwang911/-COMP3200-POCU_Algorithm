@@ -29,6 +29,8 @@ public class Program {
 
         int minDuration2 = project.findMinDuration("ms2");
         assert (minDuration2 == 32);
+
+        int bonus = project.findMaxBonusCount("ms2");
     }
 
     private static void testFindManMonth() {

@@ -13,12 +13,16 @@ public final class Project {
     private final HashMap<String, Integer> taskIndex;
     private final Node[] nodes;
     private final Node[] reverseDirectionNodes;
+    private final HashMap<String, ArrayList<Node>> edges;
+    private final HashMap<String, ArrayList<Node>> backEdges;
     private final Node virtualStartNode;
 
     public Project(final Task[] tasks) {
         this.taskIndex = new HashMap<>(tasks.length);
         this.nodes = new Node[tasks.length];
         this.reverseDirectionNodes = new Node[tasks.length];
+        this.edges = new HashMap<>();
+        this.backEdges = new HashMap<>();
         this.virtualStartNode = new Node("", 0);
 
         for (int i = 0; i < tasks.length; ++i) {
@@ -81,13 +85,26 @@ public final class Project {
     }
 
     public int findMinDuration(final String task) {
-        Node milestone = this.reverseDirectionNodes[this.taskIndex.get(task)];
-
-        return getMinDurationRecursive(milestone);
+        return getMinDurationRecursive(this.reverseDirectionNodes[this.taskIndex.get(task)]);
     }
 
     public int findMaxBonusCount(final String task) {
-        return -1;
+        int result = 0;
+
+        LinkedList<Node> outShortestPath = new LinkedList<>();
+        int minFlow = getMinFlowToTask(task, outShortestPath);
+
+        while (minFlow != -1) {
+            for (Node n : outShortestPath) {
+                n.addAmount(minFlow);
+                n.addBackEdgeAmount(-minFlow);
+            }
+
+            outShortestPath.clear();
+            minFlow = getMinFlowToTask(task, outShortestPath);
+        }
+
+        return result;
     }
 
     private void getPostorderTraversalReverseListRecursive(final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
@@ -189,6 +206,67 @@ public final class Project {
         sum += max;
 
         return sum;
+    }
+
+    private int getMinFlowToTask(final String task, LinkedList<Node> out) {
+        HashMap<Node, Node> prevNode = new HashMap<>();
+        Queue<Node> queue = new LinkedList<>();
+
+        prevNode.put(this.virtualStartNode, this.virtualStartNode);
+        queue.add(this.virtualStartNode);
+
+        boolean isFindTask = false;
+
+        while (!queue.isEmpty() && !isFindTask) {
+            Node node = queue.poll();
+
+            for (Node n : node.getNeighbors()) {
+                if (n.getRemainingAmount() == 0) {
+                    if (n.getRemainingBackEdgeAmount() != 0) {
+                        Node reverseNode = this.reverseDirectionNodes[this.taskIndex.get(n.getTitle())];
+
+                        for (Node rn : reverseNode.getNeighbors()) {
+                            if (prevNode.get(rn) == null) {
+                                queue.add(rn);
+                                prevNode.put(rn, reverseNode);
+                            }
+                        }
+                    }
+
+                    continue;
+                }
+
+                if (prevNode.get(n) == null) {
+                    queue.add(n);
+                    prevNode.put(n, node);
+
+                    if (n.getTitle().equals(task)) {
+                        out.addFirst(n);
+                        isFindTask = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!isFindTask) {
+            return -1;
+        }
+
+        Node currNode = out.getFirst();
+
+        int resultMinFlow = Integer.MAX_VALUE;
+
+        while (!prevNode.get(currNode).getTitle().equals(this.virtualStartNode.getTitle())) {
+            Node node = prevNode.get(currNode);
+            out.addFirst(node);
+
+            resultMinFlow = Math.min(resultMinFlow, node.getRemainingAmount());
+
+            currNode = node;
+        }
+
+        return resultMinFlow;
     }
 
     private void getSCC(final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
