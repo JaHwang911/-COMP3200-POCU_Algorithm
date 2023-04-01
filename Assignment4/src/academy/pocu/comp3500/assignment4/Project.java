@@ -52,7 +52,6 @@ public final class Project {
         for (Node n : this.virtualStartNode.getNeighbors()) {
             getPostorderTraversalReverseListRecursive(n, discovered, postorderTraversalReverseList);
         }
-        this.edges.put(this.virtualStartNode, new ArrayList<>());
 
         LinkedList<Node> tempOut = new LinkedList<>();
         discovered.clear();
@@ -141,13 +140,16 @@ public final class Project {
             minFlow = getMinFlowToTask(task, outEdge);
         }
 
-        ArrayList<Edge> resultEdge = this.edges.get(this.nodes[this.taskIndex.get(task)]);
+        Node targetNode = this.nodes[this.taskIndex.get(task)];
+        ArrayList<Edge> resultEdge = this.edges.get(targetNode);
 
         for (Edge e : resultEdge) {
-            result -= e.getAmount();
+            if (e.isBackEdge()) {
+                result -= e.getAmount();
+            }
         }
 
-        return result;
+        return Math.min(result, targetNode.getEstimate());
     }
 
     private void getPostorderTraversalReverseListRecursive(final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {

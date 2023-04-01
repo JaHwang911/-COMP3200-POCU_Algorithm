@@ -10,6 +10,8 @@ public class Program {
         testFindManMonth();
         testFindMinDuration();
         testFindMaxBonusCount();
+        testBaro();
+        testWiki();
 
         System.out.println("No prob assignment 4");
     }
@@ -412,5 +414,262 @@ public class Program {
         };
 
         return tasks;
+    }
+
+    private static void testWiki() {
+        {
+            Task a = new Task("A", 3);
+            Task b = new Task("B", 5);
+            Task c = new Task("C", 3);
+            Task d = new Task("D", 2);
+            Task e = new Task("E", 1);
+            Task f = new Task("F", 2);
+            Task g = new Task("G", 6);
+            Task h = new Task("H", 8);
+            Task i = new Task("I", 2);
+            Task j = new Task("J", 4);
+            Task k = new Task("K", 2);
+            Task l = new Task("L", 8);
+            Task m = new Task("M", 7);
+            Task n = new Task("N", 1);
+            Task o = new Task("O", 1);
+            Task p = new Task("P", 6);
+            Task ms1 = new Task("ms1", 6);
+            Task ms2 = new Task("ms2", 4);
+
+            c.addPredecessor(b);
+            d.addPredecessor(a);
+
+            ms1.addPredecessor(a, c);
+
+            e.addPredecessor(c);
+            f.addPredecessor(g);
+            g.addPredecessor(e);
+
+            i.addPredecessor(h);
+            j.addPredecessor(ms1);
+
+            k.addPredecessor(j);
+            n.addPredecessor(k);
+            m.addPredecessor(n);
+            l.addPredecessor(m);
+
+            p.addPredecessor(i, j);
+            o.addPredecessor(j);
+
+            ms2.addPredecessor(o, p);
+
+            Task[] tasks = new Task[]{
+                    a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, ms1, ms2
+            };
+
+            Project project = new Project(tasks);
+
+            int manMonths1 = project.findTotalManMonths("ms1");
+            assert (manMonths1 == 17);
+
+            int manMonths2 = project.findTotalManMonths("ms2");
+            assert (manMonths2 == 42);
+
+            int minDuration1 = project.findMinDuration("ms1");
+            assert (minDuration1 == 14);
+
+            int minDuration2 = project.findMinDuration("ms2");
+            assert (minDuration2 == 28);
+
+            int bonusCount1 = project.findMaxBonusCount("ms1");
+            assert (bonusCount1 == 6);
+
+            int bonusCount2 = project.findMaxBonusCount("ms2");
+            assert (bonusCount2 == 4);
+        }
+
+
+        {
+            Task a = new Task("A", 2);
+            Task b = new Task("B", 1);
+            Task c = new Task("C", 3);
+            Task d = new Task("D", 5);
+            Task e = new Task("E", 7);
+            Task f = new Task("F", 2);
+            Task g = new Task("G", 11);
+
+            b.addPredecessor(a);
+            c.addPredecessor(b);
+            d.addPredecessor(c);
+
+            f.addPredecessor(b, e);
+            g.addPredecessor(d, f);
+
+            Task[] tasks = new Task[]{
+                    a, b, c, d, e, f, g
+            };
+            Project project = new Project(tasks);
+
+            int bonusCount1 = project.findMaxBonusCount("G");
+            assert (bonusCount1 == 3);
+        }
+    }
+
+    private static void testBaro() {
+        {  // 0
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(a, b);
+            d.addPredecessor(b, c);
+            e.addPredecessor(c, d);
+
+            Task[] test = new Task[]{a, b, c, d, e};
+
+            Project project = new Project(test);
+            assert (project.findMaxBonusCount("E") == 4);
+
+            test = new Task[]{b, a, c, d, e};
+            assert (project.findMaxBonusCount("E") == 4);
+        }
+
+        {  // 1
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(b, a);
+            d.addPredecessor(b, c);
+            e.addPredecessor(c, d);
+
+            Task[] test = new Task[]{a, b, c, d, e};
+
+            Project project = new Project(test);
+            assert (project.findMaxBonusCount("E") == 4);
+
+            test = new Task[]{b, a, c, d, e};
+            assert (project.findMaxBonusCount("E") == 4);
+        }
+
+        {  // 2
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(a, b);
+            d.addPredecessor(c, b);
+            e.addPredecessor(c, d);
+
+            Task[] test = new Task[]{a, b, c, d, e};
+
+            Project project = new Project(test);
+            assert (project.findMaxBonusCount("E") == 4);
+
+            test = new Task[]{b, a, c, d, e};
+            assert (project.findMaxBonusCount("E") == 4);
+        }
+
+        {  // 3
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(b, a);
+            d.addPredecessor(c, b);
+            e.addPredecessor(c, d);
+
+            Task[] test = new Task[]{a, b, c, d, e};
+
+            Project project = new Project(test);
+            assert (project.findMaxBonusCount("E") == 4);
+
+            test = new Task[]{b, a, c, d, e};
+            assert (project.findMaxBonusCount("E") == 4);
+        }
+
+        {  // 4
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(a, b);
+            d.addPredecessor(b, c);
+            e.addPredecessor(d, c);
+
+            Task[] test = new Task[]{a, b, c, d, e};
+
+            Project project = new Project(test);
+            assert (project.findMaxBonusCount("E") == 4);
+
+            test = new Task[]{b, a, c, d, e};
+            assert (project.findMaxBonusCount("E") == 4);
+        }
+
+        {  // 5
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(b, a);
+            d.addPredecessor(b, c);
+            e.addPredecessor(d, c);
+
+            Task[] test = new Task[]{a, b, c, d, e};
+
+            Project project = new Project(test);
+            assert (project.findMaxBonusCount("E") == 4);
+
+            test = new Task[]{b, a, c, d, e};
+            assert (project.findMaxBonusCount("E") == 4);
+        }
+
+        {  // 6
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(a, b);
+            d.addPredecessor(c, b);
+            e.addPredecessor(d, c);
+
+            Task[] test = new Task[]{a, b, c, d, e};
+
+            Project project = new Project(test);
+            assert (project.findMaxBonusCount("E") == 4);
+
+            test = new Task[]{b, a, c, d, e};
+            assert (project.findMaxBonusCount("E") == 4);
+        }
+
+        {  // 7
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(b, a);
+            d.addPredecessor(c, b);
+            e.addPredecessor(d, c);
+
+            Task[] test = new Task[]{a, b, c, d, e};
+
+            Project project = new Project(test);
+            assert (project.findMaxBonusCount("E") == 4);
+
+            test = new Task[]{b, a, c, d, e};
+            assert (project.findMaxBonusCount("E") == 4);
+        }
     }
 }
