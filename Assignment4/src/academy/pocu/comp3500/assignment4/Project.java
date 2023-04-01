@@ -145,15 +145,22 @@ public final class Project {
         initEdgesAmount();
 
         LinkedList<Edge> outEdge = new LinkedList<>();
+        HashMap<Node, Boolean> discovered = new HashMap<>();
         int minFlow = getMinFlowToTask(task, outEdge);
 
         while (minFlow != -1) {
             for (Edge e : outEdge) {
                 e.addAmount(minFlow);
                 e.getBackEdge().addAmount(-minFlow);
+
+                if (discovered.get(e.getStartNode()) == null) {
+                    e.getStartNode().addAmount(minFlow);
+                    discovered.put(e.getStartNode(), true);
+                }
             }
 
             outEdge.clear();
+            discovered.clear();
             minFlow = getMinFlowToTask(task, outEdge);
         }
 
@@ -348,7 +355,7 @@ public final class Project {
 
         int i = left;
         for (int j = left; j < right; ++j) {
-            if (node[j].getEstimate() > node[right].getEstimate()) {
+            if (node[j].getRemainingAmount() > node[right].getRemainingAmount()) {
                 Node temp = node[j];
                 node[j] = node[i];
                 node[i] = temp;
@@ -370,6 +377,8 @@ public final class Project {
             for (Edge e : this.edges.get(n)) {
                 e.initAmount();
             }
+
+            n.initAmount();
         }
     }
 

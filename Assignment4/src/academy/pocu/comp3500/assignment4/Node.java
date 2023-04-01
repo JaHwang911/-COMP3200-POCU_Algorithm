@@ -52,6 +52,10 @@ final class Node {
         this.amount += amount;
     }
 
+    public void initAmount() {
+        this.amount = 0;
+    }
+
     public void setIsLoop() {
         this.isLoopNode = true;
     }
