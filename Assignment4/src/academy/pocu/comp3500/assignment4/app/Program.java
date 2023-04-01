@@ -5,17 +5,21 @@ import academy.pocu.comp3500.assignment4.project.Task;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
+
+import static java.util.Collections.shuffle;
 
 public class Program {
 
     public static void main(String[] args) {
-        testMura();
         testOfficial();
         testBaro();
         testWiki();
         testFindManMonth();
         testFindMinDuration();
         testFindMaxBonusCount();
+        testMura();
+        testWhiteBeard();
 
         System.out.println("No prob assignment 4");
     }
@@ -719,6 +723,140 @@ public class Program {
 
             testPerm(0, tasks, perm, taken);
         }
+    }
+
+    private static void testWhiteBeard() {
+        {
+            Task a = new Task("A", 4);
+            Task b = new Task("B", 10);
+            Task c = new Task("C", 8);
+            Task d = new Task("D", 3);
+            Task e = new Task("E", 2);
+            b.addPredecessor(a);
+            c.addPredecessor(b);
+            d.addPredecessor(c);
+            e.addPredecessor(d);
+            Task[] tasks = new Task[]{
+                    a, b, c, d, e
+            };
+
+            Project project = new Project(tasks);
+            int bonusCount1 = project.findMaxBonusCount("E");
+            assert (bonusCount1 == 2);
+        }
+
+        {
+            Task a = new Task("A", 2);
+            Task b = new Task("B", 1);
+            Task c = new Task("C", 3);
+            Task d = new Task("D", 5);
+            Task e = new Task("E", 7);
+            Task f = new Task("F", 10);
+            Task g = new Task("G", 11);
+
+            b.addPredecessor(a);
+            c.addPredecessor(b);
+            d.addPredecessor(c);
+
+            f.addPredecessor(b, e);
+            g.addPredecessor(d, f);
+
+            Task[] tasks = new Task[]{
+                    a, b, c, d, e, f, g
+            };
+            Project project = new Project(tasks);
+
+            int bonusCount1 = project.findMaxBonusCount("G");
+            assert (bonusCount1 == 8);
+
+            bonusCount1 = project.findMaxBonusCount("F");
+            assert (bonusCount1 == 8);
+
+            bonusCount1 = project.findMaxBonusCount("C");
+            assert (bonusCount1 == 1);
+
+            bonusCount1 = project.findMaxBonusCount("A");
+            assert (bonusCount1 == 2);
+        }
+
+        {
+            Task a = new Task("A", 7);
+            Task b = new Task("B", 4);
+            Task c = new Task("C", 6);
+            Task d = new Task("D", 10);
+            Task f = new Task("F", 5);
+            Task g = new Task("G", 3);
+            Task h = new Task("H", 8);
+
+            f.addPredecessor(a, b);
+            c.addPredecessor(b);
+            g.addPredecessor(c, f);
+            h.addPredecessor(a, f);
+            d.addPredecessor(g, h);
+
+            Task[] tasks = new Task[]{
+                    a, b, c, d, f, g, h
+            };
+            Project project = new Project(tasks);
+
+            int bonusCount1 = project.findMaxBonusCount("D");
+            assert (bonusCount1 == 10);
+            bonusCount1 = project.findMaxBonusCount("H");
+            assert (bonusCount1 == 8);
+            bonusCount1 = project.findMaxBonusCount("G");
+            assert (bonusCount1 == 3);
+        }
+        {
+            //케로
+            for (int i = 0; i < 100; ++i) {
+                Task[] tasks = createTasks(i);
+
+                Project project = new Project(tasks);
+
+                int bonusCount1 = project.findMaxBonusCount("5");
+
+                if (bonusCount1 != 6) {
+                    System.err.println(String.format("%d, %d", i, bonusCount1));
+                }
+            }
+        }
+    }
+
+    private static Task[] createTasks(int seed) {
+        Task task0 = new Task("0", 8);
+        Task task1 = new Task("1", 3);
+        Task task2 = new Task("2", 8);
+        Task task3 = new Task("3", 8);
+        Task task4 = new Task("4", 3);
+        Task task5 = new Task("5", 8);
+
+        task1.addPredecessor(task0);
+        task2.addPredecessor(task1, task4);
+        task3.addPredecessor(task0);
+
+        task4.addPredecessor(task3, task1);
+        task5.addPredecessor(task2, task4);
+
+        Task[] tasks = new Task[]{
+                task0, task1, task2, task3, task4, task5
+        };
+
+        shuffle(seed, tasks);
+
+        return tasks;
+    }
+
+    private static void shuffle(int seed, final Task[] array) {
+        Random rand = new Random(seed);
+
+        for (int i = array.length - 1; i > 0; --i) {
+            int j = rand.nextInt(i + 1);
+
+            Task temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+
     }
 
     private static void testPerm(int j, final ArrayList<Task> tasks, final ArrayList<Task> perm, final boolean[] taken) {
