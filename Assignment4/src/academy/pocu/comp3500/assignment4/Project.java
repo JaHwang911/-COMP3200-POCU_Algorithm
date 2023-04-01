@@ -21,7 +21,7 @@ public final class Project {
         this.nodes = new Node[tasks.length];
         this.reverseDirectionNodes = new Node[tasks.length];
         this.edges = new HashMap<>();
-        this.virtualStartNode = new Node("", 0);
+        this.virtualStartNode = new Node("", Integer.MAX_VALUE);
 
         for (int i = 0; i < tasks.length; ++i) {
             this.taskIndex.put(tasks[i].getTitle(), i);
@@ -73,7 +73,21 @@ public final class Project {
         ArrayList<Edge> tempVirtualEdges = new ArrayList<>();
 
         for (Node n : this.virtualStartNode.getNeighbors()) {
-            tempVirtualEdges.add(new Edge(this.virtualStartNode, n, Integer.MAX_VALUE));
+            ArrayList<Edge> tempEdges = this.edges.get(n);
+
+            if (tempEdges == null) {
+                tempEdges = new ArrayList<>(n.getNeighborsSize());
+                this.edges.put(n, tempEdges);
+            }
+
+            Edge e = new Edge(this.virtualStartNode, n, Integer.MAX_VALUE);
+            Edge be = new Edge(n, this.virtualStartNode, 0);
+
+            e.addBackEdge(be);
+            be.addBackEdge(e);
+
+            tempVirtualEdges.add(e);
+            tempEdges.add(be);
         }
 
         this.edges.put(this.virtualStartNode, tempVirtualEdges);
@@ -257,7 +271,7 @@ public final class Project {
         HashMap<Node, Node> prevNode = new HashMap<>();
         Queue<Node> queue = new LinkedList<>();
 
-        prevNode.put(this.virtualStartNode, this.virtualStartNode);
+//        prevNode.put(this.virtualStartNode, this.virtualStartNode);
         queue.add(this.virtualStartNode);
 
         boolean isFindTask = false;
@@ -291,7 +305,7 @@ public final class Project {
 
         int resultMinFlow = Integer.MAX_VALUE;
 
-        while (!prevNode.get(currNode).getTitle().equals(this.virtualStartNode.getTitle())) {
+        do {
             Node prev = prevNode.get(currNode);
             ArrayList<Edge> tempEdges = this.edges.get(prev);
 
@@ -304,7 +318,11 @@ public final class Project {
             }
 
             currNode = prev;
-        }
+
+            if (currNode == null) {
+                break;
+            }
+        } while (prevNode.get(currNode) != null && !prevNode.get(currNode).getTitle().equals(this.virtualStartNode.getTitle()));
 
         return resultMinFlow;
     }

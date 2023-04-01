@@ -3,6 +3,9 @@ package academy.pocu.comp3500.assignment4.app;
 import academy.pocu.comp3500.assignment4.Project;
 import academy.pocu.comp3500.assignment4.project.Task;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Program {
 
     public static void main(String[] args) {
@@ -12,6 +15,49 @@ public class Program {
         testFindMaxBonusCount();
         testBaro();
         testWiki();
+
+        {
+            Task a = new Task("A", 5);
+            Task[] tasks = new Task[] {a};
+
+            Project p = new Project(tasks);
+            assert (p.findMaxBonusCount("A") == 5);
+        }
+
+        {
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(b, a);
+            d.addPredecessor(c, b);
+            e.addPredecessor(d, c);
+
+            Task[] test = new Task[]{b, a, c, d, e};
+
+            Project project = new Project(test);
+            assert (project.findMaxBonusCount("E") == 4);
+        }
+
+        {
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(a, b);
+            d.addPredecessor(b, c);
+            e.addPredecessor(c, d);
+
+            ArrayList<Task> tasks = new ArrayList<>(Arrays.asList(a, b, c, d, e));
+            ArrayList<Task> perm = new ArrayList<>();
+            boolean[] taken = new boolean[5];
+
+            testPerm(0, tasks, perm, taken);
+        }
 
         System.out.println("No prob assignment 4");
     }
@@ -670,6 +716,42 @@ public class Program {
 
             test = new Task[]{b, a, c, d, e};
             assert (project.findMaxBonusCount("E") == 4);
+        }
+    }
+
+    private static void testPerm(int j, final ArrayList<Task> tasks, final ArrayList<Task> perm, final boolean[] taken) {
+        if (j == 5 && perm.size() != 5) {
+            return;
+        }
+
+        if (perm.size() == 5) {
+
+            Task[] temp = new Task[5];
+            for (int i = 0; i < temp.length; ++i) {
+                temp[i] = perm.get(i);
+            }
+
+            Project project = new Project(temp);
+
+            int res = project.findMaxBonusCount("E");
+
+            if (res != 4) {
+                for (int i = 0; i < perm.size(); ++i) {
+                    System.out.print(perm.get(i).getTitle());
+                }
+            }
+
+            assert res == 4;
+        }
+
+        for (int i = 0; i < tasks.size(); ++i) {
+            if (!taken[i]) {
+                taken[i] = true;
+                perm.add(tasks.get(i));
+                testPerm(j + 1, tasks, perm, taken);
+                perm.remove(perm.size() - 1);
+                taken[i] = false;
+            }
         }
     }
 }
