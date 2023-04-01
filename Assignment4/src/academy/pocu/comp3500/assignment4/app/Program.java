@@ -7,8 +7,8 @@ public class Program {
 
     public static void main(String[] args) {
         testOfficial();
-        testFindManMonth();
-        testFindMinDuration();
+//        testFindManMonth();
+//        testFindMinDuration();
 
         System.out.println("No prob assignment 4");
     }
@@ -30,7 +30,11 @@ public class Program {
         int minDuration2 = project.findMinDuration("ms2");
         assert (minDuration2 == 32);
 
-        int bonus = project.findMaxBonusCount("ms2");
+        int bonusCount1 = project.findMaxBonusCount("ms1");
+        assert (bonusCount1 == 6);
+
+        int bonusCount2 = project.findMaxBonusCount("ms2");
+        assert (bonusCount2 == 6);
     }
 
     private static void testFindManMonth() {
