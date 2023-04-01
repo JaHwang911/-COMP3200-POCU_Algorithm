@@ -65,23 +65,4 @@ final class Node {
     public void setIsLoop() {
         this.isLoopNode = true;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-
-        return (obj instanceof Node && this.hashCode() == obj.hashCode());
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 17;
-
-        hash = hash * 31 + this.title.hashCode();
-        hash = hash * 31 + this.neighbors.hashCode();
-
-        return hash;
-    }
 }

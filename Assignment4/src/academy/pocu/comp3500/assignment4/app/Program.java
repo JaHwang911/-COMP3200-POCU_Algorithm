@@ -7,8 +7,8 @@ public class Program {
 
     public static void main(String[] args) {
         testOfficial();
-//        testFindManMonth();
-//        testFindMinDuration();
+        testFindManMonth();
+        testFindMinDuration();
 
         System.out.println("No prob assignment 4");
     }
