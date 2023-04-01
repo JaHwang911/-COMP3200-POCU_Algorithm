@@ -9,13 +9,13 @@ import java.util.Arrays;
 public class Program {
 
     public static void main(String[] args) {
+        testMura();
         testOfficial();
+        testBaro();
+        testWiki();
         testFindManMonth();
         testFindMinDuration();
         testFindMaxBonusCount();
-        testBaro();
-        testWiki();
-        testMura();
 
         System.out.println("No prob assignment 4");
     }

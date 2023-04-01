@@ -136,6 +136,10 @@ public final class Project {
     }
 
     public int findMaxBonusCount(final String task) {
+        if (this.nodes.length == 1) {
+            return this.nodes[0].getEstimate();
+        }
+
         int result = 0;
 
         initEdgesAmount();
@@ -269,17 +273,33 @@ public final class Project {
     private int getMinFlowToTask(final String task, LinkedList<Edge> out) {
         HashMap<Node, Node> prevNode = new HashMap<>();
         Queue<Node> queue = new LinkedList<>();
+        Node[] tempStartNode = new Node[this.virtualStartNode.getNeighborsSize()];
 
-//        prevNode.put(this.virtualStartNode, this.virtualStartNode);
-        queue.add(this.virtualStartNode);
+        Node targetNode = null;
 
-        boolean isFindTask = false;
-        Node currNode = null;
+        ArrayList<Edge> tempStartEdges = this.edges.get(this.virtualStartNode);
 
-        while (!queue.isEmpty() && !isFindTask) {
-            Node curr = queue.poll();
+        for (int i = 0; i < tempStartEdges.size(); ++i) {
+            assert (!tempStartEdges.get(i).isBackEdge());
+            tempStartNode[i] = tempStartEdges.get(i).getEndNode();
+        }
 
-            for (Edge e : this.edges.get(curr)) {
+        sortNodeByEstimateRecursive(tempStartNode, 0, tempStartNode.length - 1);
+
+        for (Node n : tempStartNode) {
+            prevNode.put(n, this.virtualStartNode);
+            queue.add(n);
+
+            if (n.getTitle().equals(task)) {
+                targetNode = n;
+                break;
+            }
+        }
+
+        while (!queue.isEmpty() && targetNode == null) {
+            Node currNode = queue.poll();
+
+            for (Edge e : this.edges.get(currNode)) {
                 if (e.getRemainingAmount() == 0) {
                     continue;
                 }
@@ -287,26 +307,25 @@ public final class Project {
                 Node next = e.getEndNode();
                 if (prevNode.get(next) == null) {
                     queue.add(next);
-                    prevNode.put(next, curr);
+                    prevNode.put(next, currNode);
 
                     if (next.getTitle().equals(task)) {
-                        currNode = next;
-                        isFindTask = true;
+                        targetNode = next;
                         break;
                     }
                 }
             }
         }
 
-        if (!isFindTask) {
+        if (targetNode == null) {
             return -1;
         }
 
         int resultMinFlow = Integer.MAX_VALUE;
 
         do {
-            Node prev = prevNode.get(currNode);
-            ArrayList<Edge> tempEdges = this.edges.get(prev);
+            Node currNode = prevNode.get(targetNode);
+            ArrayList<Edge> tempEdges = this.edges.get(currNode);
 
             for (Edge e : tempEdges) {
                 if (!e.isBackEdge()) {
@@ -316,14 +335,34 @@ public final class Project {
                 }
             }
 
-            currNode = prev;
-
-            if (currNode == null) {
-                break;
-            }
-        } while (prevNode.get(currNode) != null && !prevNode.get(currNode).getTitle().equals(this.virtualStartNode.getTitle()));
+            targetNode = currNode;
+        } while (prevNode.get(targetNode) != null && !prevNode.get(targetNode).getTitle().equals(this.virtualStartNode.getTitle()));
 
         return resultMinFlow;
+    }
+
+    private void sortNodeByEstimateRecursive(Node[] node, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+
+        int i = left;
+        for (int j = left; j < right; ++j) {
+            if (node[j].getEstimate() > node[right].getEstimate()) {
+                Node temp = node[j];
+                node[j] = node[i];
+                node[i] = temp;
+
+                ++i;
+            }
+        }
+
+        Node temp = node[i];
+        node[i] = node[right];
+        node[right] = temp;
+
+        sortNodeByEstimateRecursive(node, left, i - 1);
+        sortNodeByEstimateRecursive(node, i + 1, right);
     }
 
     private void initEdgesAmount() {
