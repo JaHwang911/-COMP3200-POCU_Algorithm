@@ -8,7 +8,6 @@ final class Node {
     private final int estimate;
     private boolean isLoopNode;
     private int amount;
-    private int backEdgeAmount;
 
     public Node(String title, int estimate) {
         this.title = title;
@@ -40,10 +39,6 @@ final class Node {
         return this.estimate - this.amount;
     }
 
-    public int getRemainingBackEdgeAmount() {
-        return -this.backEdgeAmount;
-    }
-
     public void addNeighbor(final Node neighbor) {
         this.neighbors.add(neighbor);
     }
@@ -55,11 +50,6 @@ final class Node {
     public void addAmount(final int amount) {
         assert (this.amount + amount <= this.estimate);
         this.amount += amount;
-    }
-
-    public void addBackEdgeAmount(final int amount) {
-        assert (this.backEdgeAmount + amount <= 0);
-        this.backEdgeAmount += amount;
     }
 
     public void setIsLoop() {

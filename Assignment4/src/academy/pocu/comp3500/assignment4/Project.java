@@ -71,6 +71,7 @@ public final class Project {
         }
 
         ArrayList<Edge> tempVirtualEdges = new ArrayList<>();
+        this.edges.put(this.virtualStartNode, tempVirtualEdges);
 
         for (Node n : this.virtualStartNode.getNeighbors()) {
             ArrayList<Edge> tempEdges = this.edges.get(n);
@@ -89,8 +90,6 @@ public final class Project {
             tempVirtualEdges.add(e);
             tempEdges.add(be);
         }
-
-        this.edges.put(this.virtualStartNode, tempVirtualEdges);
 
         for (Node n : this.nodes) {
             ArrayList<Edge> tempEdges = this.edges.get(n);

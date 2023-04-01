@@ -15,49 +15,7 @@ public class Program {
         testFindMaxBonusCount();
         testBaro();
         testWiki();
-
-        {
-            Task a = new Task("A", 5);
-            Task[] tasks = new Task[] {a};
-
-            Project p = new Project(tasks);
-            assert (p.findMaxBonusCount("A") == 5);
-        }
-
-        {
-            Task a = new Task("A", 5);
-            Task b = new Task("B", 2);
-            Task c = new Task("C", 2);
-            Task d = new Task("D", 9);
-            Task e = new Task("E", 10);
-
-            c.addPredecessor(b, a);
-            d.addPredecessor(c, b);
-            e.addPredecessor(d, c);
-
-            Task[] test = new Task[]{b, a, c, d, e};
-
-            Project project = new Project(test);
-            assert (project.findMaxBonusCount("E") == 4);
-        }
-
-        {
-            Task a = new Task("A", 5);
-            Task b = new Task("B", 2);
-            Task c = new Task("C", 2);
-            Task d = new Task("D", 9);
-            Task e = new Task("E", 10);
-
-            c.addPredecessor(a, b);
-            d.addPredecessor(b, c);
-            e.addPredecessor(c, d);
-
-            ArrayList<Task> tasks = new ArrayList<>(Arrays.asList(a, b, c, d, e));
-            ArrayList<Task> perm = new ArrayList<>();
-            boolean[] taken = new boolean[5];
-
-            testPerm(0, tasks, perm, taken);
-        }
+        testMura();
 
         System.out.println("No prob assignment 4");
     }
@@ -389,28 +347,37 @@ public class Program {
     }
 
     private static void testFindMaxBonusCount() {
-        Task a = new Task("A", 2);
-        Task b = new Task("B", 1);
-        Task c = new Task("C", 3);
-        Task d = new Task("D", 5);
-        Task e = new Task("E", 7);
-        Task f = new Task("F", 2);
-        Task g = new Task("G", 11);
+        {
+            Task a = new Task("A", 2);
+            Task b = new Task("B", 1);
+            Task c = new Task("C", 3);
+            Task d = new Task("D", 5);
+            Task e = new Task("E", 7);
+            Task f = new Task("F", 2);
+            Task g = new Task("G", 11);
 
-        b.addPredecessor(a);
-        c.addPredecessor(b);
-        d.addPredecessor(c);
+            b.addPredecessor(a);
+            c.addPredecessor(b);
+            d.addPredecessor(c);
 
-        f.addPredecessor(b, e);
-        g.addPredecessor(d, f);
+            f.addPredecessor(b, e);
+            g.addPredecessor(d, f);
 
-        Task[] tasks = new Task[]{
-                a, b, c, d, e, f, g
-        };
-        Project project = new Project(tasks);
+            Task[] tasks = new Task[]{
+                    a, b, c, d, e, f, g
+            };
+            Project project = new Project(tasks);
 
-        int bonusCount1 = project.findMaxBonusCount("G");
-        assert (bonusCount1 == 3);
+            int bonusCount1 = project.findMaxBonusCount("G");
+            assert (bonusCount1 == 3);
+        }
+        {
+            Task a = new Task("A", 5);
+            Task[] tasks = new Task[] {a};
+
+            Project p = new Project(tasks);
+            assert (p.findMaxBonusCount("A") == 5);
+        }
     }
 
     private static Task[] createTasks() {
@@ -529,8 +496,6 @@ public class Program {
             int bonusCount2 = project.findMaxBonusCount("ms2");
             assert (bonusCount2 == 4);
         }
-
-
         {
             Task a = new Task("A", 2);
             Task b = new Task("B", 1);
@@ -716,6 +681,43 @@ public class Program {
 
             test = new Task[]{b, a, c, d, e};
             assert (project.findMaxBonusCount("E") == 4);
+        }
+    }
+
+    private static void testMura() {
+        {
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(b, a);
+            d.addPredecessor(c, b);
+            e.addPredecessor(d, c);
+
+            Task[] test = new Task[]{b, a, c, d, e};
+
+            Project project = new Project(test);
+            assert (project.findMaxBonusCount("E") == 4);
+        }
+
+        {
+            Task a = new Task("A", 5);
+            Task b = new Task("B", 2);
+            Task c = new Task("C", 2);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 10);
+
+            c.addPredecessor(a, b);
+            d.addPredecessor(b, c);
+            e.addPredecessor(c, d);
+
+            ArrayList<Task> tasks = new ArrayList<>(Arrays.asList(a, b, c, d, e));
+            ArrayList<Task> perm = new ArrayList<>();
+            boolean[] taken = new boolean[5];
+
+            testPerm(0, tasks, perm, taken);
         }
     }
 
