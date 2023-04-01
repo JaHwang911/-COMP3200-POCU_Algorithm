@@ -9,6 +9,7 @@ public class Program {
         testOfficial();
         testFindManMonth();
         testFindMinDuration();
+        testFindMaxBonusCount();
 
         System.out.println("No prob assignment 4");
     }
@@ -337,6 +338,31 @@ public class Program {
             int minDuration = p.findMinDuration("D");
             assert (minDuration == 15);
         }
+    }
+
+    private static void testFindMaxBonusCount() {
+        Task a = new Task("A", 2);
+        Task b = new Task("B", 1);
+        Task c = new Task("C", 3);
+        Task d = new Task("D", 5);
+        Task e = new Task("E", 7);
+        Task f = new Task("F", 2);
+        Task g = new Task("G", 11);
+
+        b.addPredecessor(a);
+        c.addPredecessor(b);
+        d.addPredecessor(c);
+
+        f.addPredecessor(b, e);
+        g.addPredecessor(d, f);
+
+        Task[] tasks = new Task[]{
+                a, b, c, d, e, f, g
+        };
+        Project project = new Project(tasks);
+
+        int bonusCount1 = project.findMaxBonusCount("G");
+        assert (bonusCount1 == 3);
     }
 
     private static Task[] createTasks() {

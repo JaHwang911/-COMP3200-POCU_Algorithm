@@ -50,6 +50,5 @@ final class Edge {
 
     public void initAmount() {
         this.amount = 0;
-        this.backEdge.amount = 0;
     }
 }
