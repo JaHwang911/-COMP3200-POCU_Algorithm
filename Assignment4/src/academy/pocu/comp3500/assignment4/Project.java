@@ -14,14 +14,14 @@ public final class Project {
     private final Node[] nodes;
     private final Node[] reverseDirectionNodes;
     private final HashMap<Node, ArrayList<Edge>> edges;
-    private final Node virtualStartNode;
+    private final ArrayList<Node> startNodes;
 
     public Project(final Task[] tasks) {
         this.taskIndex = new HashMap<>(tasks.length);
         this.nodes = new Node[tasks.length];
         this.reverseDirectionNodes = new Node[tasks.length];
+        this.startNodes = new ArrayList<>(tasks.length);
         this.edges = new HashMap<>();
-        this.virtualStartNode = new Node("", Integer.MAX_VALUE);
 
         for (int i = 0; i < tasks.length; ++i) {
             this.taskIndex.put(tasks[i].getTitle(), i);
@@ -33,7 +33,7 @@ public final class Project {
             List<Task> tempPredecessors = tasks[i].getPredecessors();
 
             if (tempPredecessors.size() == 0) {
-                this.virtualStartNode.addNeighbor(this.nodes[i]);
+                this.startNodes.add(this.nodes[i]);
                 continue;
             }
 
@@ -49,7 +49,7 @@ public final class Project {
 
         HashMap<Node, Boolean> discovered = new HashMap<>();
         LinkedList<Node> postorderTraversalReverseList = new LinkedList<>();
-        for (Node n : this.virtualStartNode.getNeighbors()) {
+        for (Node n : this.startNodes) {
             getPostorderTraversalReverseListRecursive(n, discovered, postorderTraversalReverseList);
         }
 
@@ -115,7 +115,7 @@ public final class Project {
     }
 
     public int findMaxBonusCount(final String task) {
-        for (Node n : this.virtualStartNode.getNeighbors()) {
+        for (Node n : this.startNodes) {
             if (n.getTitle().equals(task)) {
                 return n.getEstimate();
             }
@@ -204,7 +204,7 @@ public final class Project {
     }
 
     private LinkedList<Node> getPostorderTraversalReverseListToTask(final String task) {
-        ArrayList<Node> startNodes = new ArrayList<>(this.virtualStartNode.getNeighborsSize());
+        ArrayList<Node> startNodes = new ArrayList<>(this.startNodes.size());
 
         getStartNodesToTask(task, startNodes);
 
@@ -270,7 +270,7 @@ public final class Project {
         Queue<Node> queue = new LinkedList<>();
         Queue<Edge> backEdgeQueue = new LinkedList<>();
 
-        for (Node node : this.virtualStartNode.getNeighbors()) {
+        for (Node node : this.startNodes) {
             queue.add(node);
         }
 
