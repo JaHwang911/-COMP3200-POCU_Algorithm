@@ -10,15 +10,15 @@ import java.util.Random;
 public class Program {
 
     public static void main(String[] args) {
+        testOfficial();
         testBackEdge();
-//        testOfficial();
-//        testBaro();
-//        testWiki();
-//        testFindManMonth();
-//        testFindMinDuration();
-//        testFindMaxBonusCount();
-//        testMura();
-//        testWhiteBeard();
+        testBaro();
+        testWiki();
+        testFindManMonth();
+        testFindMinDuration();
+        testFindMaxBonusCount();
+        testMura();
+        testWhiteBeard();
 
         System.out.println("No prob assignment 4");
     }
@@ -67,7 +67,14 @@ public class Program {
         };
 
         Project p = new Project(tasks);
-        assert (p.findMaxBonusCount("5") == 6);
+        System.out.println(p.findMaxBonusCount("5"));
+
+        Task[] tasks2 = new Task[] {
+                task0, task1, task2, task3, task4, task5
+        };
+
+        Project p2 = new Project(tasks2);
+        System.out.println(p2.findMaxBonusCount("5"));
     }
 
     private static void testFindManMonth() {

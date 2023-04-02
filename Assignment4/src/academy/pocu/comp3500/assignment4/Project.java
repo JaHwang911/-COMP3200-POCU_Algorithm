@@ -70,27 +70,6 @@ public final class Project {
             }
         }
 
-        ArrayList<Edge> tempVirtualEdges = new ArrayList<>();
-        this.edges.put(this.virtualStartNode, tempVirtualEdges);
-
-        for (Node n : this.virtualStartNode.getNeighbors()) {
-            ArrayList<Edge> tempEdges = this.edges.get(n);
-
-            if (tempEdges == null) {
-                tempEdges = new ArrayList<>(n.getNeighborsSize());
-                this.edges.put(n, tempEdges);
-            }
-
-            Edge e = new Edge(this.virtualStartNode, n, Integer.MAX_VALUE);
-            Edge be = new Edge(n, this.virtualStartNode, 0);
-
-            e.addBackEdge(be);
-            be.addBackEdge(e);
-
-            tempVirtualEdges.add(e);
-            tempEdges.add(be);
-        }
-
         for (Node n : this.nodes) {
             ArrayList<Edge> tempEdges = this.edges.get(n);
 
@@ -147,31 +126,34 @@ public final class Project {
         initEdgesAmount();
 
         LinkedList<Edge> outEdge = new LinkedList<>();
-        HashMap<Node, Boolean> discovered = new HashMap<>();
-        int minFlow = getMinFlowToTask(task, outEdge);
+        LinkedList<Node> outPath = new LinkedList<>();
+        int minFlow = getMinFlowToTask(task, outEdge, outPath);
 
         while (minFlow != -1) {
-            for (Edge e : outEdge) {
-                e.addAmount(minFlow);
-                e.getBackEdge().addAmount(-minFlow);
+            Node currentNode = outPath.poll();
+            Node nextNode = outPath.poll();
 
-                if (discovered.get(e.getStartNode()) == null) {
-                    if (e.isBackEdge()) {
-                        e.getStartNode().addAmount(-minFlow);
-                    } else {
-                        e.getStartNode().addAmount(minFlow);
-                    }
-                    discovered.put(e.getStartNode(), true);
+            while (!outEdge.isEmpty()) {
+                Edge edge = outEdge.poll();
+                edge.addAmount(minFlow);
+
+                if (currentNode != null && nextNode != null
+                        && edge.getStartNode().getTitle().equals(currentNode.getTitle())
+                        && edge.getEndNode().getTitle().equals(nextNode.getTitle())) {
+                    edge.getBackEdge().addAmount(-minFlow);
+
+                    currentNode = nextNode;
+                    nextNode = outPath.poll();
                 }
             }
 
-            outEdge.clear();
-            discovered.clear();
-            minFlow = getMinFlowToTask(task, outEdge);
+            outPath.clear();
+
+            minFlow = getMinFlowToTask(task, outEdge, outPath);
         }
 
-        Node prevNode = this.nodes[this.taskIndex.get(task)];
-        ArrayList<Edge> resultEdge = this.edges.get(prevNode);
+        Node targetNode = this.nodes[this.taskIndex.get(task)];
+        ArrayList<Edge> resultEdge = this.edges.get(targetNode);
 
         for (Edge e : resultEdge) {
             if (e.isBackEdge()) {
@@ -179,7 +161,7 @@ public final class Project {
             }
         }
 
-        return Math.min(result, prevNode.getEstimate());
+        return Math.min(result, targetNode.getEstimate());
     }
 
     private void getPostorderTraversalReverseListRecursive(final Node node, final HashMap<Node, Boolean> discovered, final LinkedList<Node> out) {
@@ -283,114 +265,90 @@ public final class Project {
         return sum;
     }
 
-    private int getMinFlowToTask(final String task, LinkedList<Edge> out) {
+    private int getMinFlowToTask(final String task, LinkedList<Edge> outEdges, LinkedList<Node> outPath) {
         HashMap<Node, Node> prevNodes = new HashMap<>();
         Queue<Node> queue = new LinkedList<>();
-        Node[] tempStartNode = new Node[this.virtualStartNode.getNeighborsSize()];
+        Queue<Edge> backEdgeQueue = new LinkedList<>();
 
-        Node prevNode = null;
-
-        ArrayList<Edge> tempStartEdges = this.edges.get(this.virtualStartNode);
-
-        for (int i = 0; i < tempStartEdges.size(); ++i) {
-            assert (!tempStartEdges.get(i).isBackEdge());
-            tempStartNode[i] = tempStartEdges.get(i).getEndNode();
+        for (Node node : this.virtualStartNode.getNeighbors()) {
+            queue.add(node);
         }
 
-        sortNodeByEstimateRecursive(tempStartNode, 0, tempStartNode.length - 1);
-
-        for (Node n : tempStartNode) {
-            prevNodes.put(n, this.virtualStartNode);
-            queue.add(n);
-
-            if (n.getTitle().equals(task)) {
-                prevNode = n;
-                break;
-            }
-        }
-
-        while (!queue.isEmpty() && prevNode == null) {
+        Node targetNode = null;
+        while (!queue.isEmpty() && targetNode == null) {
             Node currNode = queue.poll();
+            boolean hasOnlyBackEdge = true;
+            backEdgeQueue.clear();
 
-            for (Edge e : this.edges.get(currNode)) {
-                if (e.getRemainingAmount() == 0) {
+            for (Edge edge : this.edges.get(currNode)) {
+                if (edge.getRemainingAmount() == 0) {
                     continue;
                 }
 
-                Node next = e.getEndNode();
+                if (!edge.isBackEdge()) {
+                    hasOnlyBackEdge = false;
+                } else {
+                    backEdgeQueue.add(edge);
+                    continue;
+                }
+
+                Node next = edge.getEndNode();
                 if (prevNodes.get(next) == null) {
                     queue.add(next);
                     prevNodes.put(next, currNode);
 
                     if (next.getTitle().equals(task)) {
-                        prevNode = next;
+                        targetNode = next;
+                        prevNodes.put(targetNode, currNode);
+                        outPath.addFirst(targetNode);
                         break;
                     }
                 }
             }
+
+            if (hasOnlyBackEdge) {
+                for (Edge backEdge : backEdgeQueue) {
+                    assert (backEdge.getAmount() < 0);
+                    int amount = backEdge.getAmount();
+
+                    Node node = backEdge.getEndNode();
+                    if (prevNodes.get(currNode).equals(node)) {
+                        continue;
+                    }
+
+                    queue.add(node);
+                    for (Edge e : this.edges.get(node)) {
+                        if (!e.isBackEdge()) {
+                            e.addAmount(amount);
+                        }
+                    }
+
+                    backEdge.addAmount(-amount);
+                }
+            }
         }
 
-        if (prevNode == null) {
+        if (targetNode == null) {
             return -1;
         }
 
         int resultMinFlow = Integer.MAX_VALUE;
 
         do {
-            Node currNode = prevNodes.get(prevNode);
-            boolean isRightWay = false;
+            Node currNode = prevNodes.get(targetNode);
+            outPath.addFirst(currNode);
 
-            for (Node neighbor : currNode.getNeighbors()) {
-                if (neighbor.equals(prevNode)) {
-                    isRightWay = true;
-                    break;
+            for (Edge edge : this.edges.get(currNode)) {
+                if (!edge.isBackEdge()) {
+                    outEdges.addFirst(edge);
+                    resultMinFlow = Math.min(resultMinFlow, edge.getRemainingAmount());
                 }
             }
 
-            ArrayList<Edge> tempEdges = this.edges.get(currNode);
-
-            for (Edge e : tempEdges) {
-                if (isRightWay) {
-                    if (!e.isBackEdge()) {
-                        out.addFirst(e);
-                        resultMinFlow = Math.min(resultMinFlow, e.getRemainingAmount());
-                    }
-                } else {
-                    if (e.isBackEdge()) {
-                        out.addFirst(e);
-                        resultMinFlow = Math.min(resultMinFlow, e.getRemainingAmount());
-                    }
-                }
-            }
-
-            prevNode = currNode;
-        } while (prevNodes.get(prevNode) != null && !prevNodes.get(prevNode).getTitle().equals(this.virtualStartNode.getTitle()));
+            targetNode = currNode;
+        } while (prevNodes.get(targetNode) != null);
 
         return resultMinFlow;
-    }
-
-    private void sortNodeByEstimateRecursive(Node[] node, int left, int right) {
-        if (left >= right) {
-            return;
-        }
-
-        int i = left;
-        for (int j = left; j < right; ++j) {
-            if (node[j].getRemainingAmount() > node[right].getRemainingAmount()) {
-                Node temp = node[j];
-                node[j] = node[i];
-                node[i] = temp;
-
-                ++i;
-            }
-        }
-
-        Node temp = node[i];
-        node[i] = node[right];
-        node[right] = temp;
-
-        sortNodeByEstimateRecursive(node, left, i - 1);
-        sortNodeByEstimateRecursive(node, i + 1, right);
     }
 
     private void initEdgesAmount() {
