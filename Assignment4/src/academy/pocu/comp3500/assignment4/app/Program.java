@@ -7,19 +7,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-import static java.util.Collections.shuffle;
-
 public class Program {
 
     public static void main(String[] args) {
-        testOfficial();
-        testBaro();
-        testWiki();
-        testFindManMonth();
-        testFindMinDuration();
-        testFindMaxBonusCount();
-        testMura();
-        testWhiteBeard();
+        testBackEdge();
+//        testOfficial();
+//        testBaro();
+//        testWiki();
+//        testFindManMonth();
+//        testFindMinDuration();
+//        testFindMaxBonusCount();
+//        testMura();
+//        testWhiteBeard();
 
         System.out.println("No prob assignment 4");
     }
@@ -46,6 +45,29 @@ public class Program {
 
         int bonusCount2 = project.findMaxBonusCount("ms2");
         assert (bonusCount2 == 6);
+    }
+
+    private static void testBackEdge() {
+        Task task0 = new Task("0", 8);
+        Task task1 = new Task("1", 3);
+        Task task2 = new Task("2", 8);
+        Task task3 = new Task("3", 8);
+        Task task4 = new Task("4", 3);
+        Task task5 = new Task("5", 8);
+
+        task1.addPredecessor(task0);
+        task2.addPredecessor(task1, task4);
+        task3.addPredecessor(task0);
+
+        task4.addPredecessor(task3, task1);
+        task5.addPredecessor(task2, task4);
+
+        Task[] tasks = new Task[] {
+                task4, task1, task2, task5, task3, task0
+        };
+
+        Project p = new Project(tasks);
+        assert (p.findMaxBonusCount("5") == 6);
     }
 
     private static void testFindManMonth() {
@@ -816,7 +838,10 @@ public class Program {
                 int bonusCount1 = project.findMaxBonusCount("5");
 
                 if (bonusCount1 != 6) {
-                    System.err.println(String.format("%d, %d", i, bonusCount1));
+                    for (Task t : tasks) {
+                        System.out.print(t.getTitle() + ", ");
+                    }
+                    System.out.println();
                 }
             }
         }
