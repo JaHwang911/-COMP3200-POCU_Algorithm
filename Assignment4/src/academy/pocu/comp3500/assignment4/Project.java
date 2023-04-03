@@ -356,8 +356,6 @@ public final class Project {
             for (Edge e : this.edges.get(n)) {
                 e.initAmount();
             }
-
-            n.initAmount();
         }
     }
 
