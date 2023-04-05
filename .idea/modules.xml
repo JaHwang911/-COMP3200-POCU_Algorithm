@@ -21,6 +21,7 @@
       <module fileurl="file://$PROJECT_DIR$/PracticeBST/PracticeBST.iml" filepath="$PROJECT_DIR$/PracticeBST/PracticeBST.iml" />
       <module fileurl="file://$PROJECT_DIR$/PracticeDFS/PracticeDFS.iml" filepath="$PROJECT_DIR$/PracticeDFS/PracticeDFS.iml" />
       <module fileurl="file://$PROJECT_DIR$/PracticeGraph/PracticeGraph.iml" filepath="$PROJECT_DIR$/PracticeGraph/PracticeGraph.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PracticeKnapsack/PracticeKnapsack.iml" filepath="$PROJECT_DIR$/PracticeKnapsack/PracticeKnapsack.iml" />
       <module fileurl="file://$PROJECT_DIR$/PracticeRotateArray/PracticeRotateArray.iml" filepath="$PROJECT_DIR$/PracticeRotateArray/PracticeRotateArray.iml" />
       <module fileurl="file://$PROJECT_DIR$/PracticeSort/PracticeSort.iml" filepath="$PROJECT_DIR$/PracticeSort/PracticeSort.iml" />
     </modules>
