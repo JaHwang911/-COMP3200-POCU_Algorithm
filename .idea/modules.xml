@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/Assignment2/Assignment2.iml" filepath="$PROJECT_DIR$/Assignment2/Assignment2.iml" />
       <module fileurl="file://$PROJECT_DIR$/Assignment3/Assignment3.iml" filepath="$PROJECT_DIR$/Assignment3/Assignment3.iml" />
       <module fileurl="file://$PROJECT_DIR$/Assignment4/Assignment4.iml" filepath="$PROJECT_DIR$/Assignment4/Assignment4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Graph/Graph.iml" filepath="$PROJECT_DIR$/Graph/Graph.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lab1/Lab1.iml" filepath="$PROJECT_DIR$/Lab1/Lab1.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lab10/Lab10.iml" filepath="$PROJECT_DIR$/Lab10/Lab10.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lab11/Lab11.iml" filepath="$PROJECT_DIR$/Lab11/Lab11.iml" />
@@ -24,6 +25,7 @@
       <module fileurl="file://$PROJECT_DIR$/PracticeKnapsack/PracticeKnapsack.iml" filepath="$PROJECT_DIR$/PracticeKnapsack/PracticeKnapsack.iml" />
       <module fileurl="file://$PROJECT_DIR$/PracticeRotateArray/PracticeRotateArray.iml" filepath="$PROJECT_DIR$/PracticeRotateArray/PracticeRotateArray.iml" />
       <module fileurl="file://$PROJECT_DIR$/PracticeSort/PracticeSort.iml" filepath="$PROJECT_DIR$/PracticeSort/PracticeSort.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ReadLab7/ReadLab7.iml" filepath="$PROJECT_DIR$/ReadLab7/ReadLab7.iml" />
       <module fileurl="file://$PROJECT_DIR$/SCC/SCC.iml" filepath="$PROJECT_DIR$/SCC/SCC.iml" />
     </modules>
   </component>
